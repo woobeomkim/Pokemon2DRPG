@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public LayerMask solidObjectsLayer;
+    
     public float moveSpeed;
-
     bool isMoving;
 
     Vector2 input;
@@ -36,7 +37,8 @@ public class PlayerController : MonoBehaviour
                 targetPos.x += input.x;
                 targetPos.y += input.y;
 
-                StartCoroutine(Move(targetPos));
+                if(IsWalkable(targetPos))
+                    StartCoroutine(Move(targetPos));
             }
         }
 
@@ -54,5 +56,13 @@ public class PlayerController : MonoBehaviour
         }
 
         isMoving = false;
+    }
+
+    bool IsWalkable(Vector3 targetPos)
+    {
+        if (Physics2D.OverlapCircle(targetPos, 0.2f, solidObjectsLayer) != null)
+            return false;
+
+        return true;
     }
 }
