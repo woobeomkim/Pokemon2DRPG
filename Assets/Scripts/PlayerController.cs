@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public LayerMask solidObjectsLayer;
-    
+    public LayerMask longgrassLayer;
+
     public float moveSpeed;
     bool isMoving;
 
@@ -56,6 +57,8 @@ public class PlayerController : MonoBehaviour
         }
 
         isMoving = false;
+
+        CheckForEncounter();
     }
 
     bool IsWalkable(Vector3 targetPos)
@@ -64,5 +67,16 @@ public class PlayerController : MonoBehaviour
             return false;
 
         return true;
+    }
+
+    void CheckForEncounter()
+    {
+        if(Physics2D.OverlapCircle(transform.position,0.2f,longgrassLayer) != null)
+        {
+            if(UnityEngine.Random.Range(1,101) <= 10)
+            {
+                Debug.Log("배틀시작!");
+            }
+        }
     }
 }
