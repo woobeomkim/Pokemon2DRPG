@@ -7,10 +7,26 @@ public class Pokemon
     [SerializeField] PokemonBase pBase;
     [SerializeField] int level;
 
-    Pokemon(PokemonBase pBase,int level)
+    public int HP { get; set; }
+    public List<Move> Moves { get; set; }
+
+    public Pokemon(PokemonBase pBase,int level)
     {
         this.pBase = pBase;
         this.level = level;
+
+        HP = MaxHP;
+
+        Moves = new List<Move>();
+
+        foreach(var move in pBase.LearnableMoves)
+        {
+            if(move.Level <= level)
+                Moves.Add(new Move(move.Base));
+
+            if (Moves.Count >= 4)
+                break;
+        }
     }
 
     public int Attack

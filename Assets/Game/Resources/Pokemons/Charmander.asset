@@ -24,3 +24,10 @@ MonoBehaviour:
   speed: 65
   type1: 2
   type2: 0
+  learnableMoves:
+  - pBase: {fileID: 11400000, guid: 68dc772b728e7d749b3aa0bd1f0badb9, type: 2}
+    level: 1
+  - pBase: {fileID: 11400000, guid: ce69119eaf9a61149971a3a5679394dc, type: 2}
+    level: 1
+  - pBase: {fileID: 11400000, guid: 6162b918abdcb63418551accf10b4142, type: 2}
+    level: 4
