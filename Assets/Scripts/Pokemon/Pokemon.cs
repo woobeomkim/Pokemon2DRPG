@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class Pokemon
 {
-    [SerializeField] PokemonBase pBase;
-    [SerializeField] int level;
+    public PokemonBase Base { get; set; }
+    public int Level { get; set; }
 
     public int HP { get; set; }
     public List<Move> Moves { get; set; }
 
     public Pokemon(PokemonBase pBase,int level)
     {
-        this.pBase = pBase;
-        this.level = level;
+        this.Base = pBase;
+        this.Level = level;
 
         HP = MaxHP;
 
@@ -33,14 +33,14 @@ public class Pokemon
     {
         get
         {
-            return Mathf.FloorToInt((pBase.Attack * level) / 100f) + 5;
+            return Mathf.FloorToInt((Base.Attack * Level) / 100f) + 5;
         }
     }
     public int Defense
     {
         get
         {
-            return Mathf.FloorToInt((pBase.Defense * level) / 100f) + 5;
+            return Mathf.FloorToInt((Base.Defense * Level) / 100f) + 5;
         }
     }
 
@@ -48,14 +48,14 @@ public class Pokemon
     {
         get
         {
-            return Mathf.FloorToInt((pBase.SpAttack * level) / 100f) + 5;
+            return Mathf.FloorToInt((Base.SpAttack * Level) / 100f) + 5;
         }
     }
     public int SpDefense
     {
         get
         {
-            return Mathf.FloorToInt((pBase.SpDefense * level) / 100f) + 5;
+            return Mathf.FloorToInt((Base.SpDefense * Level) / 100f) + 5;
         }
     }
 
@@ -63,7 +63,7 @@ public class Pokemon
     {
         get
         {
-            return Mathf.FloorToInt((pBase.Speed * level) / 100f) + 5;
+            return Mathf.FloorToInt((Base.Speed * Level) / 100f) + 5;
         }
     }
 
@@ -71,7 +71,7 @@ public class Pokemon
     {
         get
         {
-            return Mathf.FloorToInt((pBase.MaxHP * level) / 100f) + 10;
+            return Mathf.FloorToInt((Base.MaxHP * Level) / 100f) + 10;
         }
     }
 
