@@ -29,6 +29,29 @@ public class Pokemon
         }
     }
 
+    public bool TakeDamage(Move move,Pokemon attacker)
+    {
+        float modifiers = UnityEngine.Random.Range(0.85f, 1f);
+        float a = (2 * attacker.Level + 10) / 250f;
+        float d = a * move.Base.Power * ((float)attacker.Attack / Defense) + 2;
+        int damage = Mathf.FloorToInt(d * modifiers);
+
+        HP -= damage;
+        if(HP <=0)
+        {
+            HP = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    public Move GetRandomMove()
+    {
+        var move = Moves[UnityEngine.Random.Range(0, Moves.Count)];
+
+        return move;
+    }
     public int Attack
     {
         get

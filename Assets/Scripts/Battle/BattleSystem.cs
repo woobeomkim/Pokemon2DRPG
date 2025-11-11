@@ -33,9 +33,49 @@ public class BattleSystem : MonoBehaviour
 
         yield return dialogBox.TypeDialog($"야생의 {enemyUnit.Pokemon.Base.Name}(이)가 나타났다!");
 
-        yield return new WaitForSeconds(1.0f);
-
         PlayerAction();
+    }
+
+    IEnumerator PlayerPerformMove()
+    {
+        state = BattleState.Busy;
+
+        var move = playerUnit.Pokemon.Moves[currentMove];
+
+        yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}을 사용하였다!");
+
+        bool isFainted = enemyUnit.Pokemon.TakeDamage(move, playerUnit.Pokemon);
+        yield return enemyHud.UpdateHP();
+    
+        if(isFainted)
+        {
+            yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name}(이)가 기절했다!");
+        }
+        else
+        {
+            StartCoroutine(EnemyMove());
+        }
+    }
+
+    IEnumerator EnemyMove()
+    {
+        state = BattleState.EnemyMove;
+
+        var move = enemyUnit.Pokemon.GetRandomMove();
+
+        yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}을 사용하였다!");
+
+        bool isFainted = playerUnit.Pokemon.TakeDamage(move, enemyUnit.Pokemon);
+        yield return playerHud.UpdateHP();
+
+        if (isFainted)
+        {
+            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 기절했다!");
+        }
+        else
+        {
+            PlayerAction();
+        }
     }
 
     void PlayerAction()
@@ -113,7 +153,10 @@ public class BattleSystem : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Z))
         {
             // ATTACK
-            Debug.Log($"Attack {playerUnit.Pokemon.Moves[currentMove].Base.Name}");
+            //Debug.Log($"Attack {playerUnit.Pokemon.Moves[currentMove].Base.Name}");
+            dialogBox.EnabledMoveSelector(false);
+            dialogBox.EnabledDialogText(true);
+            StartCoroutine(PlayerPerformMove());
         }
         else if(Input.GetKeyDown(KeyCode.X))
         {
