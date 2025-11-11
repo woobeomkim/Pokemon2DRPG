@@ -44,10 +44,11 @@ public class BattleSystem : MonoBehaviour
 
         yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}을 사용하였다!");
 
-        bool isFainted = enemyUnit.Pokemon.TakeDamage(move, playerUnit.Pokemon);
+        var damageDetails = enemyUnit.Pokemon.TakeDamage(move, playerUnit.Pokemon);
         yield return enemyHud.UpdateHP();
+        yield return ShowDamageDetails(damageDetails);
     
-        if(isFainted)
+        if(damageDetails.Fainted)
         {
             yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name}(이)가 기절했다!");
         }
@@ -65,10 +66,11 @@ public class BattleSystem : MonoBehaviour
 
         yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}을 사용하였다!");
 
-        bool isFainted = playerUnit.Pokemon.TakeDamage(move, enemyUnit.Pokemon);
+        var damageDetails = playerUnit.Pokemon.TakeDamage(move, enemyUnit.Pokemon);
         yield return playerHud.UpdateHP();
+        yield return ShowDamageDetails(damageDetails);
 
-        if (isFainted)
+        if (damageDetails.Fainted)
         {
             yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 기절했다!");
         }
@@ -76,6 +78,17 @@ public class BattleSystem : MonoBehaviour
         {
             PlayerAction();
         }
+    }
+
+    IEnumerator ShowDamageDetails(DamageDetails damageDetails)
+    {
+        if (damageDetails.Critical > 1f)
+            yield return dialogBox.TypeDialog($"급소를 때린것같다!");
+
+        if(damageDetails.TypeEffective >1)
+            yield return dialogBox.TypeDialog($"매우 효과적이다!");
+        else if(damageDetails.TypeEffective <1)
+            yield return dialogBox.TypeDialog($"효과가 없는것 같다!");
     }
 
     void PlayerAction()
