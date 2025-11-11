@@ -20,7 +20,9 @@ public class BattleUnit : MonoBehaviour
 
     private void Awake()
     {
-        image = GetComponent<Image>();   
+        image = GetComponent<Image>();
+        originalPos = image.transform.localPosition;
+        originalColor = image.color;
     }
 
     public void Setup(Pokemon pokemon)
@@ -33,8 +35,9 @@ public class BattleUnit : MonoBehaviour
             image.sprite = Pokemon.Base.BackSprite;
         else
             image.sprite = Pokemon.Base.FrontSprite;
-        originalPos = image.transform.localPosition;
-        originalColor = image.color;
+
+        image.transform.localPosition = originalPos;
+        image.color = originalColor;
 
         PlayEnterAnimation();
     }

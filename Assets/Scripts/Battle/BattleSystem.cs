@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -13,11 +14,13 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleHud enemyHud;
     [SerializeField] BattleDialog dialogBox;
 
+    public event Action<bool> onEndBattle;
+
     BattleState state;
     int currentAction;
     int currentMove;
 
-    private void Start()
+    public void StartBattle()
     {
         StartCoroutine(SetupBattle());
     }
@@ -57,6 +60,8 @@ public class BattleSystem : MonoBehaviour
         {
             yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name}(이)가 기절했다!");
             enemyUnit.PlayFaintAniamtion();
+            yield return new WaitForSeconds(2.0f);
+            onEndBattle?.Invoke(true);
         }
         else
         {
@@ -85,6 +90,8 @@ public class BattleSystem : MonoBehaviour
         {
             yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 기절했다!");
             playerUnit.PlayFaintAniamtion();
+            yield return new WaitForSeconds(2.0f);
+            onEndBattle?.Invoke(false);
         }
         else
         {
@@ -120,7 +127,7 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnabledMoveSelector(true);
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
         if(state == BattleState.PlayerAction)
         {

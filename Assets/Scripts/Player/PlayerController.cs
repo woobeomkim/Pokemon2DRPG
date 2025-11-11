@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     bool isMoving;
 
+    public event Action onEncounter;
+
     Vector2 input;
 
     Animator animtor;
@@ -19,7 +22,7 @@ public class PlayerController : MonoBehaviour
         animtor = GetComponent<Animator>();
     }
 
-    void Update()
+    public void HandleUpdate()
     {
         if(!isMoving)
         {
@@ -75,7 +78,9 @@ public class PlayerController : MonoBehaviour
         {
             if(UnityEngine.Random.Range(1,101) <= 10)
             {
-                Debug.Log("배틀시작!");
+                //Debug.Log("배틀시작!");
+                animtor.SetBool("isMoving", false);
+                onEncounter?.Invoke();
             }
         }
     }
