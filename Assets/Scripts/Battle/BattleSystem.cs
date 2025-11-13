@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum BattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy }
+public enum BattleState { Start, PlayerAction, PlayerMove, EnemyMove, PartyScreen ,Busy }
 
 public class BattleSystem : MonoBehaviour
 {
@@ -13,6 +13,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleHud playerHud;
     [SerializeField] BattleHud enemyHud;
     [SerializeField] BattleDialog dialogBox;
+    [SerializeField] PartyScreen partyScreen;
 
     public event Action<bool> onEndBattle;
 
@@ -37,6 +38,8 @@ public class BattleSystem : MonoBehaviour
         enemyUnit.Setup(wildPokemon);
         playerHud.SetData(playerUnit.Pokemon);
         enemyHud.SetData(wildPokemon);
+
+        partyScreen.Init();
 
         dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
 
@@ -149,6 +152,12 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnabledMoveSelector(true);
     }
 
+    void OpenPartyScreen()
+    {
+        partyScreen.SetPartyData(playerParty.Pokemons);
+        partyScreen.gameObject.SetActive(true);
+    }
+
     public void HandleUpdate()
     {
         if(state == BattleState.PlayerAction)
@@ -184,7 +193,16 @@ public class BattleSystem : MonoBehaviour
             }
             else if(currentAction == 1)
             {
-
+                // Bag
+            }
+            else if(currentAction == 2)
+            {
+                // PartyScreen
+                OpenPartyScreen();
+            }
+            else if (currentAction == 3)
+            {
+                // Run
             }
         }
     }
@@ -215,6 +233,7 @@ public class BattleSystem : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.X))
         {
             dialogBox.EnabledMoveSelector(false);
+            dialogBox.EnabledDialogText(true);
             PlayerAction();
         }
     }
