@@ -9,7 +9,10 @@ using Unity.VisualScripting;
 public class BattleUnit : MonoBehaviour
 {
     [SerializeField] bool isPlayerUnit;
+    [SerializeField] BattleHud hud;
+    public bool IsPlayerUnit => isPlayerUnit;
 
+    public BattleHud Hud => hud;
     public Pokemon Pokemon { get; set; }
 
     // test¿ë
@@ -33,6 +36,8 @@ public class BattleUnit : MonoBehaviour
             image.sprite = Pokemon.Base.BackSprite;
         else
             image.sprite = Pokemon.Base.FrontSprite;
+
+        hud.SetData(pokemon);
 
         image.transform.localPosition = originalPos;
         image.color = originalColor;

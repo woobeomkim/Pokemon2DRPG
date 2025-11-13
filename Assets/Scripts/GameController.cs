@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         player.onEncounter += StartBattle;
-        bs.onEndBattle += EndBattle;
+        bs.onBattleOver += EndBattle;
     }
 
     void StartBattle()
