@@ -2886,6 +2886,7 @@ GameObject:
   - component: {fileID: 530368769}
   - component: {fileID: 530368771}
   - component: {fileID: 530368772}
+  - component: {fileID: 530368773}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3001,6 +3002,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &530368773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530368768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4956ce1c647d9b4e82f25946a051453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pokemons:
+  - _pBase: {fileID: 11400000, guid: d1e38602373e66148b9d789b229c3590, type: 2}
+    level: 15
+  - _pBase: {fileID: 11400000, guid: 1e3856a93f830d54e82f21049277dfd9, type: 2}
+    level: 10
 --- !u!1 &558599794
 GameObject:
   m_ObjectHideFlags: 0
@@ -7434,6 +7452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1987840638}
   - component: {fileID: 1987840637}
+  - component: {fileID: 1987840639}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -7471,6 +7490,23 @@ Transform:
   - {fileID: 164095113}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1987840639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987840636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4f3cc64a7b68ad4687e1f2c67a50666, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wildPokemons:
+  - _pBase: {fileID: 11400000, guid: 1e3856a93f830d54e82f21049277dfd9, type: 2}
+    level: 7
+  - _pBase: {fileID: 11400000, guid: d1e38602373e66148b9d789b229c3590, type: 2}
+    level: 5
 --- !u!1 &1992541586
 GameObject:
   m_ObjectHideFlags: 0

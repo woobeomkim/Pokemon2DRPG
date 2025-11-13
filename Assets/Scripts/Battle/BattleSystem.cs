@@ -20,17 +20,23 @@ public class BattleSystem : MonoBehaviour
     int currentAction;
     int currentMove;
 
-    public void StartBattle()
+    PokemonParty playerParty;
+    Pokemon wildPokemon;
+
+    public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon)
     {
+        this.playerParty = playerParty;
+        this.wildPokemon = wildPokemon;
+
         StartCoroutine(SetupBattle());
     }
 
     IEnumerator SetupBattle()
     {
-        playerUnit.Setup(playerUnit.Pokemon);
-        enemyUnit.Setup(enemyUnit.Pokemon);
+        playerUnit.Setup(playerParty.GetHealthPokemon());
+        enemyUnit.Setup(wildPokemon);
         playerHud.SetData(playerUnit.Pokemon);
-        enemyHud.SetData(enemyUnit.Pokemon);
+        enemyHud.SetData(wildPokemon);
 
         dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
 
@@ -44,7 +50,7 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.Busy;
 
         var move = playerUnit.Pokemon.Moves[currentMove];
-
+        move.PP--;
         yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}을 사용하였다!");
 
         playerUnit.PlayAttackAnimation();
@@ -74,7 +80,7 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.EnemyMove;
 
         var move = enemyUnit.Pokemon.GetRandomMove();
-
+        move.PP--;
         yield return dialogBox.TypeDialog($"{enemyUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}을 사용하였다!");
 
         enemyUnit.PlayAttackAnimation();
@@ -91,7 +97,23 @@ public class BattleSystem : MonoBehaviour
             yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 기절했다!");
             playerUnit.PlayFaintAniamtion();
             yield return new WaitForSeconds(2.0f);
-            onEndBattle?.Invoke(false);
+
+            var nextPokemon = playerParty.GetHealthPokemon();
+            if (nextPokemon != null)
+            {
+                playerUnit.Setup(nextPokemon);
+                playerHud.SetData(nextPokemon);
+
+                dialogBox.SetMoveNames(nextPokemon.Moves);
+
+                yield return dialogBox.TypeDialog($"가라! {nextPokemon.Base.Name}");
+
+                PlayerAction();
+            }
+            else
+            {
+                onEndBattle?.Invoke(false);
+            }
         }
         else
         {
@@ -178,7 +200,7 @@ public class BattleSystem : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.UpArrow))
             currentMove -= 2;
 
-        currentMove = Mathf.Clamp(currentMove, 0, dialogBox.MoveTexts.Count - 1);
+        currentMove = Mathf.Clamp(currentMove, 0, playerUnit.Pokemon.Moves.Count - 1);
 
         dialogBox.UpdateMoveSelection(currentMove, playerUnit.Pokemon.Moves[currentMove]);
     
