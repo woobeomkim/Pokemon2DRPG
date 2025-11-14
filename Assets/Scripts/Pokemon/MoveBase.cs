@@ -14,7 +14,9 @@ public class MoveBase : ScriptableObject
     [SerializeField] int power;
     [SerializeField] int accuracy;
     [SerializeField] int pp;
-
+    [SerializeField] MoveCategory category;
+    [SerializeField] MoveEffects effects;
+    [SerializeField] MoveTarget target;
     public string Name => name;
 
     public string Description => description;
@@ -26,15 +28,34 @@ public class MoveBase : ScriptableObject
     public int Accuracy => accuracy;
     public int PP => pp;
 
-    public bool IsSpecial
-    {
-        get
-        {
-            if (type == PokemonType.Fire || type == PokemonType.Water || type == PokemonType.Grass
-                || type == PokemonType.Ice || type == PokemonType.Electric || type == PokemonType.Dragon)
-                return true;
-            else
-                return false;
-        }
-    }
+    public MoveCategory Category => category;
+
+    public MoveEffects Effects => effects;
+    public MoveTarget Target => target;
+}
+
+[System.Serializable]
+public class MoveEffects
+{
+    [SerializeField] List<StatBoost> boosts;
+
+    public List<StatBoost> Boosts => boosts;
+
+}
+
+[System.Serializable]
+public class StatBoost
+{
+    public Stat stat;
+    public int boost;
+}
+
+public enum MoveCategory
+{
+    Physical,Special,Status
+}
+
+public enum MoveTarget
+{
+    Foe,Self
 }
