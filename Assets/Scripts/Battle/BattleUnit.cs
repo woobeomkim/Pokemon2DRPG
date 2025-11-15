@@ -15,8 +15,6 @@ public class BattleUnit : MonoBehaviour
     public BattleHud Hud => hud;
     public Pokemon Pokemon { get; set; }
 
-    // test¿ë
-    public PokemonBase pBase;
     Image image;
     Vector3 originalPos;
     Color originalColor;
