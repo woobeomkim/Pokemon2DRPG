@@ -21,6 +21,7 @@ public class Pokemon
 
     public Condition Status { get; private set; }
     public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
+    public int StatusTime { get; set; }
     public void Init()
     {
         Moves = new List<Move>();
@@ -134,6 +135,7 @@ public class Pokemon
     public void SetStatus(ConditionID conditionID)
     {
         Status = ConditionsDB.Conditions[conditionID];
+        Status?.OnStart?.Invoke(this);
         StatusChanges.Enqueue($"{Base.Name}(¿Ã)∞° {Status.StartMessage}");
     }
 
@@ -142,6 +144,20 @@ public class Pokemon
         var move = Moves[UnityEngine.Random.Range(0, Moves.Count)];
 
         return move;
+    }
+
+    public void CureStatus()
+    {
+        Status = null;
+    }
+
+    public bool OnBeforeMove()
+    {
+        if (Status?.OnBeforeMove != null) 
+        {
+            return Status.OnBeforeMove.Invoke(this);
+        }
+        return true;
     }
 
     public void OnAfterTurn()
