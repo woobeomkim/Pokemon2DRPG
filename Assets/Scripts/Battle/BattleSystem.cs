@@ -87,6 +87,7 @@ public class BattleSystem : MonoBehaviour
             yield return targetUnit.Hud.UpdateHP();
             yield return ShowDamageDetails(damageDetails);
         }
+
         if (targetUnit.Pokemon.HP <= 0) 
         {
             yield return dialogBox.TypeDialog($"{targetUnit.Pokemon.Base.Name}(이)가 기절했다!");
@@ -95,17 +96,39 @@ public class BattleSystem : MonoBehaviour
 
             CheckForBattleOver(targetUnit);
         }
+
+        sourceUnit.Pokemon.OnAfterTurn();
+        yield return ShowStatusChanges(sourceUnit.Pokemon);
+        yield return sourceUnit.Hud.UpdateHP();
+
+
+        if (sourceUnit.Pokemon.HP <= 0)
+        {
+            yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name}(이)가 기절했다!");
+            sourceUnit.PlayFaintAniamtion();
+            yield return new WaitForSeconds(2.0f);
+
+            CheckForBattleOver(sourceUnit);
+        }
     }
 
     IEnumerator RunMoveEffects(Move move, Pokemon source, Pokemon target)
     {
         var effects = move.Base.Effects;
+       
+        // Stat Boosting
         if (effects.Boosts != null)
         {
             if (move.Base.Target == MoveTarget.Self)
                 source.ApplyBoost(effects.Boosts);
             else
                 target.ApplyBoost(effects.Boosts);
+        }
+
+        // Status Condition
+        if(effects.Status != ConditionID.none)
+        {
+            target.SetStatus(effects.Status);
         }
 
         yield return ShowStatusChanges(source);
