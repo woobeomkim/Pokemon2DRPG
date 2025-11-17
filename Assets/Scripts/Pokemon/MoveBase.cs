@@ -30,7 +30,6 @@ public class MoveBase : ScriptableObject
     public int Accuracy => accuracy;
     public bool AlwaysHits => alwaysHits;
     public int PP => pp;
-
     public MoveCategory Category => category;
 
     public MoveEffects Effects => effects;
