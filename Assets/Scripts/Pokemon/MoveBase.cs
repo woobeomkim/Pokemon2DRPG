@@ -13,9 +13,11 @@ public class MoveBase : ScriptableObject
     [SerializeField] PokemonType type;
     [SerializeField] int power;
     [SerializeField] int accuracy;
+    [SerializeField] bool alwaysHits;
     [SerializeField] int pp;
     [SerializeField] MoveCategory category;
     [SerializeField] MoveEffects effects;
+    [SerializeField] List<SecondaryEffects> secondaries;
     [SerializeField] MoveTarget target;
     public string Name => name;
 
@@ -26,11 +28,13 @@ public class MoveBase : ScriptableObject
     public int Power => power;
 
     public int Accuracy => accuracy;
+    public bool AlwaysHits => alwaysHits;
     public int PP => pp;
 
     public MoveCategory Category => category;
 
     public MoveEffects Effects => effects;
+    public List<SecondaryEffects> Secondaries => secondaries;
     public MoveTarget Target => target;
 }
 
@@ -43,6 +47,16 @@ public class MoveEffects
     public List<StatBoost> Boosts => boosts;
     public ConditionID Status => status;
     public ConditionID VolatileStatus => volatileStatus;
+}
+
+[System.Serializable]
+public class SecondaryEffects : MoveEffects
+{
+    [SerializeField] int chance;
+    [SerializeField] MoveTarget target;
+
+    public int Chance => chance;
+    public MoveTarget Target => target;
 }
 
 [System.Serializable]

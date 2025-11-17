@@ -88,6 +88,10 @@ public enum Stat
     SpAttack,
     SpDefense,
     Speed,
+
+    // 실제 스탯은아니지만 기술의 정확도를위해 추가
+    Accuracy,
+    Evasion,
 }
 
 public class TypeChart
