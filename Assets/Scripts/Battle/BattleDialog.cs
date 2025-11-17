@@ -90,5 +90,11 @@ public class BattleDialog : MonoBehaviour
         }
         ppText.text = $"PP{move.PP}/{move.Base.PP}";
         typeText.text = move.Base.Type.ToString();
+
+        if (move.PP == 0)
+            ppText.color = Color.red;
+        else
+            ppText.color = Color.black;
+
     }
 }
