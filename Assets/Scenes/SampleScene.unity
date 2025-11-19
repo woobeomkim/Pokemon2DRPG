@@ -1211,6 +1211,9 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 256
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &326182489
 GameObject:
   m_ObjectHideFlags: 0
@@ -3309,7 +3312,7 @@ GameObject:
   - component: {fileID: 530368775}
   - component: {fileID: 530368776}
   - component: {fileID: 530368777}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5239,7 +5242,7 @@ MonoBehaviour:
     - "\uD3EC\uCF13\uBAAC \uC138\uACC4\uB294 \uC5B4\uB5BB\uB2C8?"
     - "\uD3EC\uCF13\uBAAC\uC740 \uC6B0\uB9AC\uB97C \uB3C4\uC640\uC8FC\uB294 \uCE5C\uAD6C\uC57C!~"
   movementPattern:
-  - {x: 2, y: 0}
+  - {x: -2, y: 0}
   - {x: 0, y: -2}
   - {x: -2, y: 0}
   - {x: 0, y: 2}
