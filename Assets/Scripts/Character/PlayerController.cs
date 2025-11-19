@@ -16,11 +16,11 @@ public class PlayerController : MonoBehaviour
 
     Vector2 input;
 
-    Animator animtor;
+    CharacterAnimator animator;
 
     private void Awake()
     {
-        animtor = GetComponent<Animator>();
+        animator = GetComponent<CharacterAnimator>();
     }
 
     public void HandleUpdate()
@@ -34,8 +34,8 @@ public class PlayerController : MonoBehaviour
 
             if(input != Vector2.zero)
             {
-                animtor.SetFloat("moveX", input.x);
-                animtor.SetFloat("moveY", input.y);
+                animator.MoveX = input.x;
+                animator.MoveY = input.y;
 
                 Vector3 targetPos = transform.position;
 
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        animtor.SetBool("isMoving", isMoving);
+        animator.IsMoving = isMoving;
 
         if (Input.GetKeyDown(KeyCode.Z))
             Interact();
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
     void Interact()
     {
-        var faceDir = new Vector3(animtor.GetFloat("moveX"), animtor.GetFloat("moveY"));
+        var faceDir = new Vector3(animator.MoveX, animator.MoveY);
         var interactPos = faceDir + transform.position;
 
         //Debug.DrawLine(transform.position, interactPos, Color.red, 0.5f);
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
             if(UnityEngine.Random.Range(1,101) <= 10)
             {
                 //Debug.Log("배틀시작!");
-                animtor.SetBool("isMoving", false);
+                animator.IsMoving = false;
                 onEncounter?.Invoke();
             }
         }
