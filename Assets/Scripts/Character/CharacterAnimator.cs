@@ -52,7 +52,7 @@ public class CharacterAnimator : MonoBehaviour
         else if (MoveY == -1)
             currentAnim = walkDownAnim;
 
-        if (currentAnim != prevAnim && IsMoving != wasPrevioulyMoving)
+        if (currentAnim != prevAnim || IsMoving != wasPrevioulyMoving)
             currentAnim.Start();
 
         if (IsMoving)
