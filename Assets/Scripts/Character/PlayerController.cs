@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
 
     public event Action onEncounter;
+    public event Action<Collider2D> onEnterTrainersView;
 
     Vector2 input;
 
@@ -29,7 +31,7 @@ public class PlayerController : MonoBehaviour
 
             if(input != Vector2.zero)
             {
-                StartCoroutine(character.Move(input,CheckForEncounter));
+                StartCoroutine(character.Move(input,OnMoveOver));
             }
         }
 
@@ -52,17 +54,34 @@ public class PlayerController : MonoBehaviour
             collider.GetComponent<Interactable>()?.Interact(transform);
         }
     }
+    
+    void OnMoveOver()
+    {
+        CheckForEncounter();
+        CheckForInTrainersView();
+    }
 
     void CheckForEncounter()
     {
         if(Physics2D.OverlapCircle(transform.position,0.2f,GameLayers.i.GrassLayer) != null)
         {
-            if(UnityEngine.Random.Range(1,101) <= 10)
+            if (UnityEngine.Random.Range(1,101) <= 10)
             {
                 //Debug.Log("배틀시작!");
                 character.Animator.IsMoving = false;
                 onEncounter?.Invoke();
             }
+        }
+    }
+
+    void CheckForInTrainersView()
+    {
+        var collider = Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.i.FovLayer);
+        if (collider != null) 
+        {
+            Debug.Log("In Trainers view");
+            character.Animator.IsMoving = false;
+            onEnterTrainersView?.Invoke(collider);
         }
     }
 }
