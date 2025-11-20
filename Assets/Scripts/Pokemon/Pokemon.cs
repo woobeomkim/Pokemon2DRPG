@@ -11,6 +11,14 @@ public class Pokemon
     [SerializeField] PokemonBase _pBase;
     [SerializeField] int level;
 
+    public Pokemon(PokemonBase pBase,int pLevel)
+    {
+        _pBase = pBase;
+        level = pLevel;
+
+        Init();
+    }
+
     public PokemonBase Base { get { return _pBase; } set { _pBase = value; } }
     public int Level { get { return level; } set { level = value; } }
 
@@ -32,6 +40,7 @@ public class Pokemon
     public void Init()
     {
         Moves = new List<Move>();
+        StatusChanges = new Queue<string>();
 
         foreach(var move in Base.LearnableMoves)
         {
