@@ -5134,6 +5134,10 @@ MonoBehaviour:
     lines:
     - "\uD3EC\uCF13\uBAAC \uC138\uACC4\uC5D0\uC11C \uC2B9\uBD80\uB294 \uC990\uAC70\uC6B4\uAC70\uC57C"
     - "\uB098\uC758 \uAC15\uD568\uC744 \uBCF4\uC5EC\uC8FC\uC9C0"
+  dialogAfterBattle:
+    lines:
+    - "\uB10C \uC815\uB9D0\uAC15\uD558\uAD6C\uB098!"
+    - "\uB098\uB3C4 \uC870\uAE08\uB354 \uAC15\uD574\uC9C0\uB3C4\uB85D \uB178\uB825\uD560\uAC70\uC57C!"
   exclamation: {fileID: 2007888969}
   fov: {fileID: 1623110400}
 --- !u!114 &1755822656
