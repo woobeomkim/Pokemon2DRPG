@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, PartyScreen ,BattleOver ,Busy }
 
@@ -13,6 +14,8 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleUnit enemyUnit;
     [SerializeField] BattleDialog dialogBox;
     [SerializeField] PartyScreen partyScreen;
+    [SerializeField] Image playerImage;
+    [SerializeField] Image trainerImage;
 
     public event Action<bool> onBattleOver;
 
@@ -23,7 +26,12 @@ public class BattleSystem : MonoBehaviour
     int currentMember;
 
     PokemonParty playerParty;
+    PokemonParty trainerParty;
     Pokemon wildPokemon;
+
+    bool isTrainerBattle = false;
+    PlayerController player;
+    TrainerController trainer;
 
     public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon)
     {
@@ -32,18 +40,65 @@ public class BattleSystem : MonoBehaviour
 
         StartCoroutine(SetupBattle());
     }
+    public void StartTrainerBattle(PokemonParty playerParty, PokemonParty trainerParty)
+    {
+        this.playerParty = playerParty;
+        this.trainerParty = trainerParty;
+
+        isTrainerBattle = true;
+        player = playerParty.GetComponent<PlayerController>();
+        trainer = trainerParty.GetComponent<TrainerController>();
+
+        StartCoroutine(SetupBattle());
+    }
+
 
     IEnumerator SetupBattle()
     {
-        playerUnit.Setup(playerParty.GetHealthPokemon());
-        enemyUnit.Setup(wildPokemon);
+        playerUnit.Clear();
+        enemyUnit.Clear();
 
+        if(!isTrainerBattle)
+        {
+            // Wild Pokemon Battle
+            playerUnit.Setup(playerParty.GetHealthPokemon());
+            enemyUnit.Setup(wildPokemon);
+
+            dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
+            yield return dialogBox.TypeDialog($"야생의 {enemyUnit.Pokemon.Base.Name}(이)가 나타났다!");
+        }
+        else
+        {
+            // Trainer Battle
+
+            // Show trainer and player Image
+            playerUnit.gameObject.SetActive(false);
+            enemyUnit.gameObject.SetActive(false);
+
+            playerImage.gameObject.SetActive(true);
+            trainerImage.gameObject.SetActive(true);
+            playerImage.sprite = player.Sprite;
+            trainerImage.sprite = trainer.Sprite;
+
+            yield return dialogBox.TypeDialog($"{trainer.Name}(이)가 배틀을 걸어왔다!");
+
+            // send out first pokemon of the trainer
+            trainerImage.gameObject.SetActive(false);
+            enemyUnit.gameObject.SetActive(true);
+            var enemyPokemon = trainerParty.GetHealthPokemon();
+            enemyUnit.Setup(enemyPokemon);
+            yield return dialogBox.TypeDialog($"{trainer.Name}(이)가 {enemyPokemon.Base.Name}을 내보냈다!");
+
+            // send out first pokemon of the player
+            playerImage.gameObject.SetActive(false);
+            playerUnit.gameObject.SetActive(true);
+            var playerPokemon = playerParty.GetHealthPokemon();
+            playerUnit.Setup(playerPokemon);
+            yield return dialogBox.TypeDialog($"가라! {playerPokemon.Base.Name}!");
+            dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
+        }
+     
         partyScreen.Init();
-
-        dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
-
-        yield return dialogBox.TypeDialog($"야생의 {enemyUnit.Pokemon.Base.Name}(이)가 나타났다!");
-
         ActionSeletion();
     }
 
@@ -252,7 +307,20 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            BattleOver(true);
+            if(isTrainerBattle)
+            {
+                var nextPokemon = trainerParty.GetHealthPokemon();
+                if(nextPokemon != null)
+                {
+                    StartCoroutine(SendNextTrainerPokemon(nextPokemon));
+                }
+                else
+                {
+                    BattleOver(true);
+                }
+            }
+            else
+                BattleOver(true);
         }
     }
 
@@ -448,6 +516,16 @@ public class BattleSystem : MonoBehaviour
         dialogBox.SetMoveNames(newPokemon.Moves);
 
         yield return dialogBox.TypeDialog($"가라! {newPokemon.Base.Name}");
+
+        state = BattleState.RunningTurn;
+    }
+
+    IEnumerator SendNextTrainerPokemon(Pokemon nextPokemon)
+    {
+        state = BattleState.Busy;
+
+        enemyUnit.Setup(nextPokemon);
+        yield return dialogBox.TypeDialog($"{trainer.Name}(이)가 {nextPokemon.Base.Name}을 내보냈다!");
 
         state = BattleState.RunningTurn;
     }

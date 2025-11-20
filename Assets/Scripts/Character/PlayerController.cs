@@ -6,14 +6,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed;
-
+    [SerializeField] string name;
+    [SerializeField] Sprite sprite;
     public event Action onEncounter;
     public event Action<Collider2D> onEnterTrainersView;
 
     Vector2 input;
 
     Character character;
+
+    public string Name => name;
+    public Sprite Sprite => sprite;
 
     private void Awake()
     {
