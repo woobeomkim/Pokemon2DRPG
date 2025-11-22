@@ -55,6 +55,8 @@ public class PokemonBase : ScriptableObject
 
     public List<LearnableMove> LearnableMoves => learnableMoves;
 
+    public static int MaxNumOfMoves { get; private set; } = 4;
+
     public int GetExpForLevel(int level)
     {
         if (growthRate == GrowthRate.Fast)
