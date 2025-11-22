@@ -22,6 +22,8 @@ public class Pokemon
     public PokemonBase Base { get { return _pBase; } set { _pBase = value; } }
     public int Level { get { return level; } set { level = value; } }
 
+    
+    public int Exp { get; set; }
     public int HP { get; set; }
     public bool HPChanged { get; set; }
     public List<Move> Moves { get; set; }
@@ -50,6 +52,8 @@ public class Pokemon
             if (Moves.Count >= 4)
                 break;
         }
+
+        Exp = Base.GetExpForLevel(Level);
 
         CalculateStats();
 
