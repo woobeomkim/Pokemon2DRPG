@@ -26,8 +26,8 @@ public class BattleHud : MonoBehaviour
     {
         this.pokemon = pokemon;
         nameText.text = pokemon.Base.Name;
-        lvlText.text = "Lvl " + pokemon.Level;
         hpBar.SetHP((float)pokemon.HP / pokemon.MaxHP);
+        SetLevel();
         SetExp();
 
         statusColor = new Dictionary<ConditionID, Color>()
@@ -64,10 +64,17 @@ public class BattleHud : MonoBehaviour
         expBar.transform.localScale = new Vector3(normalizedExp, 1, 1);
     }
 
-    public IEnumerator SetExpSmooth()
+    public void SetLevel()
+    {
+        lvlText.text = "Lvl " + pokemon.Level;
+    }
+
+    public IEnumerator SetExpSmooth(bool reset = false)
     {
         if (expBar == null) yield break;
 
+        if (reset)
+            expBar.transform.localScale = new Vector3(0, 1, 1);
         float normalizedExp = GetNormalizedExp();
         yield return expBar.transform.DOScaleX(normalizedExp, 1.5f).WaitForCompletion();
     }

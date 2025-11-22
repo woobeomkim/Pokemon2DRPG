@@ -152,6 +152,17 @@ public class Pokemon
         return damageDetails;
     }
 
+    public bool CheckForLevelUp()
+    {
+        if (Exp > Base.GetExpForLevel(level + 1))
+        {
+            ++level;
+            return true;
+        }
+        
+        return false;
+    }
+
     public void UpdateHP(int damage)
     {
         HP = Mathf.Clamp(HP - damage, 0, MaxHP);
