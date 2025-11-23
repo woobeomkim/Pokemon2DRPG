@@ -8,8 +8,6 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] string name;
     [SerializeField] Sprite sprite;
-    public event Action onEncounter;
-    public event Action<Collider2D> onEnterTrainersView;
 
     const float offsetY = 0.3f;
 
@@ -62,31 +60,13 @@ public class PlayerController : MonoBehaviour
     
     void OnMoveOver()
     {
-        CheckForEncounter();
-        CheckForInTrainersView();
-    }
-
-    void CheckForEncounter()
-    {
-        if (Physics2D.OverlapCircle(transform.position - new Vector3(0, offsetY, 0), 0.2f, GameLayers.i.GrassLayer) != null)
+        var colliders = Physics2D.OverlapCircleAll(transform.position - new Vector3(0, offsetY), 0.2f, GameLayers.i.TriggerableLayer);
+    
+        foreach(var collider in colliders)
         {
-            if (UnityEngine.Random.Range(1,101) <= 10)
-            {
-                //Debug.Log("배틀시작!");
-                character.Animator.IsMoving = false;
-                onEncounter?.Invoke();
-            }
-        }
-    }
-
-    void CheckForInTrainersView()
-    {
-        var collider = Physics2D.OverlapCircle(transform.position - new Vector3(0, offsetY, 0), 0.2f, GameLayers.i.FovLayer);
-        if (collider != null) 
-        {
-            Debug.Log("In Trainers view");
             character.Animator.IsMoving = false;
-            onEnterTrainersView?.Invoke(collider);
+            collider?.GetComponent<IPlayerTriggerable>()?.OnPlayerTriggered(this);
+            break;
         }
     }
 }
