@@ -34,5 +34,3 @@ MonoBehaviour:
     level: 1
   - pBase: {fileID: 11400000, guid: 6162b918abdcb63418551accf10b4142, type: 2}
     level: 4
-  - pBase: {fileID: 11400000, guid: 952a312eccf852947b37bb8270364d70, type: 2}
-    level: 1

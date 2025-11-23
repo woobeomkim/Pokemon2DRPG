@@ -2,11 +2,12 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, PartyScreen ,BattleOver,AboutToUse ,Busy }
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, PartyScreen ,BattleOver,AboutToUse ,MoveToForget ,Busy }
 
 public enum BattleAction { Move,SwitchPokemon,UseItem,Run}
 public class BattleSystem : MonoBehaviour
@@ -17,7 +18,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] Image playerImage;
     [SerializeField] Image trainerImage;
-    [SerializeField] GameObject pokeballSprite; 
+    [SerializeField] GameObject pokeballSprite;
+    [SerializeField] MoveSelectionUI moveSelectionUI;
+    
 
     public event Action<bool> onBattleOver;
 
@@ -37,7 +40,7 @@ public class BattleSystem : MonoBehaviour
     TrainerController trainer;
 
     int escapeAttempts;
-
+    MoveBase moveToLearn;
     public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon)
     {
         this.playerParty = playerParty;
@@ -338,6 +341,11 @@ public class BattleSystem : MonoBehaviour
                     else
                     {
                         // TODO : Forgot Move
+                        yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우려고한다");
+                        yield return dialogBox.TypeDialog($"그러나, 기술을 {PokemonBase.MaxNumOfMoves}개만큼 배우지 못한다.");
+                        yield return ChooseMoveToForget(playerUnit.Pokemon, newMove.Base);
+                        yield return new WaitUntil(() => state != BattleState.MoveToForget);
+                        yield return new WaitForSeconds(2.0f);
                     }
                 }
 
@@ -418,6 +426,17 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.AboutToUse;
         dialogBox.EnabledChoiceBox(true);
     }
+    
+    IEnumerator ChooseMoveToForget(Pokemon pokemon, MoveBase newMove)
+    {
+        state = BattleState.Busy;
+        yield return dialogBox.TypeDialog("잊으려는 기술을 고르세요!");
+        moveSelectionUI.gameObject.SetActive(true);
+        moveSelectionUI.SetMoveData(pokemon.Moves.Select(x => x.Base).ToList(), newMove);
+        moveToLearn = newMove;
+
+        state = BattleState.MoveToForget;
+    }
 
     void OpenPartyScreen()
     {
@@ -449,6 +468,31 @@ public class BattleSystem : MonoBehaviour
         else if (state == BattleState.AboutToUse)
         {
             HandleAboutToUse();
+        }
+        else if (state == BattleState.MoveToForget)
+        {
+            Action<int> onMoveSelected = (moveIndex) =>
+            {
+                moveSelectionUI.gameObject.SetActive(false);
+                if(moveIndex == PokemonBase.MaxNumOfMoves)
+                {
+                    // Dont' learn move
+                    StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {moveToLearn.Name}을 배우지 않았다!"));
+                }
+                else
+                {
+                    // forget selecetedmove and learn new move
+                    var selectedMove = playerUnit.Pokemon.Moves[moveIndex].Base;
+                    StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {selectedMove.Name}을 잊고 {moveToLearn.Name}을 배웠다!"));
+
+                    playerUnit.Pokemon.Moves[moveIndex] = new Move(moveToLearn);
+
+                }
+                moveToLearn = null;
+                state = BattleState.RunningTurn;
+            };
+
+            moveSelectionUI.HandleMoveSelection(onMoveSelected);
         }
     }
 

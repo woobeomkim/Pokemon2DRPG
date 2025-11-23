@@ -22,7 +22,7 @@ MonoBehaviour:
   spAttack: 65
   spDefense: 65
   speed: 45
-  expYield: 64
+  expYield: 60
   growthRate: 1
   catchRate: 255
   type1: 5
@@ -34,3 +34,5 @@ MonoBehaviour:
     level: 1
   - pBase: {fileID: 11400000, guid: b267049b8f1d2674a98343b6a88ea49e, type: 2}
     level: 4
+  - pBase: {fileID: 11400000, guid: b267049b8f1d2674a98343b6a88ea49e, type: 2}
+    level: 5
