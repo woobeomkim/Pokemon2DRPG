@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// 일반적인 씬전환에서 쓰이는포탈
-public class Portal : MonoBehaviour, IPlayerTriggerable
+// Addtive Scene에서 쓰는 Portal
+public class LocationPortal : MonoBehaviour,IPlayerTriggerable
 {
-    [SerializeField] int sceneToLoad = -1;
     [SerializeField] DestinationIdentifer detinationPortal;
     [SerializeField] Transform spawnPoint;
 
@@ -20,7 +18,7 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
         this.player = player;
         player.Character.Animator.IsMoving = false;
         Debug.Log("Player Triggerable");
-        StartCoroutine(SwitchScene());
+        StartCoroutine(Teleport());
     }
 
     Fader fader;
@@ -29,25 +27,15 @@ public class Portal : MonoBehaviour, IPlayerTriggerable
         fader = FindObjectOfType<Fader>();
     }
 
-    IEnumerator SwitchScene()
+    IEnumerator Teleport()
     {
-        DontDestroyOnLoad(gameObject);
-
         GameController.i.PausedGame(true);
         yield return fader.FadeIn();
-        yield return SceneManager.LoadSceneAsync(sceneToLoad);
 
-        var destPortal = FindObjectsOfType<Portal>().First(x => x != this && x.detinationPortal == this.detinationPortal);
+        var destPortal = FindObjectsOfType<LocationPortal>().First(x => x != this && x.detinationPortal == this.detinationPortal);
         player.Character.SetPositionAndSnapToTile(destPortal.SpawnPoint.position);
 
         yield return fader.FadeOut();
         GameController.i.PausedGame(false);
-
-        Destroy(gameObject);
     }
-}
-
-public enum DestinationIdentifer
-{
-    A,B,C,D,E
 }

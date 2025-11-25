@@ -498,6 +498,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[0].level
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[1].level
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[0]._pBase
+      value: 
+      objectReference: {fileID: 11400000, guid: 1e3856a93f830d54e82f21049277dfd9, type: 2}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[1]._pBase
+      value: 
+      objectReference: {fileID: 11400000, guid: d1e38602373e66148b9d789b229c3590, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
