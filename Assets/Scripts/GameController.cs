@@ -103,6 +103,12 @@ public class GameController : MonoBehaviour
         if(state == GameState.FreeRoam)
         {
             player.HandleUpdate();
+
+            if (Input.GetKeyDown(KeyCode.K))
+                SavingSystem.i.Save("saveSlot1");
+
+            if (Input.GetKeyDown(KeyCode.L))
+                SavingSystem.i.Load("saveSlot1");
         }
         else if(state == GameState.Battle)
         {
@@ -113,6 +119,7 @@ public class GameController : MonoBehaviour
             DialogManager.i.HandleUpdate();
         }
 
+      
     }
 
     public void SetCurrentScene(SceneDetails currScene)
