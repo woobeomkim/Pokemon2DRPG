@@ -4508,6 +4508,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -525
       objectReference: {fileID: 0}
+    - target: {fileID: 3817234995727447201, guid: 0dd72ce31a87a36459c92f1091f1a81f, type: 3}
+      propertyPath: partyScreen
+      value: 
+      objectReference: {fileID: 2402155153497374404}
     - target: {fileID: 3820495915292431398, guid: 0dd72ce31a87a36459c92f1091f1a81f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1

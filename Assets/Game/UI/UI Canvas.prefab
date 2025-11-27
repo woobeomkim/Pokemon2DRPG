@@ -242,6 +242,7 @@ MonoBehaviour:
   itemDescription: {fileID: 6632405470527718299}
   upArrow: {fileID: 8491421581294403595}
   downArrow: {fileID: 1100823085417494205}
+  partyScreen: {fileID: 5069384530042976546}
 --- !u!1 &505584583530636378
 GameObject:
   m_ObjectHideFlags: 0
@@ -3562,8 +3563,8 @@ RectTransform:
   - {fileID: 6791692530424650614}
   - {fileID: 4481224116994531350}
   - {fileID: 6670275933219483669}
-  - {fileID: 2612024937748125438}
   - {fileID: 4420607680972702709}
+  - {fileID: 2612024937748125438}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5355,3 +5356,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6530463219519216021, guid: a89f91eeb313de948a0c36ab539fa938, type: 3}
   m_PrefabInstance: {fileID: 9124041493848395627}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5069384530042976546 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4090685984265500233, guid: a89f91eeb313de948a0c36ab539fa938, type: 3}
+  m_PrefabInstance: {fileID: 9124041493848395627}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc65a7b4ec8be48478af8b35f823f3ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
