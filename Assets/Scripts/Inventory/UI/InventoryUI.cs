@@ -36,6 +36,8 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         UpdateItemList();
+
+        inventory.onUpdated += UpdateItemList;
     }
 
     public void UpdateItemList()
@@ -84,7 +86,8 @@ public class InventoryUI : MonoBehaviour
         {
             Action onSelected = () =>
             {
-                 // Todo : Use Item
+                // Todo : Use Item
+                StartCoroutine(UseItem());
             };
 
             Action onBackPartySeletion = () =>
@@ -94,6 +97,24 @@ public class InventoryUI : MonoBehaviour
 
             partyScreen.HandleUpdate(onSelected, onBackPartySeletion);
         }
+    }
+
+    IEnumerator UseItem()
+    {
+        state = InventoryUIState.Busy;
+
+        var usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember);
+
+        if(usedItem != null)
+        {
+            yield return DialogManager.i.ShowDialogText($"{usedItem.Name}을 사용하였다!");
+        }
+        else
+        {
+            yield return DialogManager.i.ShowDialogText($"효과가 없을것 같다!");
+        }
+
+        ClosePartyScreen();
     }
 
     void UpdateItemSelection()

@@ -39,6 +39,7 @@ public class Pokemon
     public int VolatileStatusTime { get; set; }
 
     public event Action OnStatusChanged;
+    public event Action OnHpChagnged;
     public void Init()
     {
         Moves = new List<Move>();
@@ -182,7 +183,7 @@ public class Pokemon
         float d = a * move.Base.Power * ((float)attack / defense) + 2;
         int damage = Mathf.FloorToInt(d * modifiers);
 
-        UpdateHP(damage);
+        DecreaseHP(damage);
 
         return damageDetails;
     }
@@ -210,9 +211,16 @@ public class Pokemon
 
         Moves.Add(new Move(moveToLearn.Base));
     }
-    public void UpdateHP(int damage)
+    public void IncreaseHP(int amount)
+    {
+        HP = Mathf.Clamp(HP + amount, 0, MaxHP);
+        OnHpChagnged?.Invoke();
+        HPChanged = true;
+    }
+    public void DecreaseHP(int damage)
     {
         HP = Mathf.Clamp(HP - damage, 0, MaxHP);
+        OnHpChagnged?.Invoke();
         HPChanged = true;
     }
 

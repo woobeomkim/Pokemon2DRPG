@@ -26,7 +26,7 @@ public class ConditionsDB
                 StartMessage = "독에 감염되었다!",
                 OnAfterTurn = (Pokemon pokemon) =>
                 {
-                    pokemon.UpdateHP(pokemon.MaxHP / 8);
+                    pokemon.DecreaseHP(pokemon.MaxHP / 8);
                     pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 독에 감염되어 데미지를 입었다!");
                 }
             }
@@ -39,7 +39,7 @@ public class ConditionsDB
                 StartMessage = "화상을 입었다!",
                 OnAfterTurn = (Pokemon pokemon) =>
                 {
-                    pokemon.UpdateHP(pokemon.MaxHP / 16);
+                    pokemon.DecreaseHP(pokemon.MaxHP / 16);
                     pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 화상을입어 데미지를 입었다!");
                 }
             }
@@ -129,7 +129,7 @@ public class ConditionsDB
                     pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 혼란에 빠져있다!");
                     if(UnityEngine.Random.Range(1,3) == 1)
                         return true;
-                    pokemon.UpdateHP(pokemon.MaxHP / 8);
+                    pokemon.DecreaseHP(pokemon.MaxHP / 8);
                     pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 혼란에빠져 영문도모른체 자신을 공격했다!");
                     return false;
                 }
