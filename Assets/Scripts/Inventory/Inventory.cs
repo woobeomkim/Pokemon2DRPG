@@ -8,10 +8,27 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     [SerializeField] List<ItemSlot> slots;
+    [SerializeField] List<ItemSlot> pokeballSlots;
+    [SerializeField] List<ItemSlot> tmSlots;
+
+    List<List<ItemSlot>> allSlots;
 
     public event Action onUpdated;
 
-    public List<ItemSlot> Slots => slots;
+    private void Awake()
+    {
+        allSlots = new List<List<ItemSlot>> { slots, pokeballSlots, tmSlots };
+    }
+
+    public static List<string> ItemCategories = new List<string>()
+    {
+        "ITEMS", "POKEBALLS","Tms & Hms"
+    };
+
+    public List<ItemSlot> GetSlotsByCategory(int categoryIndex)
+    {
+        return allSlots[categoryIndex];
+    }
 
     public ItemBase UseItem(int itemIndex, Pokemon selectedPokemon)
     {

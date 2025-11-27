@@ -13,12 +13,15 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] Image itemIcon;
     [SerializeField] Text itemDescription;
+    [SerializeField] Text categoryText;
 
     [SerializeField] Image upArrow;
     [SerializeField] Image downArrow;
 
     [SerializeField] PartyScreen partyScreen;
     int selectedItem = 0;
+    int selectedCategory = 0;
+
     Inventory inventory;
 
     InventoryUIState state;
@@ -50,7 +53,7 @@ public class InventoryUI : MonoBehaviour
             Destroy(child.gameObject);
 
         slotUIList = new List<ItemSlotUI>();
-        foreach (var itemSlot in inventory.Slots)
+        foreach (var itemSlot in inventory.GetSlotsByCategory(selectedCategory))
         {
             var slotUIObj = Instantiate(itemSlotUI, itemList.transform);
             slotUIObj.SetData(itemSlot);
@@ -67,16 +70,33 @@ public class InventoryUI : MonoBehaviour
         if (state == InventoryUIState.ItemSelection)
         {
             int prevSelection = selectedItem;
+            int prevCategory = selectedCategory;
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
                 ++selectedItem;
             else if (Input.GetKeyDown(KeyCode.UpArrow))
                 --selectedItem;
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+                ++selectedCategory;
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                --selectedCategory;
 
-            selectedItem = Mathf.Clamp(selectedItem, 0, inventory.Slots.Count - 1);
+            if (selectedCategory > Inventory.ItemCategories.Count - 1)
+                selectedCategory = 0;
+            else if (selectedCategory < 0)
+                selectedCategory = Inventory.ItemCategories.Count - 1;
 
-            if (prevSelection != selectedItem)
+                selectedItem = Mathf.Clamp(selectedItem, 0, inventory.GetSlotsByCategory(selectedCategory).Count - 1);
+
+            if (prevCategory != selectedCategory)
+            {
+                ResetSelection();
+                categoryText.text = Inventory.ItemCategories[selectedCategory];
+                UpdateItemList();
+            }
+            else if (prevSelection != selectedItem)
                 UpdateItemSelection();
+            
             if(Input.GetKeyDown(KeyCode.Z))
             {
                 OpenPartyScreen();
@@ -124,6 +144,8 @@ public class InventoryUI : MonoBehaviour
 
     void UpdateItemSelection()
     {
+        var slots = inventory.GetSlotsByCategory(selectedCategory);
+
         for (int i = 0; i < slotUIList.Count; i++)
         {
             if (i == selectedItem)
@@ -132,12 +154,13 @@ public class InventoryUI : MonoBehaviour
                 slotUIList[i].NameText.color = Color.black;
         }
 
-        selectedItem = Mathf.Clamp(selectedItem, 0, inventory.Slots.Count - 1);
-        var item = inventory.Slots[selectedItem].Item;
-
-        itemIcon.sprite = item.Icon;
-        itemDescription.text = item.Description;
-
+        selectedItem = Mathf.Clamp(selectedItem, 0, slots.Count - 1);
+        if (slots.Count > 0)
+        {
+            var item = slots[selectedItem].Item;
+            itemIcon.sprite = item.Icon;
+            itemDescription.text = item.Description;
+        }
         HandleScrolling();
     }
 
@@ -153,6 +176,16 @@ public class InventoryUI : MonoBehaviour
 
         upArrow.gameObject.SetActive(showUpArrow);
         downArrow.gameObject.SetActive(showDownArrow);
+    }
+
+    void ResetSelection()
+    {
+        selectedItem = 0;
+        upArrow.gameObject.SetActive(false);
+        downArrow.gameObject.SetActive(false);
+
+        itemIcon.sprite = null;
+        itemDescription.text = "";
     }
 
     void OpenPartyScreen()
