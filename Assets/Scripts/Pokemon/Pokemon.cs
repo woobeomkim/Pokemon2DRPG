@@ -25,7 +25,6 @@ public class Pokemon
     
     public int Exp { get; set; }
     public int HP { get; set; }
-    public bool HPChanged { get; set; }
     public List<Move> Moves { get; set; }
 
     public Move CurrentMove { get; set; }
@@ -215,13 +214,11 @@ public class Pokemon
     {
         HP = Mathf.Clamp(HP + amount, 0, MaxHP);
         OnHpChagnged?.Invoke();
-        HPChanged = true;
     }
     public void DecreaseHP(int damage)
     {
         HP = Mathf.Clamp(HP - damage, 0, MaxHP);
         OnHpChagnged?.Invoke();
-        HPChanged = true;
     }
 
     public void SetStatus(ConditionID conditionID)

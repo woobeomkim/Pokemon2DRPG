@@ -23,6 +23,8 @@ public class InventoryUI : MonoBehaviour
 
     InventoryUIState state;
 
+    Action onItemUsed;
+
     const int itemsInViewport = 8;
 
     List<ItemSlotUI> slotUIList;
@@ -58,8 +60,10 @@ public class InventoryUI : MonoBehaviour
         UpdateItemSelection();
     }
 
-    public void HandleUpdate(Action onBack)
+    public void HandleUpdate(Action onBack, Action onItemUsed = null)
     {
+        this.onItemUsed = onItemUsed;
+
         if (state == InventoryUIState.ItemSelection)
         {
             int prevSelection = selectedItem;
@@ -108,6 +112,7 @@ public class InventoryUI : MonoBehaviour
         if(usedItem != null)
         {
             yield return DialogManager.i.ShowDialogText($"{usedItem.Name}을 사용하였다!");
+            onItemUsed?.Invoke();
         }
         else
         {
