@@ -8,6 +8,7 @@ public class PartyMemberUI : MonoBehaviour
     [SerializeField] Text nameText;
     [SerializeField] Text lvlText;
     [SerializeField] HPBar hpBar;
+    [SerializeField] Text messageText;
 
     Pokemon pokemon;
 
@@ -15,6 +16,7 @@ public class PartyMemberUI : MonoBehaviour
     {
         this.pokemon = pokemon;
         UpdateData();
+        SetMessage("");
 
         this.pokemon.OnHpChagnged += UpdateData;
     }
@@ -32,5 +34,10 @@ public class PartyMemberUI : MonoBehaviour
             nameText.color = GlobalSettings.i.HighlightedColor;
         else
             nameText.color = Color.black;
+    }
+
+    public void SetMessage(string message)
+    {
+        messageText.text = message;
     }
 }

@@ -45,7 +45,8 @@ public class Inventory : MonoBehaviour
 
         if(itemUsed)
         {
-            RemoveItem(item, selectedCategory);
+            if(!item.IsReusable)
+                RemoveItem(item, selectedCategory);
             return item;
         }
 

@@ -31,6 +31,7 @@ public class PokemonBase : ScriptableObject
     [SerializeField] PokemonType type2;
 
     [SerializeField] List<LearnableMove> learnableMoves;
+    [SerializeField] List<MoveBase> learnableByItems;
 
     public string Name => name;
     public string Description => description;
@@ -54,6 +55,7 @@ public class PokemonBase : ScriptableObject
     public PokemonType Type2 => type2;
 
     public List<LearnableMove> LearnableMoves => learnableMoves;
+    public List<MoveBase> LearnableByItems => learnableByItems;
 
     public static int MaxNumOfMoves { get; private set; } = 4;
 

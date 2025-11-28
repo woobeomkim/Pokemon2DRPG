@@ -103,7 +103,7 @@ public class InventoryUI : MonoBehaviour
             
             if(Input.GetKeyDown(KeyCode.Z))
             {
-                ItemSelected();
+                StartCoroutine(ItemSelected());
             }
             else if (Input.GetKeyDown(KeyCode.X))
             {
@@ -136,15 +136,43 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    void ItemSelected()
+    IEnumerator ItemSelected()
     {
-        if(selectedCategory == (int)ItemCategory.Pokeballs)
+        state = InventoryUIState.Busy;
+
+        var item = inventory.GetItem(selectedItem, selectedCategory);
+
+        if(GameController.i.State == GameState.Battle)
+        {
+            // In Battle
+            if(!item.CanUseInBattle)
+            {
+                yield return DialogManager.i.ShowDialogText($"이 아이템은 배틀에서 쓸수없어!");
+                state = InventoryUIState.ItemSelection;
+                yield break;
+            }
+        }
+        else
+        {
+            // Outside 
+            if (!item.CanUseOutsideBattle)
+            {
+                yield return DialogManager.i.ShowDialogText($"이 아이템은 밖에서 쓸수없어!");
+                state = InventoryUIState.ItemSelection;
+                yield break;
+            }
+        }
+        if (selectedCategory == (int)ItemCategory.Pokeballs)
         {
             StartCoroutine(UseItem());
         }
         else
         {
             OpenPartyScreen();
+
+            if (item is TmItem)
+                partyScreen.ShowIfTmIsUsable(item as TmItem);
+
         }
     }
 
@@ -164,7 +192,8 @@ public class InventoryUI : MonoBehaviour
         }
         else
         {
-            yield return DialogManager.i.ShowDialogText($"효과가 없을것 같다!");
+            if(selectedCategory == (int)ItemCategory.Items)
+                yield return DialogManager.i.ShowDialogText($"효과가 없을것 같다!");
         }
 
         ClosePartyScreen();
@@ -177,7 +206,19 @@ public class InventoryUI : MonoBehaviour
             yield break;
 
         var pokemon = partyScreen.SelectedMember;
-        if(pokemon.Moves.Count < PokemonBase.MaxNumOfMoves)
+        
+        if(pokemon.HasMove(tmItem.Move))
+        {
+            yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 이미 {tmItem.Move.Name}을 배웠다!");
+            yield break;
+        }
+
+        if(!tmItem.CanBeTaught(pokemon))
+        {
+            yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 {tmItem.Move.Name}을 배울 수 없다!");
+            yield break;
+        }
+        if (pokemon.Moves.Count < PokemonBase.MaxNumOfMoves)
         {
             pokemon.LearnMove(tmItem.Move);
             yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 {tmItem.Move.Name}을 배웠다!");
@@ -261,6 +302,7 @@ public class InventoryUI : MonoBehaviour
     void ClosePartyScreen()
     {
         state = InventoryUIState.ItemSelection;
+        partyScreen.ClearMemberSlotMessage();
         partyScreen.gameObject.SetActive(false);
     }
     IEnumerator OnMoveToForgetSelected(int moveIndex)
