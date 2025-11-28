@@ -16,3 +16,4 @@ MonoBehaviour:
   description: "\uD3EC\uCF13\uBAAC\uC744 \uBAAC\uC2A4\uD130\uBCFC\uBCF4\uB2E4 \uB192\uC740\uD655\uB960\uB85C
     \uC7A1\uB294 \uBCFC\uC774\uB2E4"
   icon: {fileID: 8020060226805192610, guid: f64ca9a0e50d2214aa7054deb58e16bc, type: 3}
+  catchRateModifier: 1.5

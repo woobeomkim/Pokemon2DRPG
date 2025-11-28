@@ -26,7 +26,7 @@ public class InventoryUI : MonoBehaviour
 
     InventoryUIState state;
 
-    Action onItemUsed;
+    Action<ItemBase> onItemUsed;
 
     const int itemsInViewport = 8;
 
@@ -63,7 +63,7 @@ public class InventoryUI : MonoBehaviour
         UpdateItemSelection();
     }
 
-    public void HandleUpdate(Action onBack, Action onItemUsed = null)
+    public void HandleUpdate(Action onBack, Action<ItemBase> onItemUsed = null)
     {
         this.onItemUsed = onItemUsed;
 
@@ -99,7 +99,7 @@ public class InventoryUI : MonoBehaviour
             
             if(Input.GetKeyDown(KeyCode.Z))
             {
-                OpenPartyScreen();
+                ItemSelected();
             }
             else if (Input.GetKeyDown(KeyCode.X))
             {
@@ -123,6 +123,18 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    void ItemSelected()
+    {
+        if(selectedCategory == (int)ItemCategory.Pokeballs)
+        {
+            StartCoroutine(UseItem());
+        }
+        else
+        {
+            OpenPartyScreen();
+        }
+    }
+
     IEnumerator UseItem()
     {
         state = InventoryUIState.Busy;
@@ -131,8 +143,9 @@ public class InventoryUI : MonoBehaviour
 
         if(usedItem != null)
         {
-            yield return DialogManager.i.ShowDialogText($"{usedItem.Name}을 사용하였다!");
-            onItemUsed?.Invoke();
+            if(!(usedItem is PokeballItem))
+                yield return DialogManager.i.ShowDialogText($"{usedItem.Name}을 사용하였다!");
+            onItemUsed?.Invoke(usedItem);
         }
         else
         {
