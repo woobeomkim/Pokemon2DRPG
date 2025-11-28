@@ -349,7 +349,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: objects_12
+      name: book
       rect:
         serializedVersion: 2
         x: 247
@@ -3047,6 +3047,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      book: -379661319
       exclamation: -998799908
       objects_0: 976802440
       objects_1: -1825843007
@@ -3072,7 +3073,6 @@ TextureImporter:
       objects_117: 958217698
       objects_118: -2098848724
       objects_119: -875088227
-      objects_12: -379661319
       objects_120: -638242469
       objects_121: 1924276132
       objects_122: -1813222358

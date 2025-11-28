@@ -333,7 +333,7 @@ public class BattleSystem : MonoBehaviour
                 {
                     if(playerUnit.Pokemon.Moves.Count < PokemonBase.MaxNumOfMoves)
                     {
-                        playerUnit.Pokemon.LearnMove(newMove);
+                        playerUnit.Pokemon.LearnMove(newMove.Base);
                         yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배웠다!");
                         dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
                     }
@@ -342,6 +342,7 @@ public class BattleSystem : MonoBehaviour
                         // TODO : Forgot Move
                         yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우려고한다");
                         yield return dialogBox.TypeDialog($"그러나, 기술을 {PokemonBase.MaxNumOfMoves}개만큼 배우지 못한다.");
+                        yield return dialogBox.TypeDialog($"{newMove.Base.Name}을 배우시겠습니까?");
                         yield return ChooseMoveToForget(playerUnit.Pokemon, newMove.Base);
                         yield return new WaitUntil(() => state != BattleState.MoveToForget);
                         yield return new WaitForSeconds(2.0f);

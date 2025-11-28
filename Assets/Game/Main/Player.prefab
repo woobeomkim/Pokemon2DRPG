@@ -323,7 +323,11 @@ MonoBehaviour:
     count: 5
   - item: {fileID: 11400000, guid: a14d9fcf749710348b5dbb374a873713, type: 2}
     count: 2
-  tmSlots: []
+  tmSlots:
+  - item: {fileID: 11400000, guid: 35921470053fea74fac223e6e8caf76b, type: 2}
+    count: 1
+  - item: {fileID: 11400000, guid: 5be25a8ea910ca84ea02dd17682c521e, type: 2}
+    count: 1
 --- !u!1 &3113048355667104030
 GameObject:
   m_ObjectHideFlags: 0
