@@ -53,6 +53,29 @@ public class Inventory : MonoBehaviour
         return null;
     }
 
+    public void AddItem(ItemBase item, int count = 1)
+    {
+        int categroy = (int)GetCategoryFromItem(item);
+        var currentSlot = GetSlotsByCategory(categroy);
+
+        var itemSlot = currentSlot.FirstOrDefault(slot => slot.Item == item);
+    
+        if(itemSlot != null)
+        {
+            itemSlot.Count += count;
+        }
+        else
+        {
+            currentSlot.Add(new ItemSlot()
+            {
+                Item = item,
+                Count = count
+            });
+        }
+
+        onUpdated?.Invoke();
+    }
+
     public void RemoveItem(ItemBase item,int selectedCategory)
     {
         var currentSlot = GetSlotsByCategory(selectedCategory);
@@ -67,6 +90,16 @@ public class Inventory : MonoBehaviour
         onUpdated?.Invoke();
     }
 
+    public ItemCategory GetCategoryFromItem(ItemBase item)
+    {
+        if (item is RecoveryItem)
+            return ItemCategory.Items;
+        else if (item is PokeballItem)
+            return ItemCategory.Pokeballs;
+        else
+            return ItemCategory.Tms;
+    }
+
     public static Inventory GetInventory()
     {
         return FindObjectOfType<PlayerController>().GetComponent<Inventory>();
@@ -79,7 +112,11 @@ public class ItemSlot
     [SerializeField] ItemBase item;
     [SerializeField] int count;
 
-    public ItemBase Item => item;
+    public ItemBase Item
+    {
+        get => item;
+        set => item = value;
+    }
     public int Count
     {
         get => count;
