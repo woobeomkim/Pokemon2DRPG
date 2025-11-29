@@ -17,7 +17,9 @@ public class NewBehaviourScript : MonoBehaviour, Interactable
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
 
-            yield return DialogManager.i.ShowDialogText($"{item.Name}을 발견했다!");
+            string playerName = initiator.GetComponent<PlayerController>().Name;
+
+            yield return DialogManager.i.ShowDialogText($"{playerName}(이)가 {item.Name}을 발견했다!");
         }
       }
 }
