@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour, Interactable
+public class Pickup : MonoBehaviour, Interactable,ISavable
 {
     [SerializeField] ItemBase item;
 
     public bool Used { get; set; } = false;
+
     public IEnumerator Interact(Transform initiator)
     {
         if (!Used)
@@ -21,5 +22,20 @@ public class NewBehaviourScript : MonoBehaviour, Interactable
 
             yield return DialogManager.i.ShowDialogText($"{playerName}(이)가 {item.Name}을 발견했다!");
         }
-      }
+    }
+
+    public object CaptureState()
+    {
+        return Used;
+    }
+
+    public void RestoreState(object state)
+    {
+        Used = (bool)state;
+
+        if(Used)
+        {
+
+        }
+    }
 }

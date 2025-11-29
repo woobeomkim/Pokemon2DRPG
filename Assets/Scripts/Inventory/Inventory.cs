@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public enum ItemCategory { Items,Pokeballs,Tms}
 
-public class Inventory : MonoBehaviour
+public class Inventory : MonoBehaviour,ISavable
 {
     [SerializeField] List<ItemSlot> slots;
     [SerializeField] List<ItemSlot> pokeballSlots;
@@ -104,6 +105,30 @@ public class Inventory : MonoBehaviour
     {
         return FindObjectOfType<PlayerController>().GetComponent<Inventory>();
     }
+
+    public object CaptureState()
+    {
+        var saveData = new InventorySaveData()
+        {
+            items = slots.Select(s => s.GetSaveData()).ToList(),
+            pokeballs = pokeballSlots.Select(p => p.GetSaveData()).ToList(),
+            tms = tmSlots.Select(t => t.GetSaveData()).ToList()
+        };
+
+        return saveData;
+    }
+
+    public void RestoreState(object state)
+    {
+        var saveData = (InventorySaveData)state;
+
+        slots = saveData.items.Select(i => new ItemSlot(i)).ToList();
+        pokeballSlots = saveData.pokeballs.Select(s => new ItemSlot(s)).ToList();
+        tmSlots = saveData.tms.Select(t => new ItemSlot(t)).ToList();
+
+        allSlots = new List<List<ItemSlot>> { slots, pokeballSlots, tmSlots };
+        onUpdated?.Invoke();
+    }
 }
 
 [System.Serializable]
@@ -111,6 +136,28 @@ public class ItemSlot
 {
     [SerializeField] ItemBase item;
     [SerializeField] int count;
+
+    public ItemSlot()
+    {
+
+    }
+
+    public ItemSlot(ItemSaveData saveData)
+    {
+        item = ItemDB.GetItemByName(saveData.name);
+        count = saveData.count;
+    }
+
+    public ItemSaveData GetSaveData()
+    {
+        var saveData = new ItemSaveData()
+        {
+            name = item.Name,
+            count = count
+        };
+
+        return saveData;
+    }
 
     public ItemBase Item
     {
@@ -122,4 +169,19 @@ public class ItemSlot
         get => count;
         set => count = value;
     }
+}
+
+[System.Serializable]
+public class ItemSaveData
+{
+    public string name;
+    public int count;
+}
+
+[System.Serializable]
+public class InventorySaveData
+{
+    public List<ItemSaveData> items;
+    public List<ItemSaveData> pokeballs;
+    public List<ItemSaveData> tms;
 }
