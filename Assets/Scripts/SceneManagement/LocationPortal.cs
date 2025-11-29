@@ -11,6 +11,9 @@ public class LocationPortal : MonoBehaviour,IPlayerTriggerable
     [SerializeField] Transform spawnPoint;
 
     public Transform SpawnPoint => spawnPoint;
+
+    public bool TriggerRepeatedly => false;
+
     PlayerController player;
 
     public void OnPlayerTriggered(PlayerController player)

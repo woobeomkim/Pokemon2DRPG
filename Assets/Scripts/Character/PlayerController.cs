@@ -57,21 +57,28 @@ public class PlayerController : MonoBehaviour,ISavable
             yield return collider.GetComponent<Interactable>()?.Interact(transform);
         }
     }
-    
+
+    IPlayerTriggerable currentlyInTrigger;
+
     void OnMoveOver()
     {
         var colliders = Physics2D.OverlapCircleAll(transform.position - new Vector3(0, character.OffsetY), 0.2f, GameLayers.i.TriggerableLayer);
-    
-        foreach(var collider in colliders)
+        IPlayerTriggerable trigerable = null;
+        foreach (var collider in colliders)
         {
-            var trigerable = collider.GetComponent<IPlayerTriggerable>();
+            trigerable = collider.GetComponent<IPlayerTriggerable>();
             if (trigerable != null)
             {
-                //character.Animator.IsMoving = false;
+                if (trigerable == currentlyInTrigger && !trigerable.TriggerRepeatedly)
+                    break;
                 trigerable.OnPlayerTriggered(this);
+                currentlyInTrigger = trigerable;
+                break;
             }
-            break;
         }
+        if (colliders.Count() == 0 || trigerable != currentlyInTrigger)
+            currentlyInTrigger = null;
+
     }
 
     public object CaptureState()
