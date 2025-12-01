@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2262550803831633965}
   - component: {fileID: 3429005806494436091}
   - component: {fileID: 6629076165882134194}
+  - component: {fileID: 4904857196881060540}
   m_Layer: 8
   m_Name: NPC
   m_TagString: Untagged
@@ -179,6 +180,7 @@ MonoBehaviour:
     lines:
     - "\uD3EC\uCF13\uBAAC \uC138\uACC4\uB294 \uC5B4\uB5BB\uB2C8?"
     - "\uD3EC\uCF13\uBAAC\uC740 \uC6B0\uB9AC\uB97C \uB3C4\uC640\uC8FC\uB294 \uCE5C\uAD6C\uC57C!~"
+  questToStart: {fileID: 0}
   movementPattern:
   - {x: -2, y: 0}
   - {x: 0, y: -2}
@@ -260,3 +262,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uniqueId: 
+--- !u!114 &4904857196881060540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5244540430392400756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d8f665ed6a3856479845367982536f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pokemon:
+    _pBase: {fileID: 0}
+    level: 0
+  dialog:
+    lines: []
