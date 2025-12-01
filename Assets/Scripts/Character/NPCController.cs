@@ -116,12 +116,14 @@ public class NPCController : MonoBehaviour, Interactable,ISavable
 
     public object CaptureState()
     {
-        var saveData = new NPCQuestSaveData()
-        {
-            activeQuest = activeQuest?.GetSaveData(),
-            questToStart = new Quest(questToStart)?.GetSaveData(),
-            questToComplete = new Quest(questToComplete)?.GetSaveData(),
-        };
+        var saveData = new NPCQuestSaveData();
+        saveData.activeQuest = activeQuest?.GetSaveData();
+
+        if (questToStart != null)
+            saveData.questToStart = new Quest(questToStart).GetSaveData();
+        if (questToComplete != null)
+            saveData.questToComplete = new Quest(questToComplete).GetSaveData();
+
         return saveData;
     }
 
