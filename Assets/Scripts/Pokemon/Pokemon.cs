@@ -66,7 +66,7 @@ public class Pokemon
 
     public Pokemon(PokemonSaveData saveData)
     {
-        Base = PokemonDB.GetPokemonByName(saveData.name);
+        Base = PokemonDB.GetObjectByName(saveData.name);
         HP = saveData.hp;
         level = saveData.level;
         Exp = saveData.exp;
@@ -88,7 +88,7 @@ public class Pokemon
     {
         var saveData = new PokemonSaveData()
         {
-            name = Base.Name,
+            name = Base.name,
             hp = HP,
             level = Level,
             exp = Exp,
