@@ -6107,6 +6107,10 @@ PrefabInstance:
       value: "\uC774\uAC74 \uC6B0\uB9AC\uC9D1\uC5D0\uC11C \uB300\uB300\uB85C \uB0B4\uB824\uC624\uB294
         \uAE30\uC220\uBA38\uC2E0 \uB108\uD55C\uD14C \uC904\uAC8C"
       objectReference: {fileID: 0}
+    - target: {fileID: 3611968201125619609, guid: 3bdff93a934f4e44f9357bec7ae90f90, type: 3}
+      propertyPath: questToStart
+      value: 
+      objectReference: {fileID: 11400000, guid: 4956549c9267d764ebc4474091504673, type: 2}
     - target: {fileID: 5244540430392400756, guid: 3bdff93a934f4e44f9357bec7ae90f90, type: 3}
       propertyPath: m_Name
       value: NPC
