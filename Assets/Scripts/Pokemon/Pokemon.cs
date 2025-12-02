@@ -111,7 +111,8 @@ public class Pokemon
         int oldMaxHP = MaxHP;
         MaxHP = Mathf.FloorToInt((Base.MaxHP * Level) / 100f) + 10 + Level;
 
-        HP += MaxHP - oldMaxHP;
+        if(oldMaxHP != 0)
+            HP += MaxHP - oldMaxHP;
     }
 
     void ResetBoost()
@@ -233,6 +234,12 @@ public class Pokemon
     {
         Base = evolution.EvolvesInto;
         CalculateStats();
+    }
+
+    public void Heal()
+    {
+        HP = MaxHP;
+        OnHpChagnged?.Invoke();
     }
 
     public void IncreaseHP(int amount)
