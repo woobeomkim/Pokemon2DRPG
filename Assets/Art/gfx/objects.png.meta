@@ -1210,7 +1210,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: objects_53
+      name: stone
       rect:
         serializedVersion: 2
         x: 196
@@ -3137,7 +3137,6 @@ TextureImporter:
       objects_50: -902163369
       objects_51: 1186091832
       objects_52: 1713144559
-      objects_53: 984428293
       objects_54: -1636875377
       objects_55: -1046099988
       objects_56: -975112081
@@ -3187,6 +3186,7 @@ TextureImporter:
       objects_96: -720801575
       objects_97: 869680299
       objects_98: -871058457
+      stone: 984428293
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

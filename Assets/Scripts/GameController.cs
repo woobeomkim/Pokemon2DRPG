@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
     GameState state;
 
     GameState prevState;
+    GameState stateBeforeEvolution;
 
     public GameState State => state;
     public static GameController i { get; private set; }
@@ -63,12 +64,13 @@ public class GameController : MonoBehaviour
 
         EvolutionManager.i.onStartEvolution += () =>
         {
+            stateBeforeEvolution = state;
             state = GameState.Evolution;
         };
 
         EvolutionManager.i.onCompleteEvolution += () =>
         {
-            state = GameState.FreeRoam;
+            state = stateBeforeEvolution;
         };
     }
 
