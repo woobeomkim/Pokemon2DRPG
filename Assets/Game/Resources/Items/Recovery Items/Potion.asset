@@ -16,6 +16,8 @@ MonoBehaviour:
   description: "\uD3EC\uCF13\uBAAC\uC758 \uCCB4\uB825\uC744 20\uD3EC\uC778\uD2B8
     \uD68C\uBCF5\uC2DC\uD0A8\uB2E4."
   icon: {fileID: 1935015723, guid: e9495032dddb67c41972f2e0fcc08e56, type: 3}
+  price: 100
+  isSellable: 1
   hpAmount: 20
   restoreMaxHP: 0
   ppAmount: 0
