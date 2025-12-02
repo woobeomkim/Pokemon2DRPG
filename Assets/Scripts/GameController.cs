@@ -70,6 +70,7 @@ public class GameController : MonoBehaviour
 
         EvolutionManager.i.onCompleteEvolution += () =>
         {
+            partyScreen.SetPartyData();
             state = stateBeforeEvolution;
         };
     }
@@ -127,6 +128,8 @@ public class GameController : MonoBehaviour
             trainer.BattleLost();
             trainer = null;
         }
+
+        partyScreen.SetPartyData();
 
         state = GameState.FreeRoam;
         mainCamera.gameObject.SetActive(true);

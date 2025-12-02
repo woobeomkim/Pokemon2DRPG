@@ -14,7 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: "\uBD88\uAF43\uC758\uB3CC"
   description: "\uD2B9\uC815 \uBD88\uD3EC\uCF13\uBAAC\uC744 \uC9C4\uD654\uC2DC\uD0A8\uB2E4"
-  icon: {fileID: 0}
-  evolution:
-    evolvesInto: {fileID: 0}
-    requiredLevel: 0
+  icon: {fileID: 984428293, guid: 3ae12697ae504414bbf0797ea36dfddd, type: 3}
