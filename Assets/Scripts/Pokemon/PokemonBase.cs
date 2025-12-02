@@ -32,7 +32,7 @@ public class PokemonBase : ScriptableObject
 
     [SerializeField] List<LearnableMove> learnableMoves;
     [SerializeField] List<MoveBase> learnableByItems;
-
+    [SerializeField] List<Evolution> evolutions;
     public string Name => name;
     public string Description => description;
 
@@ -57,6 +57,7 @@ public class PokemonBase : ScriptableObject
     public List<LearnableMove> LearnableMoves => learnableMoves;
     public List<MoveBase> LearnableByItems => learnableByItems;
 
+    public List<Evolution> Evolutions => evolutions;
     public static int MaxNumOfMoves { get; private set; } = 4;
 
     public int GetExpForLevel(int level)
@@ -84,6 +85,16 @@ public class LearnableMove
 
     public MoveBase Base => pBase;
     public int Level => level;
+}
+
+[System.Serializable]
+public class Evolution
+{
+    [SerializeField] PokemonBase evolvesInto;
+    [SerializeField] int requiredLevel;
+
+    public PokemonBase EvolvesInto => evolvesInto;
+    public int RequiredLevel => requiredLevel;
 }
 
 public enum PokemonType

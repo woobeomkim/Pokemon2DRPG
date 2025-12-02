@@ -119,6 +119,9 @@ public class GameController : MonoBehaviour
         state = GameState.FreeRoam;
         mainCamera.gameObject.SetActive(true);
         bs.gameObject.SetActive(false);
+
+        var playerParty = player.GetComponent<PokemonParty>();
+        StartCoroutine(playerParty.CheckForEvolution());
     }
 
     private void Update()

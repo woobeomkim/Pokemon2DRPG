@@ -215,6 +215,18 @@ public class Pokemon
     {
         return Moves.Count(m => m.Base == moveToCheck) > 0;
     }
+
+    public Evolution CheckForEvolution()
+    {
+        return Base.Evolutions.FirstOrDefault(e => e.RequiredLevel == level);
+    }
+
+    public void evolve(Evolution evolution)
+    {
+        Base = evolution.EvolvesInto;
+        CalculateStats();
+    }
+
     public void IncreaseHP(int amount)
     {
         HP = Mathf.Clamp(HP + amount, 0, MaxHP);
