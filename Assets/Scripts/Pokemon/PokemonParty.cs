@@ -55,8 +55,7 @@ public class PokemonParty : MonoBehaviour
             var evolution = pokemon.CheckForEvolution();
             if( evolution!=null)
             {
-                yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 {evolution.EvolvesInto.Name}으로 진화했다!");
-                pokemon.evolve(evolution);
+                yield return EvolutionManager.i.Evolve(pokemon, evolution);
             }
         }
 
