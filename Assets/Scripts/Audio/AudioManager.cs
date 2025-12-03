@@ -13,6 +13,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioSource sfxPlayer;
     [SerializeField] float fadeDuration;
 
+    AudioClip currentMusic;
     float originalMusicVol;
     public static AudioManager i { get; private set; }
 
@@ -30,25 +31,32 @@ public class AudioManager : MonoBehaviour
         i = this;
     }
 
-    public void PlaySfx(AudioClip clip)
+    public void PlaySfx(AudioClip clip, bool pauseMusic = false)
     {
         if (clip == null) return;
 
+        if(pauseMusic)
+        {
+            musicPlayer.Pause();
+            StartCoroutine(UnPauseMusic(clip.length));
+        }
+
         sfxPlayer.PlayOneShot(clip);
     }
-    public void PlaySfx(AudioID audioID)
+    public void PlaySfx(AudioID audioID, bool pauseMusic = false)
     {
         if (!sfxLookup.ContainsKey(audioID)) return;
 
         var audioData = sfxLookup[audioID];
 
-        sfxPlayer.PlayOneShot(audioData.clip);
+        PlaySfx(audioData.clip, pauseMusic);
     }
 
     public void PlayMusic(AudioClip clip, bool loop = true,bool fade = false)
     {
-        if (clip == null) return;
+        if (clip == null || currentMusic == clip) return;
 
+        currentMusic = clip;
         StartCoroutine(PlayMusicAsync(clip, loop, fade));
     }
 
@@ -63,11 +71,21 @@ public class AudioManager : MonoBehaviour
         if (fade)
             yield return musicPlayer.DOFade(originalMusicVol, fadeDuration).WaitForCompletion();
     }
+
+    IEnumerator UnPauseMusic(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        musicPlayer.volume = 0;
+
+        musicPlayer.UnPause();
+        musicPlayer.DOFade(originalMusicVol, fadeDuration);
+    }
 }
 
 public enum AudioID
 {
-    UIselect,Hit,Fainted,ExpGain
+    UIselect,Hit,Fainted,ExpGain,ItemObtain,PokemonObtain
 }
 
 [System.Serializable]

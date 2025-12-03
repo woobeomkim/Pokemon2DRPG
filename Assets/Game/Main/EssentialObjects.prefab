@@ -3463,6 +3463,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc7f3d6a5ec1454ab65872656464a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfxList:
+  - id: 0
+    clip: {fileID: 8300000, guid: 0956569c472e005409a56817032ad366, type: 3}
+  - id: 1
+    clip: {fileID: 8300000, guid: a1d1ce90cfd7af74d97ca33cc187c66a, type: 3}
+  - id: 4
+    clip: {fileID: 8300000, guid: bd1522d97b80e2444ab91793d6caf1dd, type: 3}
+  - id: 5
+    clip: {fileID: 8300000, guid: 42a40d4a60b34af4abce62e5b5941981, type: 3}
   musicPlayer: {fileID: 4993408535671902714}
   sfxPlayer: {fileID: 5495113378990701650}
   fadeDuration: 0

@@ -19,6 +19,7 @@ public class Pickup : MonoBehaviour, Interactable,ISavable
             GetComponent<BoxCollider2D>().enabled = false;
 
             string playerName = initiator.GetComponent<PlayerController>().Name;
+            AudioManager.i.PlaySfx(AudioID.ItemObtain, pauseMusic: true);
 
             yield return DialogManager.i.ShowDialogText($"{playerName}(이)가 {item.Name}을 발견했다!");
         }
