@@ -9,6 +9,7 @@ public class ShopController : MonoBehaviour
 {
     [SerializeField] InventoryUI inventoryUI;
     [SerializeField] WalletUI walletUI;
+    [SerializeField] CountSelectorUI countSelectorUI;
 
     public event Action onStart;
     public event Action onFinish;
@@ -84,6 +85,20 @@ public class ShopController : MonoBehaviour
         walletUI.Show();
 
         float sellingPrice = Mathf.Round(item.Price / 2);
+        int countToSell = 1;
+
+        int itemCount = inventory.GetItemCount(item);
+        if(itemCount > 1)
+        {
+            yield return DialogManager.i.ShowDialogText($"몇개를 파실건가요?", waitForInput:false,autoClose:false);
+
+            yield return countSelectorUI.ShowSelector(itemCount, sellingPrice, (selectedCount) => { countToSell = selectedCount; });
+
+            DialogManager.i.CloseDialog();
+        }
+
+        sellingPrice = countToSell * sellingPrice;
+
         int seletedChoice = 0;
         yield return DialogManager.i.ShowDialogText($"{sellingPrice}원을 드릴수있어요! 파시겠습니까?",
             waitForInput: false,
@@ -92,7 +107,7 @@ public class ShopController : MonoBehaviour
     
         if(seletedChoice == 0)
         {
-            inventory.RemoveItem(item);
+            inventory.RemoveItem(item, countToSell);
             // 플레이어에 돈추가
             Wallet.i.AddMoney(sellingPrice);
             yield return DialogManager.i.ShowDialogText($"{item.Name}을 넘기고 {sellingPrice}원을 받았다!");
