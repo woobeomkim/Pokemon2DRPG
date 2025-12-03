@@ -7,8 +7,10 @@ using UnityEngine.SceneManagement;
 public class SceneDetails : MonoBehaviour
 {
     [SerializeField] List<SceneDetails> connectedScenes;
+    [SerializeField] AudioClip sceneMusic;
     public bool IsLoaded  { get; private set; }
 
+    public AudioClip SceneMusic => sceneMusic;
     List<SavableEntity> savableEntities;
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -20,6 +22,9 @@ public class SceneDetails : MonoBehaviour
             LoadScene();
             GameController.i.SetCurrentScene(this);
             // Load all connected scenes
+
+            if(sceneMusic != null)
+                AudioManager.i.PlayMusic(sceneMusic,fade:true);
 
             foreach(var scene in connectedScenes)
             {

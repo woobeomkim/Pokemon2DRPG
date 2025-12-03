@@ -11,6 +11,8 @@ public class TrainerController : MonoBehaviour,Interactable,ISavable
     [SerializeField] GameObject exclamation;
     [SerializeField] GameObject fov;
 
+    [SerializeField] AudioClip trainerAppearsMusic;
+
     bool battleLost = false;
 
     Character character;
@@ -38,6 +40,8 @@ public class TrainerController : MonoBehaviour,Interactable,ISavable
         character.LookTowards(initiator.position);
         if (!battleLost)
         {
+            AudioManager.i.PlayMusic(trainerAppearsMusic);
+
             yield return DialogManager.i.ShowDialog(dialog);
             GameController.i.StartTrainerBattle(this);
              
@@ -50,6 +54,8 @@ public class TrainerController : MonoBehaviour,Interactable,ISavable
 
     public IEnumerator TriggerTrainerBattle(PlayerController player)
     {
+        AudioManager.i.PlayMusic(trainerAppearsMusic);
+
         exclamation.gameObject.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         exclamation.gameObject.SetActive(false);

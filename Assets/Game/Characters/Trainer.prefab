@@ -236,6 +236,7 @@ MonoBehaviour:
     - "\uB098\uB3C4 \uC870\uAE08\uB354 \uAC15\uD574\uC9C0\uB3C4\uB85D \uB178\uB825\uD560\uAC70\uC57C!"
   exclamation: {fileID: 8733873577789213683}
   fov: {fileID: 6618959507471722995}
+  trainerAppearsMusic: {fileID: 8300000, guid: cc7fbf41082435e45876c7dc5e84fea0, type: 3}
 --- !u!114 &3574985673584196702
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,8 +9,10 @@ public class EvolutionManager : MonoBehaviour
    [SerializeField] GameObject evolutionUI;
    [SerializeField] Image pokemonImage;
 
-    public event Action onStartEvolution;
-    public event Action onCompleteEvolution;
+   [SerializeField] AudioClip evolutionMusic;
+
+   public event Action onStartEvolution;
+   public event Action onCompleteEvolution;
    public static EvolutionManager i { get; private set; }
 
     private void Awake()
@@ -22,6 +24,8 @@ public class EvolutionManager : MonoBehaviour
     {
         onStartEvolution?.Invoke();
         evolutionUI.gameObject.SetActive(true);
+
+        AudioManager.i.PlayMusic(evolutionMusic);
         pokemonImage.sprite = pokemon.Base.FrontSprite;
 
         yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 진화하고 있는중이다..");
