@@ -47,7 +47,8 @@ public class ShopController : MonoBehaviour
         {
             state = ShopState.Buying;
             walletUI.Show();
-            shopUI.Show(merchant.AvailableItems);
+            shopUI.Show(merchant.AvailableItems,(item) => StartCoroutine(BuyItem(item)),
+                OnBackFromBuying);
         }
         else if (seletedChoice == 1)
         {
@@ -64,13 +65,13 @@ public class ShopController : MonoBehaviour
 
     public void HandleUpdate()
     {
-        if(state == ShopState.Buying)
+        if (state == ShopState.Buying)
         {
             shopUI.HandleUpdate();
         }
-        else if(state == ShopState.Selling)
+        else if (state == ShopState.Selling)
         {
-            inventoryUI.HandleUpdate(OnBackFromSelling,(selectedItem) => { StartCoroutine(SellItem(selectedItem)); });
+            inventoryUI.HandleUpdate(OnBackFromSelling, (selectedItem) => { StartCoroutine(SellItem(selectedItem)); });
         }
     }
 
@@ -84,7 +85,7 @@ public class ShopController : MonoBehaviour
     {
         state = ShopState.Busy;
 
-        if(!item.IsSellable)
+        if (!item.IsSellable)
         {
             yield return DialogManager.i.ShowDialogText($"이 아이템은 팔 수 없어!");
             state = ShopState.Selling;
@@ -97,9 +98,9 @@ public class ShopController : MonoBehaviour
         int countToSell = 1;
 
         int itemCount = inventory.GetItemCount(item);
-        if(itemCount > 1)
+        if (itemCount > 1)
         {
-            yield return DialogManager.i.ShowDialogText($"몇개를 파실건가요?", waitForInput:false,autoClose:false);
+            yield return DialogManager.i.ShowDialogText($"몇개를 파실건가요?", waitForInput: false, autoClose: false);
 
             yield return countSelectorUI.ShowSelector(itemCount, sellingPrice, (selectedCount) => { countToSell = selectedCount; });
 
@@ -111,10 +112,10 @@ public class ShopController : MonoBehaviour
         int seletedChoice = 0;
         yield return DialogManager.i.ShowDialogText($"{sellingPrice}원을 드릴수있어요! 파시겠습니까?",
             waitForInput: false,
-            choices: new List<string>() { "판다", "팔지않는다"},
+            choices: new List<string>() { "판다", "팔지않는다" },
             onChoiceSelected: choicesIndex => seletedChoice = choicesIndex);
-    
-        if(seletedChoice == 0)
+
+        if (seletedChoice == 0)
         {
             inventory.RemoveItem(item, countToSell);
             // 플레이어에 돈추가
@@ -128,5 +129,54 @@ public class ShopController : MonoBehaviour
 
         walletUI.Close();
         state = ShopState.Selling;
+    }
+
+    IEnumerator BuyItem(ItemBase item)
+    {
+        state = ShopState.Busy;
+
+        yield return DialogManager.i.ShowDialogText("몇개를 구매하시겠어요?",
+            waitForInput: false, autoClose: false);
+
+        int countToBuy = 1;
+        yield return countSelectorUI.ShowSelector(100, item.Price,
+            (selectedCount) => countToBuy = selectedCount);
+
+        DialogManager.i.CloseDialog();
+
+        float totalPrice = item.Price* countToBuy;
+
+        if(Wallet.i.HasMoney(totalPrice))
+        {
+            int seletedChoice = 0;
+            yield return DialogManager.i.ShowDialogText($"{totalPrice}원 입니다! 사시겠습니까?",
+                waitForInput: false,
+                choices: new List<string>() { "산다", "사지않는다" },
+                onChoiceSelected: choicesIndex => seletedChoice = choicesIndex);
+            if(seletedChoice == 0)
+            {
+                // BUY ITEM
+                inventory.AddItem(item, countToBuy);
+                Wallet.i.TakeMoney(totalPrice);
+                yield return DialogManager.i.ShowDialogText("이용해 주셔서 감사합니다!");
+            }
+            else if (seletedChoice == 1)
+            {
+
+            }
+        }
+        else
+        {
+            yield return DialogManager.i.ShowDialogText("돈이 충분하지 않은거같아!");
+        }
+
+        state = ShopState.Buying;
+    }
+
+    void OnBackFromBuying()
+    {
+        shopUI.Close();
+        walletUI.Close();
+        StartCoroutine(StartMenuState());
     }
 }
