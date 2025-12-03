@@ -1415,7 +1415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5652349316328289959}
-  mainCamera: {fileID: 7375056044036444533}
+  worldCamera: {fileID: 7375056044036444533}
   bs: {fileID: 1979282674511920882}
   partyScreen: {fileID: 1895290363034505006}
   inventoryUI: {fileID: 7561251120206627501}
@@ -1532,6 +1532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9913f8bbcead2114da324f4efdc0c439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shopCameraOffset: {x: 0, y: 0}
   inventoryUI: {fileID: 7561251120206627501}
   walletUI: {fileID: 92788552991155102}
   countSelectorUI: {fileID: 4397519394414740730}

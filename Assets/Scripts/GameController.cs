@@ -8,7 +8,7 @@ public enum GameState { FreeRoam,Battle,Dialog,Menu ,PartyScreen , Bag ,Cutscene
 public class GameController : MonoBehaviour
 {
     [SerializeField] PlayerController player;
-    [SerializeField] Camera mainCamera;
+    [SerializeField] Camera worldCamera;
     [SerializeField] BattleSystem bs;
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] InventoryUI inventoryUI;
@@ -93,7 +93,7 @@ public class GameController : MonoBehaviour
     public void StartBattle()
     {
         state = GameState.Battle;
-        mainCamera.gameObject.SetActive(false);
+        worldCamera.gameObject.SetActive(false);
         bs.gameObject.SetActive(true);
 
         var playerParty = player.GetComponent<PokemonParty>();
@@ -109,7 +109,7 @@ public class GameController : MonoBehaviour
     public void StartTrainerBattle(TrainerController trainer)
     {
         state = GameState.Battle;
-        mainCamera.gameObject.SetActive(false);
+        worldCamera.gameObject.SetActive(false);
         bs.gameObject.SetActive(true);
 
         this.trainer = trainer;
@@ -135,7 +135,7 @@ public class GameController : MonoBehaviour
         partyScreen.SetPartyData();
 
         state = GameState.FreeRoam;
-        mainCamera.gameObject.SetActive(true);
+        worldCamera.gameObject.SetActive(true);
         bs.gameObject.SetActive(false);
 
         var playerParty = player.GetComponent<PokemonParty>();
@@ -229,5 +229,15 @@ public class GameController : MonoBehaviour
             SavingSystem.i.Load("saveSlot1");
             state = GameState.FreeRoam;
         }
+    }
+    public IEnumerator MoveCamera(Vector2 moveOffset, bool waitForFadeOut = false)
+    {
+        yield return Fader.i.FadeIn();
+        worldCamera.transform.position += new Vector3(moveOffset.x, moveOffset.y);
+
+        if (waitForFadeOut)
+            yield return Fader.i.FadeOut();
+        else
+            StartCoroutine(Fader.i.FadeOut());
     }
 }
