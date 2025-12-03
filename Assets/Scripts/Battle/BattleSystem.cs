@@ -199,10 +199,12 @@ public class BattleSystem : MonoBehaviour
         if (CheckIfMoveHits(move, sourceUnit.Pokemon, targetUnit.Pokemon))
         {
             sourceUnit.PlayAttackAnimation();
+            AudioManager.i.PlaySfx(move.Base.Sound);
             yield return new WaitForSeconds(1.0f);
 
 
             targetUnit.PlayHitAnimation();
+            AudioManager.i.PlaySfx(AudioID.Hit);
 
             if (move.Base.Category == MoveCategory.Status)
             {

@@ -1270,6 +1270,22 @@ PrefabInstance:
       propertyPath: fadeDuration
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 2504710629217986439, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
+      propertyPath: sfxList.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2504710629217986439, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
+      propertyPath: sfxList.Array.data[1].id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2504710629217986439, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
+      propertyPath: sfxList.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0956569c472e005409a56817032ad366, type: 3}
+    - target: {fileID: 2504710629217986439, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
+      propertyPath: sfxList.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a1d1ce90cfd7af74d97ca33cc187c66a, type: 3}
     - target: {fileID: 2521207876380745142, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
