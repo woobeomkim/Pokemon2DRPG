@@ -1599,6 +1599,9 @@ MonoBehaviour:
   triggersLayer:
     serializedVersion: 2
     m_Bits: 4096
+  legesLayer:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!114 &2842581134396960646
 MonoBehaviour:
   m_ObjectHideFlags: 0
