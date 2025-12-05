@@ -6,9 +6,13 @@ using UnityEngine;
 public class MapArea : MonoBehaviour
 {
     [SerializeField] List<PokemonEncounterRecord> wildPokemons;
+    [SerializeField] List<PokemonEncounterRecord> wildPokemonsInWater;
 
     [HideInInspector]
     [SerializeField] int totalChance = 0;
+
+    [HideInInspector]
+    [SerializeField] int totalChanceInWater = 0;
     private void OnValidate()
     {
         totalChance = 0;
@@ -19,12 +23,23 @@ public class MapArea : MonoBehaviour
 
             totalChance = totalChance + record.chancePercentage;
         }
+
+        totalChanceInWater = 0;
+        foreach (var record in wildPokemonsInWater)
+        {
+            record.chanceLower = totalChanceInWater;
+            record.chanceUpper = totalChanceInWater + record.chancePercentage;
+
+            totalChanceInWater = totalChanceInWater + record.chancePercentage;
+        }
     }
 
-    public Pokemon GetRandomWildPokemon()
+    public Pokemon GetRandomWildPokemon(BattleTrigger trigger)
     {
+       var pokemonList = (trigger == BattleTrigger.Longgrass) ? wildPokemons : wildPokemonsInWater;
+
         int randVal = Random.Range(1, 101);
-        var pokemonRecord = wildPokemons.First(p => randVal >= p.chanceLower && randVal <= p.chanceUpper);
+        var pokemonRecord = pokemonList.First(p => randVal >= p.chanceLower && randVal <= p.chanceUpper);
 
         var levelRange = pokemonRecord.levelRange;
         var level = levelRange.y == 0 ? levelRange.x : Random.Range(levelRange.x, levelRange.y + 1);

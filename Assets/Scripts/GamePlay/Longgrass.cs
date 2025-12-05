@@ -11,7 +11,7 @@ public class Longgrass : MonoBehaviour, IPlayerTriggerable
         if (UnityEngine.Random.Range(1, 101) <= 10)
         {
             player.Character.Animator.IsMoving = false;
-            GameController.i.StartBattle();
+            GameController.i.StartBattle(BattleTrigger.Longgrass);
         }
     }
     public bool TriggerRepeatedly => true;

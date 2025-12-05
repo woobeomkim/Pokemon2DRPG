@@ -10,6 +10,8 @@ using UnityEngine.UI;
 public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, PartyScreen ,Bag,BattleOver,AboutToUse ,MoveToForget ,Busy }
 
 public enum BattleAction { Move,SwitchPokemon,UseItem,Run}
+
+public enum BattleTrigger { Longgrass,Water}
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField] BattleUnit playerUnit;

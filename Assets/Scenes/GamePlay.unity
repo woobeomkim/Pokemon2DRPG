@@ -515,8 +515,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: totalChance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: totalChanceInWater
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
       propertyPath: wildPokemons.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemonsInWater.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
       propertyPath: wildPokemons.Array.data[0].level
@@ -559,12 +571,28 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemonsInWater.Array.data[0].pokemon
+      value: 
+      objectReference: {fileID: 11400000, guid: cb65e3db77fb1064da0826161554c4b3, type: 2}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
       propertyPath: wildPokemons.Array.data[0].chancePercentage
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
       propertyPath: wildPokemons.Array.data[1].chancePercentage
       value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemonsInWater.Array.data[0].levelRange.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemonsInWater.Array.data[0].levelRange.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemonsInWater.Array.data[0].chancePercentage
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

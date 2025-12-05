@@ -29,5 +29,5 @@ public class GameLayers : MonoBehaviour
 
     public LayerMask LegesLayer => legesLayer;
     public LayerMask WaterLayer => waterLayer;
-    public LayerMask TriggerableLayer => grassLayer | fovLayer | portalLayer | triggersLayer;
+    public LayerMask TriggerableLayer => grassLayer | fovLayer | portalLayer | triggersLayer | waterLayer;
 }
