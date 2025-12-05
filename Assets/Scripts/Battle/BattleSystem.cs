@@ -29,6 +29,10 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] AudioClip trainerBattleMusic;
     [SerializeField] AudioClip battleVictoryMusic;
 
+    [Header("Background Images")]
+    [SerializeField] Image backgroundImage;
+    [SerializeField] Sprite grassBackground;
+    [SerializeField] Sprite waterBackground;
 
     public event Action<bool> onBattleOver;
 
@@ -47,7 +51,10 @@ public class BattleSystem : MonoBehaviour
 
     int escapeAttempts;
     MoveBase moveToLearn;
-    public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon)
+
+    BattleTrigger battleTrigger;
+    public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon,
+        BattleTrigger trigger = BattleTrigger.Longgrass)
     {
         this.playerParty = playerParty;
         this.wildPokemon = wildPokemon;
@@ -55,11 +62,14 @@ public class BattleSystem : MonoBehaviour
         isTrainerBattle = false;
         player = playerParty.GetComponent<PlayerController>();
 
+        battleTrigger = trigger;
+
         AudioManager.i.PlayMusic(wildBattleMusic);
 
         StartCoroutine(SetupBattle());
     }
-    public void StartTrainerBattle(PokemonParty playerParty, PokemonParty trainerParty)
+    public void StartTrainerBattle(PokemonParty playerParty, PokemonParty trainerParty,
+        BattleTrigger trigger = BattleTrigger.Longgrass)
     {
         this.playerParty = playerParty;
         this.trainerParty = trainerParty;
@@ -67,6 +77,8 @@ public class BattleSystem : MonoBehaviour
         isTrainerBattle = true;
         player = playerParty.GetComponent<PlayerController>();
         trainer = trainerParty.GetComponent<TrainerController>();
+
+        battleTrigger = trigger;
 
         AudioManager.i.PlayMusic(trainerBattleMusic);
         StartCoroutine(SetupBattle());
@@ -77,6 +89,8 @@ public class BattleSystem : MonoBehaviour
     {
         playerUnit.Clear();
         enemyUnit.Clear();
+
+        backgroundImage.sprite = (battleTrigger == BattleTrigger.Longgrass) ? grassBackground : waterBackground;
 
         if(!isTrainerBattle)
         {

@@ -32,6 +32,7 @@ public class Character : MonoBehaviour
 
     public IEnumerator Move(Vector2 moveVec, Action onMoveOver = null)
     {
+        if (animator.IsJumping) yield break;
         animator.MoveX = Mathf.Clamp(moveVec.x, -1, 1);
         animator.MoveY = Mathf.Clamp(moveVec.y, -1, 1);
 
@@ -46,7 +47,7 @@ public class Character : MonoBehaviour
         {
             if (ledge.TryToJump(this, moveVec))
             {
-                transform.position = targetPos;
+                SetPositionAndSnapToTile(targetPos);
                 yield break;
             }
         }
@@ -60,8 +61,9 @@ public class Character : MonoBehaviour
             animator.IsJumping = true;
             yield return transform.DOJump(targetPos, 0.35f, 1, 0.5f).WaitForCompletion();
             animator.IsJumping = false;
-            transform.position = targetPos;
-            //yield break;
+            SetPositionAndSnapToTile(targetPos);
+            Debug.Log(transform.position.ToString("F4"));
+            yield break;
         }
         IsMoving = true;
 

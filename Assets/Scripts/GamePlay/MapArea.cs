@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MapArea : MonoBehaviour
@@ -15,25 +16,44 @@ public class MapArea : MonoBehaviour
     [SerializeField] int totalChanceInWater = 0;
     private void OnValidate()
     {
-        totalChance = 0;
-        foreach (var record in wildPokemons)
-        {
-            record.chanceLower = totalChance;
-            record.chanceUpper = totalChance + record.chancePercentage;
-
-            totalChance = totalChance + record.chancePercentage;
-        }
-
-        totalChanceInWater = 0;
-        foreach (var record in wildPokemonsInWater)
-        {
-            record.chanceLower = totalChanceInWater;
-            record.chanceUpper = totalChanceInWater + record.chancePercentage;
-
-            totalChanceInWater = totalChanceInWater + record.chancePercentage;
-        }
+        CalculatePercentage();
     }
 
+    private void Start()
+    {
+        CalculatePercentage();
+    }
+
+    void CalculatePercentage()
+    {
+        totalChance = -1;
+
+        if (wildPokemons.Count > 0)
+        {
+            totalChance = 0;
+            foreach (var record in wildPokemons)
+            {
+                record.chanceLower = totalChance;
+                record.chanceUpper = totalChance + record.chancePercentage;
+
+                totalChance = totalChance + record.chancePercentage;
+            }
+        }
+
+        totalChanceInWater = -1;
+
+        if (wildPokemonsInWater.Count > 0)
+        {
+            totalChanceInWater = 0;
+            foreach (var record in wildPokemonsInWater)
+            {
+                record.chanceLower = totalChanceInWater;
+                record.chanceUpper = totalChanceInWater + record.chancePercentage;
+
+                totalChanceInWater = totalChanceInWater + record.chancePercentage;
+            }
+        }
+    }
     public Pokemon GetRandomWildPokemon(BattleTrigger trigger)
     {
        var pokemonList = (trigger == BattleTrigger.Longgrass) ? wildPokemons : wildPokemonsInWater;

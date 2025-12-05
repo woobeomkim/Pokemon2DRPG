@@ -40,7 +40,8 @@ public class SurfableWater : MonoBehaviour,Interactable,IPlayerTriggerable
                 yield return initiator.DOJump(targetPos, 0.3f, 1, 0.5f).WaitForCompletion();
                 isJumpingToWater = false;
                 animator.IsJumping = false;
-                
+                initiator.GetComponent<Character>().SetPositionAndSnapToTile(targetPos);
+
                 animator.IsSurfing = true;
             }
         }
