@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,14 +42,27 @@ public class Character : MonoBehaviour
 
         var ledge = ChechForLedge(targetPos);
 
-        if(ledge!= null)
+        if (ledge != null)
         {
             if (ledge.TryToJump(this, moveVec))
+            {
+                transform.position = targetPos;
                 yield break;
+            }
         }
 
         if (!IsPathClear(targetPos))
             yield break;
+
+        if (animator.IsSurfing && Physics2D.OverlapCircle(targetPos, 0.2f, GameLayers.i.WaterLayer) == null)
+        {
+            animator.IsSurfing = false;
+            animator.IsJumping = true;
+            yield return transform.DOJump(targetPos, 0.35f, 1, 0.5f).WaitForCompletion();
+            animator.IsJumping = false;
+            transform.position = targetPos;
+            //yield break;
+        }
         IsMoving = true;
 
         while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
@@ -57,6 +71,7 @@ public class Character : MonoBehaviour
             yield return null;
         }
 
+        transform.position = targetPos;
         IsMoving = false;
 
         onMoveOver?.Invoke();
@@ -72,7 +87,12 @@ public class Character : MonoBehaviour
         var diff = targetPos - transform.position;
         var dir = diff.normalized;
 
-        if (Physics2D.BoxCast(transform.position + dir, new Vector2(0.2f, 0.2f), 0f, dir, diff.magnitude - 1, GameLayers.i.SolidLayer | GameLayers.i.InteractableLayer | GameLayers.i.PlayerLayer) == true)
+        var collisionLayer = GameLayers.i.SolidLayer | GameLayers.i.InteractableLayer | GameLayers.i.PlayerLayer;
+
+        if (!animator.IsSurfing)
+            collisionLayer |= GameLayers.i.WaterLayer;
+
+        if (Physics2D.BoxCast(transform.position + dir, new Vector2(0.2f, 0.2f), 0f, dir, diff.magnitude - 1, collisionLayer) == true)
             return false;
         return true;
     }
@@ -87,7 +107,7 @@ public class Character : MonoBehaviour
 
     Ledge ChechForLedge(Vector3 targetPos)
     {
-       var collider = Physics2D.OverlapCircle(targetPos, 0.15f,GameLayers.i.LegesLayer);
+        var collider = Physics2D.OverlapCircle(targetPos - new Vector3(0, OffsetY), 0.15f, GameLayers.i.LegesLayer);
        return collider?.GetComponent<Ledge>();
     }
 

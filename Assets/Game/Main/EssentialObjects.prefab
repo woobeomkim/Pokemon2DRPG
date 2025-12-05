@@ -1602,6 +1602,9 @@ MonoBehaviour:
   legesLayer:
     serializedVersion: 2
     m_Bits: 8192
+  waterLayer:
+    serializedVersion: 2
+    m_Bits: 16
 --- !u!114 &2842581134396960646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7435,6 +7438,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3192438051715633676, guid: 5c55e1bdb0b8e274ab4828ce278f18f3, type: 3}
+      propertyPath: surfingSprites.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192438051715633676, guid: 5c55e1bdb0b8e274ab4828ce278f18f3, type: 3}
+      propertyPath: surfingSprites.Array.data[0]
+      value: 
+      objectReference: {fileID: -4465137455631916842, guid: 14ced2238d82c7149b8f5a0481222249, type: 3}
+    - target: {fileID: 3192438051715633676, guid: 5c55e1bdb0b8e274ab4828ce278f18f3, type: 3}
+      propertyPath: surfingSprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 548946438817077065, guid: 14ced2238d82c7149b8f5a0481222249, type: 3}
+    - target: {fileID: 3192438051715633676, guid: 5c55e1bdb0b8e274ab4828ce278f18f3, type: 3}
+      propertyPath: surfingSprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 4472088847651303106, guid: 14ced2238d82c7149b8f5a0481222249, type: 3}
+    - target: {fileID: 3192438051715633676, guid: 5c55e1bdb0b8e274ab4828ce278f18f3, type: 3}
+      propertyPath: surfingSprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 6356773947664160301, guid: 14ced2238d82c7149b8f5a0481222249, type: 3}
     - target: {fileID: 4798605791400019329, guid: 5c55e1bdb0b8e274ab4828ce278f18f3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5
