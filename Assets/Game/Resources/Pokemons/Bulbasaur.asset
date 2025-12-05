@@ -36,3 +36,6 @@ MonoBehaviour:
     level: 4
   - pBase: {fileID: 11400000, guid: b267049b8f1d2674a98343b6a88ea49e, type: 2}
     level: 5
+  learnableByItems:
+  - {fileID: 11400000, guid: 6d21d568c54fd764abefdf8b271674dd, type: 2}
+  evolutions: []

@@ -15,5 +15,7 @@ MonoBehaviour:
   name: HM01
   description: 
   icon: {fileID: -379661319, guid: 3ae12697ae504414bbf0797ea36dfddd, type: 3}
-  move: {fileID: 11400000, guid: ce69119eaf9a61149971a3a5679394dc, type: 2}
+  price: 0
+  isSellable: 0
+  move: {fileID: 11400000, guid: 6d21d568c54fd764abefdf8b271674dd, type: 2}
   isHM: 1
