@@ -534,6 +534,38 @@ PrefabInstance:
       propertyPath: wildPokemons.Array.data[1]._pBase
       value: 
       objectReference: {fileID: 11400000, guid: d1e38602373e66148b9d789b229c3590, type: 2}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[0].pokemon
+      value: 
+      objectReference: {fileID: 11400000, guid: 1e3856a93f830d54e82f21049277dfd9, type: 2}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[1].pokemon
+      value: 
+      objectReference: {fileID: 11400000, guid: cb65e3db77fb1064da0826161554c4b3, type: 2}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[0].levelRange.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[0].levelRange.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[1].levelRange.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[1].levelRange.y
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[0].chancePercentage
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8452733261344079411, guid: a389ef72f5dfdcd4f8736f7bcc254b74, type: 3}
+      propertyPath: wildPokemons.Array.data[1].chancePercentage
+      value: 70
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
