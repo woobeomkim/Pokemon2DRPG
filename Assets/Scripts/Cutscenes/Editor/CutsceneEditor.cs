@@ -16,7 +16,7 @@ public class CutsceneEditor : Editor
         }
         else if (GUILayout.Button("Add Move Actor Action"))
         {
-            cutScene.AddAction(new MoveActiorAction());
+            cutScene.AddAction(new MoveActorAction());
         }
 
         base.OnInspectorGUI();
