@@ -18,7 +18,14 @@ public class CutsceneEditor : Editor
         {
             cutScene.AddAction(new MoveActorAction());
         }
-
+        else if(GUILayout.Button("Add Turn Actor Action"))
+        {
+            cutScene.AddAction(new TurnActorAction());
+        }
+        else if (GUILayout.Button("Add Teleport Object Action"))
+        {
+            cutScene.AddAction(new TeleportObjectAction());
+        }
         base.OnInspectorGUI();
     }
 }
