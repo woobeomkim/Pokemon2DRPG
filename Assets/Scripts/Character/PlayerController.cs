@@ -18,8 +18,11 @@ public class PlayerController : MonoBehaviour,ISavable
     public Sprite Sprite => sprite;
 
     public Character Character => character;
+    
+    public static PlayerController i { get; private set; }
     private void Awake()
     {
+        i = this;
         character = GetComponent<Character>();
     }
 

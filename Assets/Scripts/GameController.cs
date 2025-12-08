@@ -172,19 +172,23 @@ public class GameController : MonoBehaviour
                 state = GameState.Menu;
             }
         }
-        else if(state == GameState.Battle)
+        else if(state == GameState.Cutscene)
+        {
+            player.Character.HandleUpdate();
+        }
+        else if (state == GameState.Battle)
         {
             bs.HandleUpdate();
         }
-        else if(state == GameState.Dialog)
+        else if (state == GameState.Dialog)
         {
             DialogManager.i.HandleUpdate();
         }
-        else if(state == GameState.Menu)
+        else if (state == GameState.Menu)
         {
             menuController.HandleUpdate();
         }
-        else if(state == GameState.PartyScreen)
+        else if (state == GameState.PartyScreen)
         {
             Action onSelected = () =>
             {
@@ -208,7 +212,7 @@ public class GameController : MonoBehaviour
             };
             inventoryUI.HandleUpdate(onBack);
         }
-        else if(state == GameState.Shop)
+        else if (state == GameState.Shop)
         {
             ShopController.i.HandleUpdate();
         }

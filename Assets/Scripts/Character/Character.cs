@@ -30,7 +30,7 @@ public class Character : MonoBehaviour
         transform.position = pos;
     }
 
-    public IEnumerator Move(Vector2 moveVec, Action onMoveOver = null)
+    public IEnumerator Move(Vector2 moveVec, Action onMoveOver = null, bool checkCollisions = true)
     {
         if (animator.IsJumping) yield break;
         animator.MoveX = Mathf.Clamp(moveVec.x, -1, 1);
@@ -52,7 +52,7 @@ public class Character : MonoBehaviour
             }
         }
 
-        if (!IsPathClear(targetPos))
+        if (checkCollisions && !IsPathClear(targetPos))
             yield break;
 
         if (animator.IsSurfing && Physics2D.OverlapCircle(targetPos, 0.2f, GameLayers.i.WaterLayer) == null)

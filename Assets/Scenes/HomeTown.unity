@@ -4150,7 +4150,9 @@ MonoBehaviour:
       type: {class: MoveActorAction, ns: , asm: Assembly-CSharp}
       data:
         name: MoveActorAction
-        character: {fileID: 3118729165603696036}
+        actor:
+          isPlayer: 1
+          character: {fileID: 0}
         movePatterns:
         - {x: 0, y: -3}
         - {x: 0, y: 3}
@@ -7107,17 +7109,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bdff93a934f4e44f9357bec7ae90f90, type: 3}
---- !u!114 &3118729165603696036 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2262550803831633965, guid: 3bdff93a934f4e44f9357bec7ae90f90, type: 3}
-  m_PrefabInstance: {fileID: 3118729165603696035}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 930774c244cc0ea46aca278e817f5cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3943189402219932485
 MonoBehaviour:
   m_ObjectHideFlags: 0
