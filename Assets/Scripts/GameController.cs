@@ -27,12 +27,10 @@ public class GameController : MonoBehaviour
     public SceneDetails CurrentScene { get; private set; }
     public SceneDetails PrevScene { get; private set; }
 
-    MenuController menuController;
     private void Awake()
     {
         i = this;
 
-        menuController = GetComponent<MenuController>();
         PokemonDB.Init();
         MoveDB.Init();
         ConditionsDB.Init();
@@ -60,13 +58,6 @@ public class GameController : MonoBehaviour
             if (state == GameState.Dialog)
                 state = prevState;
         };
-
-        menuController.onBack += () =>
-        {
-            state = GameState.FreeRoam;
-        };
-
-        menuController.onMenuSelected += OnMenuSelected;
 
         EvolutionManager.i.onStartEvolution += () =>
         {
@@ -169,15 +160,6 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         StateMachine.Execute();
-        //if(state == GameState.FreeRoam)
-        //{
-        //    player.HandleUpdate();
-        //    if(Input.GetKeyDown(KeyCode.Return))
-        //    {
-        //        menuController.OpenMenu();
-        //        state = GameState.Menu;
-        //    }
-        //}
         if(state == GameState.Cutscene)
         {
             player.Character.HandleUpdate();
@@ -189,10 +171,6 @@ public class GameController : MonoBehaviour
         else if (state == GameState.Dialog)
         {
             DialogManager.i.HandleUpdate();
-        }
-        else if (state == GameState.Menu)
-        {
-            menuController.HandleUpdate();
         }
         else if (state == GameState.PartyScreen)
         {
