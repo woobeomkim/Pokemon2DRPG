@@ -1514,6 +1514,8 @@ GameObject:
   - component: {fileID: 3275834661461769072}
   - component: {fileID: 261315369957433535}
   - component: {fileID: 6202299894902660211}
+  - component: {fileID: 6278246429175174245}
+  - component: {fileID: 88529517530423289}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1678,6 +1680,30 @@ MonoBehaviour:
   walletUI: {fileID: 92788552991155102}
   countSelectorUI: {fileID: 4397519394414740730}
   shopUI: {fileID: 152212521369611425}
+--- !u!114 &6278246429175174245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2703668061461008731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3d2ca867e465b4aa7a772d5502ed52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &88529517530423289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2703668061461008731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d945ec8a8f9e2cf48876c4d152a63909, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3226552562740911946
 GameObject:
   m_ObjectHideFlags: 0

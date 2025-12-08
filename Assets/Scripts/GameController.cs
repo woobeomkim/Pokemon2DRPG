@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils.StateMachine;
 
 public enum GameState { FreeRoam,Battle,Dialog,Menu ,PartyScreen , Bag ,Cutscene, Paused,Evolution,Shop}
 
@@ -17,6 +18,8 @@ public class GameController : MonoBehaviour
 
     GameState prevState;
     GameState stateBeforeEvolution;
+
+    public StateMachine<GameController> StateMachine { get; private set; }
 
     public GameState State => state;
     public static GameController i { get; private set; }
@@ -39,6 +42,9 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        StateMachine = new StateMachine<GameController>(this);
+        StateMachine.ChangeState(FreeRoamState.i);
+
         bs.onBattleOver += EndBattle;
 
         partyScreen.Init();
@@ -162,17 +168,17 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if(state == GameState.FreeRoam)
-        {
-
-            player.HandleUpdate();
-            if(Input.GetKeyDown(KeyCode.Return))
-            {
-                menuController.OpenMenu();
-                state = GameState.Menu;
-            }
-        }
-        else if(state == GameState.Cutscene)
+        StateMachine.Execute();
+        //if(state == GameState.FreeRoam)
+        //{
+        //    player.HandleUpdate();
+        //    if(Input.GetKeyDown(KeyCode.Return))
+        //    {
+        //        menuController.OpenMenu();
+        //        state = GameState.Menu;
+        //    }
+        //}
+        if(state == GameState.Cutscene)
         {
             player.Character.HandleUpdate();
         }
@@ -261,5 +267,18 @@ public class GameController : MonoBehaviour
             yield return Fader.i.FadeOut();
         else
             StartCoroutine(Fader.i.FadeOut());
+    }
+
+    private void OnGUI()
+    {
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 32;
+        style.fontStyle = FontStyle.Bold;
+    
+        foreach(var state in StateMachine.StateStack)
+        {
+            GUILayout.Label(state.GetType().ToString(), style);
+        }
+        GUILayout.Label("STATE STACK",style);
     }
 }
