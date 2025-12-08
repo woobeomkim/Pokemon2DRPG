@@ -3,28 +3,59 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Cutscen))]
+[CustomEditor(typeof(Cutscene))]
 public class CutsceneEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        var cutScene = target as Cutscen;
+        var cutScene = target as Cutscene;
 
-        if(GUILayout.Button("Add Dialogue Action"))
+        using (var scope = new GUILayout.HorizontalScope())
         {
-            cutScene.AddAction(new DialogueAction());
+            if (GUILayout.Button("Dialogue"))
+            {
+                cutScene.AddAction(new DialogueAction());
+            }
+            else if (GUILayout.Button("Move Actor"))
+            {
+                cutScene.AddAction(new MoveActorAction());
+            }
+            else if (GUILayout.Button("Turn Actor"))
+            {
+                cutScene.AddAction(new TurnActorAction());
+            }
         }
-        else if (GUILayout.Button("Add Move Actor Action"))
+
+        using (var scope = new GUILayout.HorizontalScope())
         {
-            cutScene.AddAction(new MoveActorAction());
+            if (GUILayout.Button("Teleport Object"))
+            {
+                cutScene.AddAction(new TeleportObjectAction());
+            }
+            else if (GUILayout.Button("Enable Object"))
+            {
+                cutScene.AddAction(new EnableObjectAction());
+            }
+            else if (GUILayout.Button("Disable Object"))
+            {
+                cutScene.AddAction(new DisableObjectAction());
+            }
         }
-        else if(GUILayout.Button("Add Turn Actor Action"))
+
+        using (var scope = new GUILayout.HorizontalScope())
         {
-            cutScene.AddAction(new TurnActorAction());
-        }
-        else if (GUILayout.Button("Add Teleport Object Action"))
-        {
-            cutScene.AddAction(new TeleportObjectAction());
+            if (GUILayout.Button("NPC Interact"))
+            {
+                cutScene.AddAction(new NPCInteractAction());
+            }
+            else if (GUILayout.Button("FadeIn"))
+            {
+                cutScene.AddAction(new FadeInAction());
+            }
+            else if (GUILayout.Button("FadeOut"))
+            {
+                cutScene.AddAction(new FadeOutAction());
+            }
         }
         base.OnInspectorGUI();
     }

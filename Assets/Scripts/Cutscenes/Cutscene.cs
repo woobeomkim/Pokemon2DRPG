@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class Cutscen : MonoBehaviour,IPlayerTriggerable
+public class Cutscene : MonoBehaviour,IPlayerTriggerable
 {
     [SerializeReference]
     [SerializeField] List<CutsceneAction> actions;
@@ -24,6 +25,9 @@ public class Cutscen : MonoBehaviour,IPlayerTriggerable
 
     public void AddAction(CutsceneAction action)
     {
+#if UNITY_EDTOR
+        Undo.RegisterCompleteObjectUndo(this, "Add action to cutscene.");
+#endif
         action.Name = action.GetType().ToString();
         actions.Add(action);
     }

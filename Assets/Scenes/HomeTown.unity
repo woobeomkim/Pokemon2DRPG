@@ -4143,6 +4143,7 @@ MonoBehaviour:
       type: {class: DialogueAction, ns: , asm: Assembly-CSharp}
       data:
         name: DialogueAction
+        waitForCompletion: 1
         dialog:
           lines:
           - "\uD14C\uC2A4\uD2B8 \uB2E4\uC774\uC5B4\uB85C\uADF8 123"
@@ -4150,6 +4151,7 @@ MonoBehaviour:
       type: {class: MoveActorAction, ns: , asm: Assembly-CSharp}
       data:
         name: MoveActorAction
+        waitForCompletion: 1
         actor:
           isPlayer: 1
           character: {fileID: 0}
