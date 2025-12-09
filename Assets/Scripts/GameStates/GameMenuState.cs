@@ -40,6 +40,10 @@ public class GameMenuState : State<GameController>
         {
             gc.StateMachine.Push(GamePartyState.i);
         }
+        else if(selection == 1)
+        {
+            gc.StateMachine.Push(InventoryState.i);
+        }
 
     }
 

@@ -1516,6 +1516,7 @@ GameObject:
   - component: {fileID: 6278246429175174245}
   - component: {fileID: 88529517530423289}
   - component: {fileID: 8527044528208884005}
+  - component: {fileID: 6200278193960401517}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1705,6 +1706,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyScreen: {fileID: 1895290363034505006}
+--- !u!114 &6200278193960401517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2703668061461008731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e11428fe63867640863512f6553e4b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryUI: {fileID: 7561251120206627501}
 --- !u!1 &3226552562740911946
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,9 +5,10 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.GenericSelectionUI;
 
 public enum InventoryUIState { ItemSelection,PartySelection,MoveToForget,Busy}
-public class InventoryUI : MonoBehaviour
+public class InventoryUI : SelectionUI<TextSlot>
 {
     [SerializeField] GameObject itemList;
     [SerializeField] ItemSlotUI itemSlotUI;
@@ -21,7 +22,7 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] MoveSelectionUI moveSelectionUI;
-    int selectedItem = 0;
+    
     int selectedCategory = 0;
 
     Inventory inventory;
@@ -64,76 +65,32 @@ public class InventoryUI : MonoBehaviour
             slotUIList.Add(slotUIObj);
         }
 
-        UpdateItemSelection();
+        SetItems(slotUIList.Select(s => s.GetComponent<TextSlot>()).ToList());
+
+        UpdateSelectionUI();
     }
 
-    public void HandleUpdate(Action onBack, Action<ItemBase> onItemUsed = null)
+    public override void HandleUpdate()
     {
-        this.onItemUsed = onItemUsed;
+        int prevCategory = selectedCategory;
 
-        if (state == InventoryUIState.ItemSelection)
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            ++selectedCategory;
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            --selectedCategory;
+
+        if (selectedCategory > Inventory.ItemCategories.Count - 1)
+            selectedCategory = 0;
+        else if (selectedCategory < 0)
+            selectedCategory = Inventory.ItemCategories.Count - 1;
+
+        if (prevCategory != selectedCategory)
         {
-            int prevSelection = selectedItem;
-            int prevCategory = selectedCategory;
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-                ++selectedItem;
-            else if (Input.GetKeyDown(KeyCode.UpArrow))
-                --selectedItem;
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
-                ++selectedCategory;
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                --selectedCategory;
-
-            if (selectedCategory > Inventory.ItemCategories.Count - 1)
-                selectedCategory = 0;
-            else if (selectedCategory < 0)
-                selectedCategory = Inventory.ItemCategories.Count - 1;
-
-                selectedItem = Mathf.Clamp(selectedItem, 0, inventory.GetSlotsByCategory(selectedCategory).Count - 1);
-
-            if (prevCategory != selectedCategory)
-            {
-                ResetSelection();
-                categoryText.text = Inventory.ItemCategories[selectedCategory];
-                UpdateItemList();
-            }
-            else if (prevSelection != selectedItem)
-                UpdateItemSelection();
-            
-            if(Input.GetKeyDown(KeyCode.Z))
-            {
-                StartCoroutine(ItemSelected());
-            }
-            else if (Input.GetKeyDown(KeyCode.X))
-            {
-                onBack?.Invoke();
-            }
+            ResetSelection();
+            categoryText.text = Inventory.ItemCategories[selectedCategory];
+            UpdateItemList();
         }
-        else if (state == InventoryUIState.PartySelection)
-        {
-            Action onSelected = () =>
-            {
-                // Todo : Use Item
-                StartCoroutine(UseItem());
-            };
-
-            Action onBackPartySeletion = () =>
-            {
-                ClosePartyScreen();
-            };
-
-            //partyScreen.HandleUpdate(onSelected, onBackPartySeletion);
-        }
-        else if(state == InventoryUIState.MoveToForget)
-        {
-            Action<int> onMoveSelected = (moveIndex) =>
-            {
-                StartCoroutine(OnMoveToForgetSelected(moveIndex));
-            };
-
-            moveSelectionUI.HandleMoveSelection(onMoveSelected);
-        }
+        base.HandleUpdate();
     }
 
     IEnumerator ItemSelected()
@@ -271,19 +228,11 @@ public class InventoryUI : MonoBehaviour
         state = InventoryUIState.MoveToForget;
     }
 
-    void UpdateItemSelection()
+    public override void UpdateSelectionUI()
     {
-        var slots = inventory.GetSlotsByCategory(selectedCategory);
+        base.UpdateSelectionUI();
 
-        selectedItem = Mathf.Clamp(selectedItem, 0, slots.Count - 1);
-        
-        for (int i = 0; i < slotUIList.Count; i++)
-        {
-            if (i == selectedItem)
-                slotUIList[i].NameText.color = GlobalSettings.i.HighlightedColor;
-            else
-                slotUIList[i].NameText.color = Color.black;
-        }
+        var slots = inventory.GetSlotsByCategory(selectedCategory);
 
         if (slots.Count > 0)
         {

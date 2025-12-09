@@ -73,7 +73,7 @@ public class ShopController : MonoBehaviour
         }
         else if (state == ShopState.Selling)
         {
-            inventoryUI.HandleUpdate(OnBackFromSelling, (selectedItem) => { StartCoroutine(SellItem(selectedItem)); });
+            //inventoryUI.HandleUpdate(OnBackFromSelling, (selectedItem) => { StartCoroutine(SellItem(selectedItem)); });
         }
     }
 

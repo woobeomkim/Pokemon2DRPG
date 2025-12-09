@@ -160,7 +160,7 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         StateMachine.Execute();
-        if(state == GameState.Cutscene)
+        if (state == GameState.Cutscene)
         {
             player.Character.HandleUpdate();
         }
@@ -172,20 +172,11 @@ public class GameController : MonoBehaviour
         {
             DialogManager.i.HandleUpdate();
         }
-        else if (state == GameState.Bag)
-        {
-            Action onBack = () =>
-            {
-                inventoryUI.gameObject.SetActive(false);
-                state = GameState.FreeRoam;
-            };
-            inventoryUI.HandleUpdate(onBack);
-        }
         else if (state == GameState.Shop)
         {
             ShopController.i.HandleUpdate();
         }
-      
+
     }
 
     public void SetCurrentScene(SceneDetails currScene)
