@@ -27,6 +27,8 @@ public class GameController : MonoBehaviour
     public SceneDetails CurrentScene { get; private set; }
     public SceneDetails PrevScene { get; private set; }
 
+    public PlayerController Player => player;
+    public Camera WorldCamera => worldCamera;
     private void Awake()
     {
         i = this;
@@ -102,31 +104,16 @@ public class GameController : MonoBehaviour
 
     public void StartBattle(BattleTrigger trigger)
     {
-        state = GameState.Battle;
-        worldCamera.gameObject.SetActive(false);
-        bs.gameObject.SetActive(true);
-
-        var playerParty = player.GetComponent<PokemonParty>();
-        var wildPokemon = CurrentScene.GetComponent<MapArea>().GetRandomWildPokemon(trigger);
-
-        var wildPokemonCopy = new Pokemon(wildPokemon.Base, wildPokemon.Level);
-
-        bs.StartBattle(playerParty, wildPokemonCopy,trigger);
+        BattleState.i.Trigger = trigger;
+        StateMachine.Push(BattleState.i);
     }
 
     TrainerController trainer;
 
     public void StartTrainerBattle(TrainerController trainer)
     {
-        state = GameState.Battle;
-        worldCamera.gameObject.SetActive(false);
-        bs.gameObject.SetActive(true);
-
-        this.trainer = trainer;
-        var playerParty = player.GetComponent<PokemonParty>();
-        var trainerParty = trainer.GetComponent<PokemonParty>();
-
-        bs.StartTrainerBattle(playerParty, trainerParty);
+        BattleState.i.Trainer = trainer;
+        StateMachine.Push(BattleState.i);
     }
 
     public void OnEnterTrainersView(TrainerController trainer)
@@ -163,10 +150,6 @@ public class GameController : MonoBehaviour
         if (state == GameState.Cutscene)
         {
             player.Character.HandleUpdate();
-        }
-        else if (state == GameState.Battle)
-        {
-            bs.HandleUpdate();
         }
         else if (state == GameState.Dialog)
         {
