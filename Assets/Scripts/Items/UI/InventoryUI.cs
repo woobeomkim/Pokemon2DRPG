@@ -123,7 +123,7 @@ public class InventoryUI : MonoBehaviour
                 ClosePartyScreen();
             };
 
-            partyScreen.HandleUpdate(onSelected, onBackPartySeletion);
+            //partyScreen.HandleUpdate(onSelected, onBackPartySeletion);
         }
         else if(state == InventoryUIState.MoveToForget)
         {

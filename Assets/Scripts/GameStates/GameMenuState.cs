@@ -36,7 +36,11 @@ public class GameMenuState : State<GameController>
     }
     void OnMenuItemSelected(int selection)
     {
-        Debug.Log($"Selected Menu Items {selection}");
+        if(selection == 0)
+        {
+            gc.StateMachine.Push(GamePartyState.i);
+        }
+
     }
 
     void OnBack()
