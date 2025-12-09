@@ -42,11 +42,16 @@ public class Inventory : MonoBehaviour,ISavable
     public ItemBase UseItem(int itemIndex, Pokemon selectedPokemon, int selectedCategory)
     {
         var item = GetItem(itemIndex, selectedCategory);
+        return UseItem(item, selectedPokemon);
+    }
+
+    public ItemBase UseItem(ItemBase item, Pokemon selectedPokemon)
+    {
         bool itemUsed = item.Use(selectedPokemon);
 
-        if(itemUsed)
+        if (itemUsed)
         {
-            if(!item.IsReusable)
+            if (!item.IsReusable)
                 RemoveItem(item);
             return item;
         }

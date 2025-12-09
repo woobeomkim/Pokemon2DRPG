@@ -37,6 +37,9 @@ public class InventoryUI : SelectionUI<TextSlot>
 
     List<ItemSlotUI> slotUIList;
     RectTransform itemListRect;
+
+    public ItemBase SelectedItem => inventory.GetItem(selectedItem, selectedCategory);
+    public int SelectedCategory => selectedCategory;
     private void Awake()
     {
         inventory = Inventory.GetInventory();
@@ -128,7 +131,7 @@ public class InventoryUI : SelectionUI<TextSlot>
         }
         if (selectedCategory == (int)ItemCategory.Pokeballs)
         {
-            StartCoroutine(UseItem());
+            //StartCoroutine(UseItem());
         }
         else
         {
@@ -140,82 +143,7 @@ public class InventoryUI : SelectionUI<TextSlot>
         }
     }
 
-    IEnumerator UseItem()
-    {
-        state = InventoryUIState.Busy;
-
-        yield return HandlTmItems();
-
-        var item = inventory.GetItem(selectedItem, selectedCategory);
-        var pokemon = partyScreen.SelectedMember;
-
-        if (item is EvolutionItem)
-        {
-            var evolution = pokemon.CheckForEvolution(item);
-            if (evolution != null)
-            {
-                yield return EvolutionManager.i.Evolve(pokemon, evolution);
-            }
-            else
-            {
-                yield return DialogManager.i.ShowDialogText($"효과가 없을것 같다!");
-                ClosePartyScreen();
-                yield break;
-            }
-        }
-        
-        var usedItem = inventory.UseItem(selectedItem, partyScreen.SelectedMember, selectedCategory);
-
-        if(usedItem != null)
-        {
-            if(usedItem is RecoveryItem)
-                yield return DialogManager.i.ShowDialogText($"{usedItem.Name}을 사용하였다!");
-            onItemUsed?.Invoke(usedItem);
-        }
-        else
-        {
-            if(selectedCategory == (int)ItemCategory.Items)
-                yield return DialogManager.i.ShowDialogText($"효과가 없을것 같다!");
-        }
-
-        ClosePartyScreen();
-    }
-
-    IEnumerator HandlTmItems()
-    {
-       var tmItem = inventory.GetItem(selectedItem, selectedCategory) as TmItem;
-        if (tmItem == null)
-            yield break;
-
-        var pokemon = partyScreen.SelectedMember;
-        
-        if(pokemon.HasMove(tmItem.Move))
-        {
-            yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 이미 {tmItem.Move.Name}을 배웠다!");
-            yield break;
-        }
-
-        if(!tmItem.CanBeTaught(pokemon))
-        {
-            yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 {tmItem.Move.Name}을 배울 수 없다!");
-            yield break;
-        }
-        if (pokemon.Moves.Count < PokemonBase.MaxNumOfMoves)
-        {
-            pokemon.LearnMove(tmItem.Move);
-            yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 {tmItem.Move.Name}을 배웠다!");
-        }
-        else
-        {
-            yield return DialogManager.i.ShowDialogText($"{pokemon.Base.Name}(이)가 {tmItem.Move.Name}을 배우려고한다!");
-            yield return DialogManager.i.ShowDialogText($"그러나, 기술을 {PokemonBase.MaxNumOfMoves}개만큼 배우지 못한다.");
-            yield return DialogManager.i.ShowDialogText($"{tmItem.Move.Name}을 배우시겠습니까?");
-            yield return ChooseMoveToForget(pokemon, tmItem.Move);
-            yield return new WaitUntil(() => state != InventoryUIState.MoveToForget);
-
-        }
-        
-    }
+   
 
     IEnumerator ChooseMoveToForget(Pokemon pokemon, MoveBase newMove)
     {

@@ -39,13 +39,19 @@ public class GamePartyState : State<GameController>
         if(gc.StateMachine.GetPrevState() == InventoryState.i)
         {
             // Use Item;
-            Debug.Log("Use Items");
+            StartCoroutine(GoToUseItemState());
         }
         else
         {
             // Todo : Open Summary Screen
             Debug.Log($"Selected Pokemon at index {selection}");
         }
+    }
+
+    IEnumerator GoToUseItemState()
+    {
+        yield return gc.StateMachine.PushAndWait(UseItemState.i);
+        gc.StateMachine.Pop();
     }
 
     void OnBack()
