@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utils.StateMachine;
+using static UnityEditor.Progress;
 
 public class RunTrunState : State<BattleSystem>
 {
@@ -275,12 +278,29 @@ public class RunTrunState : State<BattleSystem>
                     else
                     {
                         // TODO : Forgot Move
-                        //yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우려고한다");
-                        //yield return dialogBox.TypeDialog($"그러나, 기술을 {PokemonBase.MaxNumOfMoves}개만큼 배우지 못한다.");
-                        //yield return dialogBox.TypeDialog($"{newMove.Base.Name}을 배우시겠습니까?");
-                        //yield return ChooseMoveToForget(playerUnit.Pokemon, newMove.Base);
-                        //yield return new WaitUntil(() => state != BattleStates.MoveToForget);
-                        //yield return new WaitForSeconds(2.0f);
+                        yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우려고한다");
+                        yield return dialogBox.TypeDialog($"그러나, 기술을 {PokemonBase.MaxNumOfMoves}개만큼 배우지 못한다.");
+                        yield return dialogBox.TypeDialog($"잊을 기술을 선택하세요!");
+
+                        MoveToForgetState.i.NewMove = newMove.Base;
+                        MoveToForgetState.i.CurrentMoves = playerUnit.Pokemon.Moves.Select(m => m.Base).ToList();
+                        yield return GameController.i.StateMachine.PushAndWait(MoveToForgetState.i);
+
+                        int moveIndex = MoveToForgetState.i.Selection;
+                        if (moveIndex == PokemonBase.MaxNumOfMoves || moveIndex == -1)
+                        {
+                            // Dont' learn move
+                            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우지 않았다!");
+                        }
+                        else
+                        {
+                            // forget selecetedmove and learn new move
+                            var selectedMove = playerUnit.Pokemon.Moves[moveIndex].Base;
+                            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {selectedMove.Name}을 잊고 {newMove.Base.Name}을 배웠다!");
+
+                            playerUnit.Pokemon.Moves[moveIndex] = new Move(newMove.Base);
+
+                        }
                     }
                 }
 

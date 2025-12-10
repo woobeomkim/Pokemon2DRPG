@@ -47,7 +47,7 @@ public class UseItemState : State<GameController>
                 var evolution = pokemon.CheckForEvolution(item);
                 if (evolution != null)
                 {
-                    yield return EvolutionManager.i.Evolve(pokemon, evolution);
+                    yield return EvolutionState.i.Evolve(pokemon, evolution);
                 }
                 else
                 {

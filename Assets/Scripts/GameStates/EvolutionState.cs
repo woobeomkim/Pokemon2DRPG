@@ -3,17 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.StateMachine;
 
-public class EvolutionManager : MonoBehaviour
+public class EvolutionState : State<GameController>
 {
    [SerializeField] GameObject evolutionUI;
    [SerializeField] Image pokemonImage;
 
    [SerializeField] AudioClip evolutionMusic;
 
-   public event Action onStartEvolution;
-   public event Action onCompleteEvolution;
-   public static EvolutionManager i { get; private set; }
+   public static EvolutionState i { get; private set; }
 
     private void Awake()
     {
@@ -22,7 +21,8 @@ public class EvolutionManager : MonoBehaviour
 
     public IEnumerator Evolve(Pokemon pokemon, Evolution evolution)
     {
-        onStartEvolution?.Invoke();
+        var gc = GameController.i;
+        gc.StateMachine.Push(this);
         evolutionUI.gameObject.SetActive(true);
 
         AudioManager.i.PlayMusic(evolutionMusic);
@@ -37,6 +37,10 @@ public class EvolutionManager : MonoBehaviour
         yield return DialogManager.i.ShowDialogText($"축하합니다! {oldPokemon.Name}(이)가 {pokemon.Base.Name}으로 진화했습니다!");
 
         evolutionUI.gameObject.SetActive(false);
-        onCompleteEvolution?.Invoke();
+
+        gc.PartyScreen.SetPartyData();
+
+        AudioManager.i.PlayMusic(gc.CurrentScene.SceneMusic, fade: true);
+        gc.StateMachine.Pop();
     }
 }

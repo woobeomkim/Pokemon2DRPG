@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour
 
     public PlayerController Player => player;
     public Camera WorldCamera => worldCamera;
+    public PartyScreen PartyScreen => partyScreen;
     private void Awake()
     {
         i = this;
@@ -57,20 +58,6 @@ public class GameController : MonoBehaviour
         DialogManager.i.OnDialogFinished += () =>
         {
             StateMachine.Pop();
-        };
-
-        EvolutionManager.i.onStartEvolution += () =>
-        {
-            stateBeforeEvolution = state;
-            state = GameState.Evolution;
-        };
-
-        EvolutionManager.i.onCompleteEvolution += () =>
-        {
-            partyScreen.SetPartyData();
-            state = stateBeforeEvolution;
-
-            AudioManager.i.PlayMusic(CurrentScene.SceneMusic, fade: true);
         };
 
         ShopController.i.onStart += () => { state = GameState.Shop; };
