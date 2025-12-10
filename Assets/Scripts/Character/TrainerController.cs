@@ -54,6 +54,7 @@ public class TrainerController : MonoBehaviour,Interactable,ISavable
 
     public IEnumerator TriggerTrainerBattle(PlayerController player)
     {
+        GameController.i.StateMachine.Push(CutsceneState.i);
         AudioManager.i.PlayMusic(trainerAppearsMusic);
 
         exclamation.gameObject.SetActive(true);
@@ -67,8 +68,11 @@ public class TrainerController : MonoBehaviour,Interactable,ISavable
         yield return character.Move(moveVec);
 
         yield return DialogManager.i.ShowDialog(dialog);
-        GameController.i.StartTrainerBattle(this);
         
+        GameController.i.StateMachine.Pop();
+        
+        GameController.i.StartTrainerBattle(this);
+
     }
 
     public void BattleLost()

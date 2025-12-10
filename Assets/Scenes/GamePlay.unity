@@ -322,6 +322,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5116536363803124928, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7907567
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116536363803124928, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.1789977
+      objectReference: {fileID: 0}
     - target: {fileID: 5281669891715869025, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
       propertyPath: m_Name
       value: EssentialObjects

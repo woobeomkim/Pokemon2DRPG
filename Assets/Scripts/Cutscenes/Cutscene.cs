@@ -12,7 +12,7 @@ public class Cutscene : MonoBehaviour,IPlayerTriggerable
 
     public IEnumerator Play()
     {
-        GameController.i.StartCutsceneState();
+        GameController.i.StateMachine.Push(CutsceneState.i);
         foreach (var action in actions)
         {
             if (action.WaitForCompletion)
@@ -20,7 +20,7 @@ public class Cutscene : MonoBehaviour,IPlayerTriggerable
             else
                 StartCoroutine(action.Play());
         }
-        GameController.i.StartFreeRoamState();
+        GameController.i.StateMachine.Pop();
     }
 
     public void AddAction(CutsceneAction action)
