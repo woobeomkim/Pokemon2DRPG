@@ -198,6 +198,7 @@ MonoBehaviour:
   - {fileID: -986575508, guid: 5d05012c2c6c28c4a92c03f8ed097c0c, type: 3}
   - {fileID: -1700800917, guid: 5d05012c2c6c28c4a92c03f8ed097c0c, type: 3}
   - {fileID: 1866622288, guid: 5d05012c2c6c28c4a92c03f8ed097c0c, type: 3}
+  surfingSprites: []
   defaultDirection: 3
 --- !u!114 &7666564061574325868
 MonoBehaviour:
@@ -289,6 +290,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5714576421466471663}
   - component: {fileID: 7686125636997358172}
+  - component: {fileID: 4810874875716922761}
   m_Layer: 10
   m_Name: Fov
   m_TagString: Untagged
@@ -356,6 +358,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.6, y: 4}
   m_EdgeRadius: 0
+--- !u!114 &4810874875716922761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6618959507471722995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f306f53821dd247aebea1764468e7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8733873577789213683
 GameObject:
   m_ObjectHideFlags: 0

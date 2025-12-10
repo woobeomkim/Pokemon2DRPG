@@ -6979,9 +6979,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 116619650173631910, guid: 789e125996df99c4393d3938e8b04253, type: 3}
+      propertyPath: uniqueId
+      value: 0d3c908b-23d0-4548-88dc-c312a30f5260
+      objectReference: {fileID: 0}
     - target: {fileID: 1445121030020153230, guid: 789e125996df99c4393d3938e8b04253, type: 3}
       propertyPath: m_Name
       value: Trainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 1445121030020153230, guid: 789e125996df99c4393d3938e8b04253, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9198167733571754610, guid: 789e125996df99c4393d3938e8b04253, type: 3}
       propertyPath: m_LocalPosition.x

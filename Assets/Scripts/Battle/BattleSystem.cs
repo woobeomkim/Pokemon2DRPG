@@ -55,7 +55,7 @@ public class BattleSystem : MonoBehaviour
 
     public bool IsTrainerBattle { get; private set; } = false;
     PlayerController player;
-    TrainerController trainer;
+    public TrainerController Trainer { get; private set; }
 
     public int EscapeAttempts { get; set; }
     MoveBase moveToLearn;
@@ -92,7 +92,7 @@ public class BattleSystem : MonoBehaviour
 
         IsTrainerBattle = true;
         player = playerParty.GetComponent<PlayerController>();
-        trainer = trainerParty.GetComponent<TrainerController>();
+        Trainer = trainerParty.GetComponent<TrainerController>();
 
         battleTrigger = trigger;
 
@@ -130,16 +130,16 @@ public class BattleSystem : MonoBehaviour
             playerImage.gameObject.SetActive(true);
             trainerImage.gameObject.SetActive(true);
             playerImage.sprite = player.Sprite;
-            trainerImage.sprite = trainer.Sprite;
+            trainerImage.sprite = Trainer.Sprite;
 
-            yield return dialogBox.TypeDialog($"{trainer.Name}(이)가 배틀을 걸어왔다!");
+            yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 배틀을 걸어왔다!");
 
             // send out first pokemon of the trainer
             trainerImage.gameObject.SetActive(false);
             enemyUnit.gameObject.SetActive(true);
             var enemyPokemon = TrainerParty.GetHealthPokemon();
             enemyUnit.Setup(enemyPokemon);
-            yield return dialogBox.TypeDialog($"{trainer.Name}(이)가 {enemyPokemon.Base.Name}을 내보냈다!");
+            yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {enemyPokemon.Base.Name}을 내보냈다!");
 
             // send out first pokemon of the player
             playerImage.gameObject.SetActive(false);
@@ -178,7 +178,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator AboutToUse(Pokemon newPokemon)
     {
         state = BattleStates.Busy;
-        yield return dialogBox.TypeDialog($"{trainer.Name}(이)가 {newPokemon.Base.Name}으로 바꾸려고합니다.");
+        yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {newPokemon.Base.Name}으로 바꾸려고합니다.");
         yield return dialogBox.TypeDialog($"포켓몬을 바꾸시겠습니까?");
 
         state = BattleStates.AboutToUse;
@@ -444,13 +444,13 @@ public class BattleSystem : MonoBehaviour
         yield return dialogBox.TypeDialog($"가라! {newPokemon.Base.Name}");
     }
 
-    IEnumerator SendNextTrainerPokemon()
+    public IEnumerator SendNextTrainerPokemon()
     {
         state = BattleStates.Busy;
 
         var nextPokemon = TrainerParty.GetHealthPokemon();
         enemyUnit.Setup(nextPokemon);
-        yield return dialogBox.TypeDialog($"{trainer.Name}(이)가 {nextPokemon.Base.Name}을 내보냈다!");
+        yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {nextPokemon.Base.Name}을 내보냈다!");
 
         state = BattleStates.RunningTurn;
     }

@@ -307,7 +307,8 @@ public class RunTrunState : State<BattleSystem>
                 var nextPokemon = trainerParty.GetHealthPokemon();
                 if (nextPokemon != null)
                 {
-                    //StartCoroutine(AboutToUse(nextPokemon));
+                    AboutToUseToState.i.NewPokemon = nextPokemon;
+                    yield return bs.StateMachine.PushAndWait(AboutToUseToState.i);
                 }
                 else
                 {
