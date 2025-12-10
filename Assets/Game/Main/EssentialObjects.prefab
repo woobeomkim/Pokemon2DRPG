@@ -1836,10 +1836,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2703668061461008731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b219f1ba3de6a54199f1358254237dc, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a7b775c110cce94fad98f709f27419c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyScreen: {fileID: 1895290363034505006}
+  partyScreen: {fileID: 7538031773623542753}
 --- !u!114 &6200278193960401517
 MonoBehaviour:
   m_ObjectHideFlags: 0

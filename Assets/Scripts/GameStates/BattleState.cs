@@ -13,6 +13,7 @@ public class BattleState : State<GameController>
     public TrainerController Trainer { get; set; }
     
     public static BattleState i { get; private set; }
+    public BattleSystem BattleSystem => bs;
 
     private void Awake()
     {

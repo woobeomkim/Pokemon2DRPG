@@ -72,8 +72,7 @@ public class RunTrunState : State<BattleSystem>
         {
             if (playerAction == BattleAction.SwitchPokemon)
             {
-                var selectedMember = partyScreen.SelectedMember;
-                //yield return SwitchPokemon(selectedMember);
+                yield return bs.SwitchPokemon(bs.SelectedPokemon);
             }
             else if (playerAction == BattleAction.UseItem)
             {
@@ -283,17 +282,18 @@ public class RunTrunState : State<BattleSystem>
 
             yield return new WaitForSeconds(1f);
         }
-        CheckForBattleOver(faintedUnit);
+        yield return CheckForBattleOver(faintedUnit);
     }
 
-    void CheckForBattleOver(BattleUnit faintedUnit)
+    IEnumerator CheckForBattleOver(BattleUnit faintedUnit)
     {
         if (faintedUnit.IsPlayerUnit)
         {
             var nextPokemon = playerParty.GetHealthPokemon();
             if (nextPokemon != null)
             {
-                //OpenPartyScreen();
+                yield return GameController.i.StateMachine.PushAndWait(PartyState.i);
+                yield return bs.SwitchPokemon(PartyState.i.SelectedPokemon);
             }
             else
             {
@@ -363,6 +363,5 @@ public class RunTrunState : State<BattleSystem>
                 yield return dialogBox.TypeDialog("µµ∏¡ƒ•ºˆù◊¥Ÿ!");
             }
         }
-
     }
 }

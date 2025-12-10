@@ -34,6 +34,13 @@ namespace Utils.GenericSelectionUI
             UpdateSelectionUI();
         }
 
+        public void ClearItems()
+        {
+            items.ForEach(i => i.Clear());
+
+            this.items = null;
+        }
+
         public virtual void HandleUpdate()
         {
             UpdateSelectionTimer();
