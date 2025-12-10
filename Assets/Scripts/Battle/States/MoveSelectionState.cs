@@ -50,7 +50,8 @@ public class MoveSelectionState : State<BattleSystem>
 
     void OnMoveSelected(int selection)
     {
-
+        bs.SelectedMove = selection;
+        bs.StateMachine.ChangeState(RunTrunState.i);
     }
 
     void OnBack()

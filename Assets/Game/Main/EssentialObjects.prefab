@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 1979282674511920882}
   - component: {fileID: 5740722356152506631}
   - component: {fileID: 2288261109798955802}
+  - component: {fileID: 8687362269147033756}
   m_Layer: 0
   m_Name: BattleSystem
   m_TagString: Untagged
@@ -306,7 +307,7 @@ MonoBehaviour:
   playerImage: {fileID: 6229522605466736590}
   trainerImage: {fileID: 1587205976327708905}
   pokeballSprite: {fileID: 810435715754513163, guid: 625fdaee5eaff1e46afebd2e5981b1ba, type: 3}
-  moveSelectionUI: {fileID: 0}
+  moveSelectionUI: {fileID: 1380781292249882789}
   inventoryUI: {fileID: 5885475884371932300}
   wildBattleMusic: {fileID: 8300000, guid: 6504d9b890b421b4a86296b33345c0a1, type: 3}
   trainerBattleMusic: {fileID: 8300000, guid: 0897a55fc082e3d44874b1f227de1b3b, type: 3}
@@ -341,6 +342,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionUI: {fileID: 2936414438536815516}
   moveDetailsUI: {fileID: 8633940981939304376}
+--- !u!114 &8687362269147033756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280684699148660815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb008beeb554cf64ab4236c4e2e69b9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &784347657032372849
 GameObject:
   m_ObjectHideFlags: 0
@@ -8210,6 +8223,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9894daee252416140bd951da94e16297, type: 3}
+--- !u!114 &1380781292249882789 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8599668145709679286, guid: 9894daee252416140bd951da94e16297, type: 3}
+  m_PrefabInstance: {fileID: 7237757221907178003}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7d5f2df46dd50544bb99b526726f8b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2454391582533853647 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5079618356251198428, guid: 9894daee252416140bd951da94e16297, type: 3}

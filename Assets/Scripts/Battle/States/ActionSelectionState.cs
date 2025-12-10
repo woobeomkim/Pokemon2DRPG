@@ -39,8 +39,22 @@ public class ActionSelectionState : State<BattleSystem>
     {
         if(selection == 0)
         {
+            bs.SelectedAction = BattleAction.Move;
             MoveSelectionState.i.Moves = bs.PlayerUnit.Pokemon.Moves;
             bs.StateMachine.ChangeState(MoveSelectionState.i);
+        }
+        else if(selection == 1)
+        {
+            bs.SelectedAction = BattleAction.UseItem;
+        }
+        else if(selection == 2)
+        {
+            bs.SelectedAction = BattleAction.SwitchPokemon;
+        }
+        else if(selection == 3)
+        {
+            bs.SelectedAction = BattleAction.Run;
+            bs.StateMachine.ChangeState(RunTrunState.i);
         }
     }
 }
