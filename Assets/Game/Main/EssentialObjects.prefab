@@ -1643,7 +1643,6 @@ GameObject:
   - component: {fileID: 2842581134396960646}
   - component: {fileID: 3275834661461769072}
   - component: {fileID: 261315369957433535}
-  - component: {fileID: 6202299894902660211}
   - component: {fileID: 6278246429175174245}
   - component: {fileID: 88529517530423289}
   - component: {fileID: 8527044528208884005}
@@ -1654,6 +1653,9 @@ GameObject:
   - component: {fileID: 720985251862494968}
   - component: {fileID: 1887927446812598514}
   - component: {fileID: 5061569833752556076}
+  - component: {fileID: 4217135810988978472}
+  - component: {fileID: 59635984569850815}
+  - component: {fileID: 2913435191134102889}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1788,23 +1790,6 @@ MonoBehaviour:
   evolutionUI: {fileID: 7680124533371287632}
   pokemonImage: {fileID: 4627822372709469332}
   evolutionMusic: {fileID: 8300000, guid: eb102c1fbd77a36458aaf6f78d333331, type: 3}
---- !u!114 &6202299894902660211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2703668061461008731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9913f8bbcead2114da324f4efdc0c439, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shopCameraOffset: {x: 0, y: 0}
-  inventoryUI: {fileID: 7561251120206627501}
-  walletUI: {fileID: 92788552991155102}
-  countSelectorUI: {fileID: 4397519394414740730}
-  shopUI: {fileID: 152212521369611425}
 --- !u!114 &6278246429175174245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1932,6 +1917,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51647bcbf493bcd4c8fd58e296cae8ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4217135810988978472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2703668061461008731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a6479f70cfe47e4fbe4c04ab1befb44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &59635984569850815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2703668061461008731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d630b36df309714b8de29dc7a44e24c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopCameraOffset: {x: 3.5, y: 0}
+  shopUI: {fileID: 152212521369611425}
+  walletUI: {fileID: 92788552991155102}
+  countSelectorUI: {fileID: 4397519394414740730}
+--- !u!114 &2913435191134102889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2703668061461008731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5600da01b02427b4fbcfd4804e248e5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryUI: {fileID: 7561251120206627501}
+  walletUI: {fileID: 92788552991155102}
+  countSelectorUI: {fileID: 4397519394414740730}
 --- !u!1 &3226552562740911946
 GameObject:
   m_ObjectHideFlags: 0

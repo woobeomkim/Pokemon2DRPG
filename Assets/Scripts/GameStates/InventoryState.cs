@@ -43,7 +43,11 @@ public class InventoryState : State<GameController>
     void OnItemSelected(int selection)
     {
         SelectedItem = inventoryUI.SelectedItem;
-        StartCoroutine(SelectPokemonAndUseItem());
+
+        if (gc.StateMachine.GetPrevState() != ShopSellingState.i)
+            StartCoroutine(SelectPokemonAndUseItem());
+        else
+            gc.StateMachine.Pop();
     }
 
     public override void Exit()

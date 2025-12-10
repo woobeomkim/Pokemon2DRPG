@@ -9,6 +9,7 @@ public class Merchant : MonoBehaviour
     public List<ItemBase> AvailableItems => availableItems;
     public IEnumerator Trade()
     {
-        yield return ShopController.i.StartTrading(this);
+        ShopMenuState.i.AvailableItems = availableItems;
+        yield return GameController.i.StateMachine.PushAndWait(ShopMenuState.i);
     }
 }
