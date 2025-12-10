@@ -76,8 +76,15 @@ public class RunTrunState : State<BattleSystem>
             }
             else if (playerAction == BattleAction.UseItem)
             {
-                // InventoryUI 스크립트에서 다루기떄문에, 스킵하고 지나간다
-                dialogBox.EnabledActionSelector(false);
+                if(bs.SelectedItem is PokeballItem)
+                {
+                    yield return bs.ThrowPokeball(bs.SelectedItem as PokeballItem);
+                    if (bs.IsBattleOver) yield break;
+                }
+                else
+                {
+                    // State Machine에서 자동처리
+                }
             }
             else if (playerAction == BattleAction.Run)
             {

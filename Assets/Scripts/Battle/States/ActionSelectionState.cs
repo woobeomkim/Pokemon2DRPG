@@ -45,7 +45,7 @@ public class ActionSelectionState : State<BattleSystem>
         }
         else if(selection == 1)
         {
-            bs.SelectedAction = BattleAction.UseItem;
+            StartCoroutine(GoToInventoryState());
         }
         else if(selection == 2)
         {
@@ -68,5 +68,18 @@ public class ActionSelectionState : State<BattleSystem>
             bs.SelectedPokemon = selectedPokemon;
             bs.StateMachine.ChangeState(RunTrunState.i);
         }
+    }
+
+    IEnumerator GoToInventoryState()
+    {
+        yield return GameController.i.StateMachine.PushAndWait(InventoryState.i);
+        var selectedItem = InventoryState.i.SelectedItem;
+        if(selectedItem != null)
+        {
+            bs.SelectedAction = BattleAction.UseItem;
+            bs.SelectedItem = selectedItem;
+            bs.StateMachine.ChangeState(RunTrunState.i);
+        }
+
     }
 }

@@ -42,7 +42,7 @@ public class BattleSystem : MonoBehaviour
     public int SelectedMove { get; set; }
     public BattleAction SelectedAction { get; set; }
     public Pokemon SelectedPokemon { get; set; }
-
+    public ItemBase SelectedItem { get; set; }
     public bool IsBattleOver { get; private set; }
     BattleStates state;
     int currentAction;
@@ -468,10 +468,8 @@ public class BattleSystem : MonoBehaviour
        // StartCoroutine(RunTurns(BattleAction.UseItem));
     }
 
-    IEnumerator ThrowPokeball(PokeballItem pokeballItem)
+    public IEnumerator ThrowPokeball(PokeballItem pokeballItem)
     {
-        state = BattleStates.Busy;
-
         if(IsTrainerBattle)
         {
             yield return dialogBox.TypeDialog($"트레이너의 포켓몬은 잡을수없어!");
@@ -521,7 +519,6 @@ public class BattleSystem : MonoBehaviour
                 yield return dialogBox.TypeDialog($"아깝다! 거의 다 잡았는데!");
 
             Destroy(pokeball);
-            state = BattleStates.RunningTurn;
         }
     }
 

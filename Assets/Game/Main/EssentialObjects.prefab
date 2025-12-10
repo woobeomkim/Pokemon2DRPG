@@ -1003,8 +1003,8 @@ RectTransform:
   - {fileID: 1546128861810678178}
   - {fileID: 6491265514535912277}
   - {fileID: 4697427244226660695}
-  - {fileID: 6344944469986903000}
   - {fileID: 790842970295389245}
+  - {fileID: 6344944469986903000}
   - {fileID: 9024906987679107839}
   - {fileID: 1184975932462622386}
   - {fileID: 2454391582533853647}
@@ -1842,7 +1842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a7b775c110cce94fad98f709f27419c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyScreen: {fileID: 7538031773623542753}
+  partyScreen: {fileID: 1895290363034505006}
 --- !u!114 &6200278193960401517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1882,7 +1882,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab84c0b39f9ce141ab3a80d2bd8764d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSelectionUI: {fileID: 0}
+  moveSelectionUI: {fileID: 1380781292249882789}
 --- !u!114 &6358642873088714390
 MonoBehaviour:
   m_ObjectHideFlags: 0
