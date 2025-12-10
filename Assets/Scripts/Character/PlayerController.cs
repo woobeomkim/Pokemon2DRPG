@@ -40,9 +40,8 @@ public class PlayerController : MonoBehaviour,ISavable
                 StartCoroutine(character.Move(input,OnMoveOver));
             }
         }
-
         character.HandleUpdate();
-
+        
         if (Input.GetKeyDown(KeyCode.Z))
             StartCoroutine(Interact());
     }

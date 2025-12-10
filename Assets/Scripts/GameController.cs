@@ -211,8 +211,15 @@ public class GameController : MonoBehaviour
         GUIStyle style = new GUIStyle();
         style.fontSize = 32;
         style.fontStyle = FontStyle.Bold;
-    
-        foreach(var state in StateMachine.StateStack)
+
+        if (bs.StateMachine != null)
+        {
+            foreach (var state in bs.StateMachine.StateStack)
+            {
+                GUILayout.Label(state.GetType().ToString(), style);
+            }
+        }
+        foreach (var state in StateMachine.StateStack)
         {
             GUILayout.Label(state.GetType().ToString(), style);
         }

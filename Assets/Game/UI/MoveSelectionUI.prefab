@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 9221744422036743203}
   - component: {fileID: 5339126503389142356}
   - component: {fileID: 6973683567760868266}
-  - component: {fileID: 3033941882615752919}
+  - component: {fileID: 8599668145709679286}
   m_Layer: 0
   m_Name: MoveSelectionUI
   m_TagString: Untagged
@@ -387,7 +387,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &3033941882615752919
+--- !u!114 &8599668145709679286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -396,7 +396,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2379144204827067629}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99e295ddac85a954c8d46b96512d4073, type: 3}
+  m_Script: {fileID: 11500000, guid: a7d5f2df46dd50544bb99b526726f8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveTexts:
