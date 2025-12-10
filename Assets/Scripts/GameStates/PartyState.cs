@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Utils.StateMachine;
 
@@ -42,34 +43,68 @@ public class PartyState : State<GameController>
     {
         SelectedPokemon = partyScreen.SelectedMember;
 
+        StartCoroutine(PokemonSelectedAction());
+    }
+
+    IEnumerator PokemonSelectedAction()
+    {
         var prevState = gc.StateMachine.GetPrevState();
-        if(prevState == InventoryState.i)
+        if (prevState == InventoryState.i)
         {
             // Use Item;
             StartCoroutine(GoToUseItemState());
         }
-        else if(prevState == BattleState.i)
+        else if (prevState == BattleState.i)
         {
             var battleState = prevState as BattleState;
 
-            if (SelectedPokemon.HP <= 0)
+            DynamicMenuState.i.MenuItems = new List<string>() { "Shift", "Summary", "Cancel" };
+            yield return gc.StateMachine.PushAndWait(DynamicMenuState.i);
+            if (DynamicMenuState.i.SelectedItem == 0)
             {
-                partyScreen.SetMessageText($"기절한 포켓몬은 내보낼 수 없습니다!");
-                return;
+                if (SelectedPokemon.HP <= 0)
+                {
+                    partyScreen.SetMessageText($"기절한 포켓몬은 내보낼 수 없습니다!");
+                    yield break;
+                }
+
+                if (SelectedPokemon == battleState.BattleSystem.PlayerUnit.Pokemon)
+                {
+                    partyScreen.SetMessageText($"같은 포켓몬은 내보낼 수 없습니다!");
+                    yield break;
+                }
+
+                gc.StateMachine.Pop();
+            }
+            else if (DynamicMenuState.i.SelectedItem == 1)
+            {
+                // Todo : Open Summary Screen
+                // Debug.Log($"Selected Pokemon at index {selection}");
+            }
+            else
+            {
+                yield break;
             }
 
-            if (SelectedPokemon == battleState.BattleSystem.PlayerUnit.Pokemon)
-            {
-                partyScreen.SetMessageText($"같은 포켓몬은 내보낼 수 없습니다!");
-                return;
-            }
-
-            gc.StateMachine.Pop();
+          
         }
         else
         {
-            // Todo : Open Summary Screen
-            Debug.Log($"Selected Pokemon at index {selection}");
+            DynamicMenuState.i.MenuItems = new List<string>() { "Summary", "Switch Position", "Cancel" };
+            yield return gc.StateMachine.PushAndWait(DynamicMenuState.i);
+            if(DynamicMenuState.i.SelectedItem == 0 )
+            {
+                // Todo : Open Summary Screen
+                // Debug.Log($"Selected Pokemon at index {selection}");
+            }
+            else if(DynamicMenuState.i.SelectedItem == 1)
+            {
+                // Switch Position
+            }
+            else
+            {
+                yield break;
+            }
         }
     }
 
