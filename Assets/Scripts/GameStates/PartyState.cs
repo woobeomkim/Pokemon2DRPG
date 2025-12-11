@@ -43,10 +43,10 @@ public class PartyState : State<GameController>
     {
         SelectedPokemon = partyScreen.SelectedMember;
 
-        StartCoroutine(PokemonSelectedAction());
+        StartCoroutine(PokemonSelectedAction(selection));
     }
 
-    IEnumerator PokemonSelectedAction()
+    IEnumerator PokemonSelectedAction(int selectedPokemonIndex)
     {
         var prevState = gc.StateMachine.GetPrevState();
         if (prevState == InventoryState.i)
@@ -80,6 +80,8 @@ public class PartyState : State<GameController>
             {
                 // Todo : Open Summary Screen
                 // Debug.Log($"Selected Pokemon at index {selection}");
+                SummaryState.i.SelectedPokemonIndex = selectedPokemonIndex;
+                yield return gc.StateMachine.PushAndWait(SummaryState.i);
             }
             else
             {
@@ -96,6 +98,8 @@ public class PartyState : State<GameController>
             {
                 // Todo : Open Summary Screen
                 // Debug.Log($"Selected Pokemon at index {selection}");
+                SummaryState.i.SelectedPokemonIndex = selectedPokemonIndex;
+                yield return gc.StateMachine.PushAndWait(SummaryState.i);
             }
             else if(DynamicMenuState.i.SelectedItem == 1)
             {

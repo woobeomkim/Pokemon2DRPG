@@ -243,6 +243,14 @@ public class Pokemon
         CureStatus();
     }
 
+    public float GetNormalizedExp()
+    {
+        int currLevelExp = Base.GetExpForLevel(Level);
+        int nextLevelExp = Base.GetExpForLevel(Level + 1);
+
+        float normalizedExp = (float)(Exp - currLevelExp) / (nextLevelExp - currLevelExp);
+        return Mathf.Clamp01(normalizedExp);
+    }
     public void IncreaseHP(int amount)
     {
         HP = Mathf.Clamp(HP + amount, 0, MaxHP);
