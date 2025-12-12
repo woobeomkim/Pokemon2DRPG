@@ -13,6 +13,8 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
     PokemonParty party;
     PokemonStorageBoxes storageBoxes;
 
+    int totalColumns = 7;
+
     public int SelectedBox { get; private set; } = 0;
 
     private void Awake()
@@ -40,7 +42,7 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
     private void Start()
     {
         SetItems(boxSlots);
-        SetSelectionSettings(SelectionType.Grid, 7);
+        SetSelectionSettings(SelectionType.Grid, totalColumns);
     }
 
     public void SetDataInPartySlot()
@@ -63,6 +65,52 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
                 storageSlots[i].SetData(pokemon);
             else
                 storageSlots[i].ClearData();
+        }
+    }
+
+    public bool IsPartySlot (int slotIndex)
+    {
+        return slotIndex % totalColumns == 0;
+    }
+
+    public Pokemon TakePokemonFromSlot(int slotIndex)
+    {
+        Pokemon pokemon;
+        if(IsPartySlot(slotIndex))
+        {
+            int partyIndex = slotIndex / totalColumns;
+
+            if (partyIndex >= party.Pokemons.Count)
+                return null;
+            pokemon = party.Pokemons[partyIndex];
+            party.Pokemons[partyIndex] = null;
+        }
+        else
+        {
+            int boxSlotIndex = slotIndex - (slotIndex / totalColumns + 1);
+
+            pokemon = storageBoxes.GetPokemon(SelectedBox, boxSlotIndex);
+            storageBoxes.RemovePokemon(SelectedBox, boxSlotIndex);
+        }
+
+        return pokemon;
+    }
+
+    public void PutPokemonIntoSlot(Pokemon pokemon , int slotIndex)
+    {
+        if (IsPartySlot(slotIndex))
+        {
+            int partyIndex = slotIndex / totalColumns;
+
+            if (partyIndex >= party.Pokemons.Count)
+                party.Pokemons.Add(pokemon);
+            else
+                party.Pokemons[partyIndex] = pokemon;
+        }
+        else
+        {
+            int boxSlotIndex = slotIndex - (slotIndex / totalColumns + 1);
+            storageBoxes.AddPokemon(pokemon ,SelectedBox, boxSlotIndex);
         }
     }
 }
