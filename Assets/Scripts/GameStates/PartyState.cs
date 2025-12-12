@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using Utils.StateMachine;
@@ -10,11 +11,20 @@ public class PartyState : State<GameController>
     
     public Pokemon SelectedPokemon { get; private set; }
 
+    bool isSwitchingPosition;
+    int selectedIndexForSwitching = 0;
+
     public static PartyState i { get; private set; }
 
     private void Awake()
     {
         i = this;
+    }
+
+    PokemonParty playerParty;
+    private void Start()
+    {
+        playerParty = PlayerController.i.GetComponent<PokemonParty>();
     }
 
     GameController gc;
@@ -92,6 +102,24 @@ public class PartyState : State<GameController>
         }
         else
         {
+            if(isSwitchingPosition)
+            {
+                if(selectedPokemonIndex == selectedIndexForSwitching)
+                {
+                    partyScreen.SetMessageText("같은 포켓몬으로는 바꿀수 없습니다!");
+                    yield break;
+                }    
+
+                isSwitchingPosition = false;
+
+                var tmpPokemon = playerParty.Pokemons[selectedIndexForSwitching];
+                playerParty.Pokemons[selectedIndexForSwitching] = playerParty.Pokemons[selectedPokemonIndex];
+                playerParty.Pokemons[selectedPokemonIndex] = tmpPokemon;
+                playerParty.PartyUpdate();
+
+                yield break;
+            }
+
             DynamicMenuState.i.MenuItems = new List<string>() { "Summary", "Switch Position", "Cancel" };
             yield return gc.StateMachine.PushAndWait(DynamicMenuState.i);
             if(DynamicMenuState.i.SelectedItem == 0 )
@@ -104,6 +132,9 @@ public class PartyState : State<GameController>
             else if(DynamicMenuState.i.SelectedItem == 1)
             {
                 // Switch Position
+                isSwitchingPosition = true;
+                selectedIndexForSwitching = selectedPokemonIndex;
+                partyScreen.SetMessageText("바꿀 포켓몬을 골라주세요!");
             }
             else
             {

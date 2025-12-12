@@ -25,12 +25,14 @@ public class PartyScreen : SelectionUI<TextSlot>
         party = PokemonParty.GetPlayerParty();
         SetPartyData();
 
-        party.onUpdate += SetPartyData;
+        party.OnUpdate += SetPartyData;
     }
 
     public void SetPartyData()
     {
         pokemons = party.Pokemons;
+
+        ClearItems();
 
         for (int i = 0; i < memberSlots.Length; i++) 
         {

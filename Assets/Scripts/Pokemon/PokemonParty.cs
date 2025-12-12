@@ -8,7 +8,7 @@ public class PokemonParty : MonoBehaviour
 {
     [SerializeField] List<Pokemon> pokemons;
 
-    public event Action onUpdate;
+    public event Action OnUpdate;
 
     public List<Pokemon> Pokemons
     {
@@ -20,7 +20,7 @@ public class PokemonParty : MonoBehaviour
         set
         {
             pokemons = value;
-            onUpdate?.Invoke();
+            OnUpdate?.Invoke();
         }
     }
 
@@ -40,7 +40,7 @@ public class PokemonParty : MonoBehaviour
         if (pokemons.Count < 6)
         {
             pokemons.Add(pokemon);
-            onUpdate?.Invoke();
+            OnUpdate?.Invoke();
         }
         else
         {
@@ -67,7 +67,7 @@ public class PokemonParty : MonoBehaviour
 
     public void PartyUpdate()
     {
-        onUpdate?.Invoke();
+        OnUpdate?.Invoke();
     }
     public static PokemonParty GetPlayerParty()
     {
