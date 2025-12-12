@@ -46,16 +46,30 @@ public class GameMenuState : State<GameController>
         }
         else if (selection == 2)
         {
-
+            StartCoroutine(SaveSelected());
         }
         else if(selection == 3)
         {
-
+            StartCoroutine(LoadSelected());
         }
         else if (selection == 4)
         {
             gc.StateMachine.Push(StorageState.i);
         }
+    }
+
+    IEnumerator SaveSelected()
+    {
+        yield return Fader.i.FadeIn();
+        SavingSystem.i.Save("saveSlot1");
+        yield return Fader.i.FadeOut();
+    }
+
+    IEnumerator LoadSelected()
+    {
+        yield return Fader.i.FadeIn();
+        SavingSystem.i.Load("saveSlot1");
+        yield return Fader.i.FadeOut();
     }
 
     void OnBack()
