@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using Utils.GenericSelectionUI;
 
 public class PokemonStorageUI : SelectionUI<ImageSlot>
 {
     [SerializeField] List<ImageSlot> boxSlots;
+    [SerializeField] Image movingPokemonImage;
 
     List<BoxPartySlotUI> partySlots = new List<BoxPartySlotUI>();
     List<BoxStorageSlotUI> storageSlots = new List<BoxStorageSlotUI>();
 
+    List<Image> boxSlotImages = new List<Image>();
     PokemonParty party;
     PokemonStorageBoxes storageBoxes;
 
@@ -35,6 +39,8 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
         party = PokemonParty.GetPlayerParty();
         storageBoxes = PokemonStorageBoxes.GetPlayerStorageBoxes();
 
+        boxSlotImages = boxSlots.Select(b => b.transform.GetChild(0).GetComponent<Image>()).ToList();
+        movingPokemonImage.gameObject.SetActive(false);
         // Test code
         storageBoxes.AddPokemon(party.Pokemons[0], SelectedBox, 0);
         storageBoxes.AddPokemon(party.Pokemons[1], SelectedBox, 20);
@@ -68,6 +74,14 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
         }
     }
 
+    public override void UpdateSelectionUI()
+    {
+        base.UpdateSelectionUI();
+
+        if(movingPokemonImage.gameObject.activeSelf)
+            movingPokemonImage.transform.position = boxSlotImages[selectedItem].transform.position + Vector3.up * 50f;
+    }
+
     public bool IsPartySlot (int slotIndex)
     {
         return slotIndex % totalColumns == 0;
@@ -92,6 +106,10 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
             pokemon = storageBoxes.GetPokemon(SelectedBox, boxSlotIndex);
             storageBoxes.RemovePokemon(SelectedBox, boxSlotIndex);
         }
+        movingPokemonImage.sprite = boxSlotImages[slotIndex].sprite;
+        movingPokemonImage.transform.position = boxSlotImages[slotIndex].transform.position + Vector3.up * 50f;
+        boxSlotImages[slotIndex].color = new Color(1, 1, 1, 0);
+        movingPokemonImage.gameObject.SetActive(true);
 
         return pokemon;
     }
@@ -112,5 +130,6 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
             int boxSlotIndex = slotIndex - (slotIndex / totalColumns + 1);
             storageBoxes.AddPokemon(pokemon ,SelectedBox, boxSlotIndex);
         }
+        movingPokemonImage.gameObject.SetActive(false);
     }
 }

@@ -71,6 +71,9 @@ public class StorageState : State<GameController>
             if(secondPokemon == null && storageUI.IsPartySlot(firstSlotIndex) && storageUI.IsPartySlot(secondSlotIndex))
             {
                 storageUI.PutPokemonIntoSlot(selectedPokemonToMove, selectedSlotToMove);
+                
+                storageUI.SetDataInPartySlot();
+                storageUI.SetDataInStorageSlot();
                 return;
             }
 
