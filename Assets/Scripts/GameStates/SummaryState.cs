@@ -7,6 +7,8 @@ using Utils.StateMachine;
 public class SummaryState : State<GameController>
 {
     [SerializeField] SummaryScreenUI summaryScreen;
+
+    int selectedPage = 0;
     public static SummaryState i { get; set; }
 
     // Input
@@ -29,7 +31,7 @@ public class SummaryState : State<GameController>
         gc = owner;
         summaryScreen.gameObject.SetActive(true);
         summaryScreen.SetBasicDetails(playerParty[SelectedPokemonIndex]);
-        summaryScreen.SetSkills();
+        summaryScreen.ShowPage(selectedPage);
     }
 
     public override void Execute()
@@ -40,6 +42,23 @@ public class SummaryState : State<GameController>
             return;
         }
 
+        // Page Selection
+        int prevPage = selectedPage;
+        if(Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            selectedPage = Mathf.Abs((selectedPage - 1) % 2);
+        }
+        else if(Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            selectedPage = (selectedPage + 1) % 2;
+        }
+
+        if(selectedPage != prevPage)
+        {
+            summaryScreen.ShowPage(selectedPage);
+        }
+
+        // Pokemon Selection
         int prevSelection = SelectedPokemonIndex;
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -58,8 +77,7 @@ public class SummaryState : State<GameController>
         if(SelectedPokemonIndex != prevSelection)
         {
             summaryScreen.SetBasicDetails(playerParty[SelectedPokemonIndex]);
-            summaryScreen.SetSkills();
-
+            summaryScreen.ShowPage(selectedPage);
         }
     }
 

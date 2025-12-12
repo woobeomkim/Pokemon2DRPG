@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,11 @@ public class SummaryScreenUI : MonoBehaviour
     [SerializeField] Text nameText;
     [SerializeField] Text levelText;
     [SerializeField] Image image;
+
+    [Header("Pages")]
+    [SerializeField] Text pageNameText;
+    [SerializeField] GameObject skillsPage;
+    [SerializeField] GameObject movesPage;
 
     [Header("Pokemon Skills")]
     [SerializeField] Text hpText;
@@ -21,6 +27,11 @@ public class SummaryScreenUI : MonoBehaviour
     [SerializeField] Text nextLevelExpText;
     [SerializeField] Transform expBar;
 
+    [Header("Pokemon Moves")]
+    [SerializeField] List<Text> moveTypes;
+    [SerializeField] List<Text> moveNames;
+    [SerializeField] List<Text> movePPs;
+
     Pokemon pokemon;
     public void SetBasicDetails(Pokemon pokemon)
     {
@@ -29,6 +40,29 @@ public class SummaryScreenUI : MonoBehaviour
         nameText.text = pokemon.Base.Name;
         levelText.text = "Lv. " + pokemon.Level;
         image.sprite = pokemon.Base.FrontSprite;
+    }
+
+    public void ShowPage(int pageNum)
+    {
+        if(pageNum == 0)
+        {
+            // show the skills page
+            pageNameText.text = "Pokemon Skills";
+
+            skillsPage.SetActive(true);
+            movesPage.SetActive(false);
+
+            SetSkills();
+        }
+        else if(pageNum == 1)
+        {
+            // show the moves page
+            pageNameText.text = "Pokemon Moves";
+
+            skillsPage.SetActive(false);
+            movesPage.SetActive(true);
+            SetMoves();
+        }
     }
 
     public void SetSkills()
@@ -43,5 +77,27 @@ public class SummaryScreenUI : MonoBehaviour
         expPointsText.text = "" + pokemon.Exp;
         nextLevelExpText.text = "" + (pokemon.Base.GetExpForLevel(pokemon.Level + 1) - pokemon.Exp);
         expBar.localScale = new Vector2(pokemon.GetNormalizedExp(), 1);
+    }
+
+    public void SetMoves()
+    {
+        for(int i=0;i<moveNames.Count;i++)
+        {
+            if(i<pokemon.Moves.Count)
+            {
+                var move = pokemon.Moves[i];
+
+                moveTypes[i].text = move.Base.Type.ToString();
+                moveNames[i].text = move.Base.Name.ToString();
+                movePPs[i].text = $"PP {move.PP}/{move.Base.PP}";
+            }
+            else
+            {
+                moveTypes[i].text = "-";
+                moveNames[i].text = "-";
+                movePPs[i].text = $"-";
+
+            }
+        }
     }
 }
