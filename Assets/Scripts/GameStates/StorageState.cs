@@ -20,6 +20,9 @@ public class StorageState : State<GameController>
         gc = owner;
 
         storageUI.gameObject.SetActive(true);
+
+        storageUI.SetDataInPartySlot();
+        storageUI.SetDataInStorageSlot();
     }
 
     public override void Execute()

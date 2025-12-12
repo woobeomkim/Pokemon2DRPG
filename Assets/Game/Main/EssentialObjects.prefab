@@ -1779,7 +1779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightedColor: {r: 0.09398352, g: 0.16482554, b: 0.9056604, a: 1}
-  bgHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  bgHighlightColor: {r: 1, g: 0.9726667, b: 0.18, a: 1}
 --- !u!114 &261315369957433535
 MonoBehaviour:
   m_ObjectHideFlags: 0
