@@ -9,6 +9,7 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
 {
     [SerializeField] List<ImageSlot> boxSlots;
     [SerializeField] Image movingPokemonImage;
+    [SerializeField] Text boxNameText;
 
     List<BoxPartySlotUI> partySlots = new List<BoxPartySlotUI>();
     List<BoxStorageSlotUI> storageSlots = new List<BoxStorageSlotUI>();
@@ -74,9 +75,33 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
         }
     }
 
+    public override void HandleUpdate()
+    {
+        int prevSelectionBox = SelectedBox;
+
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            SelectedBox = SelectedBox > 0 ? SelectedBox - 1 : storageBoxes.NumOfBoxes - 1;
+        }
+        else if(Input.GetKeyDown(KeyCode.E))
+        {
+            SelectedBox = (SelectedBox + 1) % storageBoxes.NumOfBoxes;
+        }
+
+        if(prevSelectionBox != SelectedBox)
+        {
+            SetDataInStorageSlot();
+            UpdateSelectionUI();
+            return;
+        }
+        base.HandleUpdate();
+    }
+
     public override void UpdateSelectionUI()
     {
         base.UpdateSelectionUI();
+
+        boxNameText.text = "Box " + (SelectedBox + 1);
 
         if(movingPokemonImage.gameObject.activeSelf)
             movingPokemonImage.transform.position = boxSlotImages[selectedItem].transform.position + Vector3.up * 50f;
@@ -97,6 +122,8 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
             if (partyIndex >= party.Pokemons.Count)
                 return null;
             pokemon = party.Pokemons[partyIndex];
+            if (pokemon == null) return null;
+            
             party.Pokemons[partyIndex] = null;
         }
         else
@@ -104,6 +131,7 @@ public class PokemonStorageUI : SelectionUI<ImageSlot>
             int boxSlotIndex = slotIndex - (slotIndex / totalColumns + 1);
 
             pokemon = storageBoxes.GetPokemon(SelectedBox, boxSlotIndex);
+            if (pokemon == null) return null;
             storageBoxes.RemovePokemon(SelectedBox, boxSlotIndex);
         }
         movingPokemonImage.sprite = boxSlotImages[slotIndex].sprite;

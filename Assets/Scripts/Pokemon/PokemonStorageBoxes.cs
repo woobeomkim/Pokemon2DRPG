@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class PokemonStorageBoxes : MonoBehaviour
 {
-    Pokemon[,] boxes = new Pokemon[16, 30];
+    const int numberOfBoxes = 16;
+    const int numberOfSlots = 30;
+
+    public int NumOfBoxes => numberOfBoxes;
+    public int NumOfSlots => numberOfSlots;
+
+    Pokemon[,] boxes = new Pokemon[numberOfBoxes, numberOfSlots];
 
     public void AddPokemon(Pokemon pokemon, int boxIndex, int slotIndex)
     {
@@ -19,6 +25,21 @@ public class PokemonStorageBoxes : MonoBehaviour
     public Pokemon GetPokemon(int boxIndex, int slotIndex)
     {
         return boxes[boxIndex, slotIndex];
+    }
+
+    public void AddPokemonToEmptySlot(Pokemon pokemon)
+    {
+        for(int boxIndex = 0; boxIndex < numberOfBoxes; boxIndex++)
+        {
+            for (int slotIndex = 0; slotIndex < numberOfSlots; slotIndex++)
+            {
+                if (boxes[boxIndex, slotIndex] == null)
+                {
+                    boxes[boxIndex, slotIndex] = pokemon;
+                    return;
+                }
+            }
+        }
     }
 
     public static PokemonStorageBoxes GetPlayerStorageBoxes()

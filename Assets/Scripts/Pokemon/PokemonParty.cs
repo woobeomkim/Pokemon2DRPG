@@ -24,8 +24,10 @@ public class PokemonParty : MonoBehaviour
         }
     }
 
+    PokemonStorageBoxes storageBoxes;
     private void Awake()
     {
+        storageBoxes = PokemonStorageBoxes.GetPlayerStorageBoxes();
         foreach (var pokemon in pokemons)
             pokemon.Init();
     }
@@ -45,6 +47,7 @@ public class PokemonParty : MonoBehaviour
         else
         {
             // TODO Send PC
+            storageBoxes.AddPokemonToEmptySlot(pokemon);
         }
     }
 

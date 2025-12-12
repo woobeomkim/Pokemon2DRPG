@@ -96,6 +96,8 @@ public class StorageState : State<GameController>
         {
             isMovingPokemon = false;
             storageUI.PutPokemonIntoSlot(selectedPokemonToMove, selectedSlotToMove);
+            storageUI.SetDataInPartySlot();
+            storageUI.SetDataInStorageSlot();
         }
         else
         {
