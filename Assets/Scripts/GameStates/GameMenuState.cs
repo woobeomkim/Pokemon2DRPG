@@ -44,7 +44,18 @@ public class GameMenuState : State<GameController>
         {
             gc.StateMachine.Push(InventoryState.i);
         }
+        else if (selection == 2)
+        {
 
+        }
+        else if(selection == 3)
+        {
+
+        }
+        else if (selection == 4)
+        {
+            gc.StateMachine.Push(StorageState.i);
+        }
     }
 
     void OnBack()
