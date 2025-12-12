@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.GenericSelectionUI;
 
-public class SummaryScreenUI : MonoBehaviour
+public class SummaryScreenUI : SelectionUI<TextSlot>
 {
     [Header("Basic Details")]
     [SerializeField] Text nameText;
@@ -31,6 +33,41 @@ public class SummaryScreenUI : MonoBehaviour
     [SerializeField] List<Text> moveTypes;
     [SerializeField] List<Text> moveNames;
     [SerializeField] List<Text> movePPs;
+    [SerializeField] Text moveDescriptionText;
+    [SerializeField] Text movePowerText;
+    [SerializeField] Text moveAccuracyText;
+    [SerializeField] GameObject moveEffectsUI;
+
+    List<TextSlot> moveSlots;
+
+    private void Start()
+    {
+        moveSlots = moveNames.Select(m => m.GetComponent<TextSlot>()).ToList();
+        moveEffectsUI.gameObject.SetActive(false);
+        moveDescriptionText.text = "";
+    }
+
+    bool inMoveSelection = false;
+    public bool InMoveSelection 
+    {
+        get => inMoveSelection;
+        set
+        {
+            inMoveSelection = value;
+
+            if(inMoveSelection)
+            {
+                moveEffectsUI.SetActive(true);
+                SetItems(moveSlots.Take(pokemon.Moves.Count).ToList());
+            }
+            else
+            {
+                moveEffectsUI.SetActive(false);
+                moveDescriptionText.text = "";
+                ClearItems();
+            }
+        }
+    }
 
     Pokemon pokemon;
     public void SetBasicDetails(Pokemon pokemon)
@@ -99,5 +136,24 @@ public class SummaryScreenUI : MonoBehaviour
 
             }
         }
+    }
+
+    public override void HandleUpdate()
+    {
+        if(InMoveSelection)
+         base.HandleUpdate();
+    }
+
+    public override void UpdateSelectionUI()
+    {
+        base.UpdateSelectionUI();
+
+        var move = pokemon.Moves[selectedItem];
+
+        moveDescriptionText.text = move.Base.Description;
+        movePowerText.text = "" + move.Base.Power;
+        moveAccuracyText.text = "" + move.Base.Accuracy;
+
+
     }
 }
