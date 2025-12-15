@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         StateMachine = new StateMachine<GameController>(this);
-        StateMachine.ChangeState(FreeRoamState.i);
+        StateMachine.ChangeState(PauseState.i);
 
         bs.onBattleOver += EndBattle;
 
