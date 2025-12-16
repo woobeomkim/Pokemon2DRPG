@@ -52,13 +52,28 @@ public class MoveSelectionState : State<BattleSystem>
 
     void OnMoveSelected(int selection)
     {
+        StartCoroutine(OnMoveSelectedAsync(selection));
+    }
+
+    IEnumerator OnMoveSelectedAsync(int selection)
+    {
+        int moveTarget = 0;
+        if (bs.UnitCount > 1)
+        {
+            yield return bs.StateMachine.PushAndWait(TargetSelectionState.i);
+            if (!TargetSelectionState.i.SelectionMade)
+                yield break;
+
+            moveTarget = TargetSelectionState.i.SelectedTarget;
+        }
+
         bs.AddBattleAction(new BattleAction()
         {
             Type = BattleActionType.Move,
             SelectedMove = Moves[selection],
 
             // TODO : TargetSelectionState
-            Target = bs.EnemyUnits[0]
+            Target = bs.EnemyUnits[moveTarget]
         });
     }
 
@@ -66,4 +81,5 @@ public class MoveSelectionState : State<BattleSystem>
     {
         bs.StateMachine.ChangeState(ActionSelectionState.i);
     }
+
 }

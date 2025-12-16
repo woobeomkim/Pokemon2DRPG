@@ -51,6 +51,11 @@ public class BattleUnit : MonoBehaviour
         hud.gameObject.SetActive(false);
     }
 
+    public void SetSelected(bool selected)
+    {
+        image.color = (selected) ? GlobalSettings.i.HighlightedColor : originalColor;
+    }
+
     public void PlayEnterAnimation()
     {
         if (isPlayerUnit)
