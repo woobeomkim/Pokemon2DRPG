@@ -202,12 +202,9 @@ public class BattleSystem : MonoBehaviour
         IsBattleOver = true;
         PlayerParty.Pokemons.ForEach(p => p.OnBattleOver());
 
-        for (int i = 0; i < unitCount; i++)
-        {
-            playerUnits[i].Hud.ClearData();
-            enemyUnits[i].Hud.ClearData();
+        PlayerUnits.ForEach(p => p.Hud.ClearData());
+        EnemyUnits.ForEach(p => p.Hud.ClearData());
 
-        }
         onBattleOver?.Invoke(won);
     }
     public void HandleUpdate()
@@ -269,7 +266,9 @@ public class BattleSystem : MonoBehaviour
 
     public IEnumerator SendNextTrainerPokemon()
     {
-        var nextPokemon = TrainerParty.GetHealthPokemon();
+        var activePokemons = EnemyUnits.Select(u => u.Pokemon).Where(p => p.HP > 0).ToList();
+
+        var nextPokemon = TrainerParty.GetHealthPokemon(activePokemons);
         enemyUnits[0].Setup(nextPokemon);
         yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {nextPokemon.Base.Name}을 내보냈다!");
     }

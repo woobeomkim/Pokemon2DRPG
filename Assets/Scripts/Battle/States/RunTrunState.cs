@@ -43,6 +43,9 @@ public class RunTrunState : State<BattleSystem>
     {
         foreach(var action in Actions)
         {
+            if (action.IsInvalid)
+                continue;
+
             if(action.Type == BattleActionType.Move)
             {
                 action.User.Pokemon.CurrentMove = action.SelectedMove;
@@ -291,41 +294,84 @@ public class RunTrunState : State<BattleSystem>
 
             yield return new WaitForSeconds(1f);
         }
-        yield return CheckForBattleOver(faintedUnit);
+        yield return NextStepsAfterFainting(faintedUnit);
     }
 
-    IEnumerator CheckForBattleOver(BattleUnit faintedUnit)
+    IEnumerator NextStepsAfterFainting(BattleUnit faintedUnit)
     {
+        // Remove the action of the fainted
+        var actionToRemove = Actions.FirstOrDefault(a => a.User == faintedUnit);
+        if (actionToRemove != null)
+            actionToRemove.IsInvalid = true;
+
         if (faintedUnit.IsPlayerUnit)
         {
-            var nextPokemon = playerParty.GetHealthPokemon();
-            if (nextPokemon != null)
+            var activePokemons = bs.PlayerUnits.Select(u => u.Pokemon).Where(p => p.HP > 0).ToList();
+
+            var nextPokemon = playerParty.GetHealthPokemon(dontInclude: activePokemons);
+           if(nextPokemon == null && activePokemons.Count == 0)
+           {
+               // End the battle
+               bs.BattleOver(false);
+           }
+            else if(nextPokemon == null && activePokemons.Count >0)
             {
+                // No new pokemon to send out, but we can continue the battle with the active pokemon
+                bs.PlayerUnits.Remove(faintedUnit);
+                faintedUnit.Hud.gameObject.SetActive(false);
+
+                // Attacks tareted at the fainted unit should be changed
+                var actionsToChange = Actions.Where(a => a.Target == faintedUnit).ToList();
+                actionsToChange.ForEach(a => a.Target = bs.PlayerUnits.First());
+            }
+            else if (nextPokemon != null)
+            {
+                // send out the next pokemon
                 yield return GameController.i.StateMachine.PushAndWait(PartyState.i);
                 yield return bs.SwitchPokemon(PartyState.i.SelectedPokemon, faintedUnit);
+
             }
-            else
-            {
-               bs.BattleOver(false);
-            }
+
         }
         else
         {
-            if (isTrainerBattle)
+            if(!isTrainerBattle)
             {
-                var nextPokemon = trainerParty.GetHealthPokemon();
-                if (nextPokemon != null)
+                bs.BattleOver(true);
+                yield break;
+            }
+
+            var activePokemons = bs.EnemyUnits.Select(u => u.Pokemon).Where(p => p.HP > 0).ToList();
+
+            var nextPokemon = trainerParty.GetHealthPokemon(dontInclude: activePokemons);
+            if (nextPokemon == null && activePokemons.Count == 0)
+            {
+                // End the battle
+                bs.BattleOver(false);
+            }
+            else if (nextPokemon == null && activePokemons.Count > 0)
+            {
+                // No new pokemon to send out, but we can continue the battle with the active pokemon
+                bs.EnemyUnits.Remove(faintedUnit);
+                faintedUnit.Hud.gameObject.SetActive(false);
+
+                // Attacks tareted at the fainted unit should be changed
+                var actionsToChange = Actions.Where(a => a.Target == faintedUnit).ToList();
+                actionsToChange.ForEach(a => a.Target = bs.EnemyUnits.First());
+            }
+            else if (nextPokemon != null)
+            {
+                // send out the next pokemon
+                if (bs.UnitCount == 1)
                 {
                     AboutToUseToState.i.NewPokemon = nextPokemon;
                     yield return bs.StateMachine.PushAndWait(AboutToUseToState.i);
                 }
                 else
                 {
-                    bs.BattleOver(true);
+                    bs.SendNextTrainerPokemon();
                 }
             }
-            else
-                bs.BattleOver(true);
         }
     }
 

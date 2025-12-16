@@ -37,7 +37,7 @@ public class TargetSelectionState : State<BattleSystem>
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
             selectedTarget--;
 
-        selectedTarget = Mathf.Clamp(selectedTarget, 0, bs.UnitCount);
+        selectedTarget = Mathf.Clamp(selectedTarget, 0, bs.EnemyUnits.Count);
 
         if (selectedTarget != prevSelection)
             UpdateSelectionUI();
@@ -61,7 +61,7 @@ public class TargetSelectionState : State<BattleSystem>
 
     void UpdateSelectionUI()
     {
-       for(int i=0;i<bs.UnitCount;i++)
+       for(int i=0;i<bs.EnemyUnits.Count;i++)
        {
             bs.EnemyUnits[i].SetSelected(i == selectedTarget);
        }
