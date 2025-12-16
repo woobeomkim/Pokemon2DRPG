@@ -8,13 +8,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utils.StateMachine;
 
-public enum BattleAction { Move,SwitchPokemon,UseItem,Run}
 
 public enum BattleTrigger { Longgrass,Water}
 public class BattleSystem : MonoBehaviour
 {
-    [SerializeField] BattleUnit playerUnit;
-    [SerializeField] BattleUnit enemyUnit;
+    [SerializeField] List<BattleUnit> playerUnits;
+    [SerializeField] List<BattleUnit> enemyUnits;
     [SerializeField] BattleDialog dialogBox;
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] Image playerImage;
@@ -33,14 +32,17 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Sprite grassBackground;
     [SerializeField] Sprite waterBackground;
 
+    int unitCount = 1;
+    int unitInSelectionIndex = 0;
+
+    public int UnitCount => unitCount;
+
     public StateMachine<BattleSystem> StateMachine { get; private set; }
 
     public event Action<bool> onBattleOver;
 
-    public int SelectedMove { get; set; }
-    public BattleAction SelectedAction { get; set; }
-    public Pokemon SelectedPokemon { get; set; }
-    public ItemBase SelectedItem { get; set; }
+
+    List<BattleAction> battleActions;
     public bool IsBattleOver { get; private set; }
 
     public PokemonParty PlayerParty { get; private set;}
@@ -56,8 +58,10 @@ public class BattleSystem : MonoBehaviour
     BattleTrigger battleTrigger;
 
     public BattleDialog DialogBox => dialogBox;
-    public BattleUnit PlayerUnit => playerUnit;
-    public BattleUnit EnemyUnit => enemyUnit;
+    public List<BattleUnit> PlayerUnits => playerUnits;
+    public List<BattleUnit> EnemyUnits => enemyUnits;
+
+    public BattleUnit UnitInSelection => playerUnits[unitInSelectionIndex];
 
     public PartyScreen PartyScreen => partyScreen;
     public AudioClip BattleVictoryMusic => battleVictoryMusic;
@@ -67,6 +71,7 @@ public class BattleSystem : MonoBehaviour
     {
         this.PlayerParty = playerParty;
         this.WildPokemon = wildPokemon;
+        this.unitCount = 1;
 
         IsTrainerBattle = false;
         player = playerParty.GetComponent<PlayerController>();
@@ -78,10 +83,11 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
     public void StartTrainerBattle(PokemonParty playerParty, PokemonParty trainerParty,
-        BattleTrigger trigger = BattleTrigger.Longgrass)
+        BattleTrigger trigger = BattleTrigger.Longgrass, int unitCount = 1)
     {
         this.PlayerParty = playerParty;
         this.TrainerParty = trainerParty;
+        this.unitCount = unitCount;
 
         IsTrainerBattle = true;
         player = playerParty.GetComponent<PlayerController>();
@@ -97,28 +103,36 @@ public class BattleSystem : MonoBehaviour
     IEnumerator SetupBattle()
     {
         StateMachine = new StateMachine<BattleSystem>(this);
+        battleActions = new List<BattleAction>();
 
-        playerUnit.Clear();
-        enemyUnit.Clear();
+        for(int i=0;i<unitCount;i++)
+        {
+            playerUnits[i].Clear();
+            enemyUnits[i].Clear();
+        }
 
         backgroundImage.sprite = (battleTrigger == BattleTrigger.Longgrass) ? grassBackground : waterBackground;
 
         if(!IsTrainerBattle)
         {
             // Wild Pokemon Battle
-            playerUnit.Setup(PlayerParty.GetHealthPokemon());
-            enemyUnit.Setup(WildPokemon);
+            playerUnits[0].Setup(PlayerParty.GetHealthPokemon());
+            enemyUnits[0].Setup(WildPokemon);
 
-            dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
-            yield return dialogBox.TypeDialog($"야생의 {enemyUnit.Pokemon.Base.Name}(이)가 나타났다!");
+            dialogBox.SetMoveNames(playerUnits[0].Pokemon.Moves);
+            yield return dialogBox.TypeDialog($"야생의 {enemyUnits[0].Pokemon.Base.Name}(이)가 나타났다!");
         }
         else
         {
             // Trainer Battle
 
             // Show trainer and player Image
-            playerUnit.gameObject.SetActive(false);
-            enemyUnit.gameObject.SetActive(false);
+            for (int i = 0; i < unitCount; i++)
+            {
+                playerUnits[i].gameObject.SetActive(false);
+                enemyUnits[i].gameObject.SetActive(false);
+            }
+
 
             playerImage.gameObject.SetActive(true);
             trainerImage.gameObject.SetActive(true);
@@ -129,23 +143,33 @@ public class BattleSystem : MonoBehaviour
 
             // send out first pokemon of the trainer
             trainerImage.gameObject.SetActive(false);
-            enemyUnit.gameObject.SetActive(true);
-            var enemyPokemon = TrainerParty.GetHealthPokemon();
-            enemyUnit.Setup(enemyPokemon);
-            yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {enemyPokemon.Base.Name}을 내보냈다!");
+            var enemyPokemons = TrainerParty.GetHealthPokemons(unitCount);
+            for (int i = 0; i < unitCount; i++) 
+            {
+                enemyUnits[i].gameObject.SetActive(true);
+                enemyUnits[i].Setup(enemyPokemons[i]);
+            }
+
+            var pokemonNames = String.Join(" 와 ", enemyPokemons.Select(p => p.Base.Name));
+            yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {pokemonNames}를 내보냈다!");
 
             // send out first pokemon of the player
             playerImage.gameObject.SetActive(false);
-            playerUnit.gameObject.SetActive(true);
-            var playerPokemon = PlayerParty.GetHealthPokemon();
-            playerUnit.Setup(playerPokemon);
-            yield return dialogBox.TypeDialog($"가라! {playerPokemon.Base.Name}!");
-            dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
+            var playerPokemons = PlayerParty.GetHealthPokemons(unitCount);
+            for(int i=0;i<unitCount;i++)
+            {
+                playerUnits[i].gameObject.SetActive(true);
+                playerUnits[i].Setup(playerPokemons[i]);
+            }
+
+            pokemonNames = String.Join(" 와 ", playerPokemons.Select(p => p.Base.Name));
+            yield return dialogBox.TypeDialog($"가라! {pokemonNames}!");
         }
 
         IsBattleOver = false;
         EscapeAttempts = 0;
         partyScreen.Init();
+        unitInSelectionIndex = 0;
 
         StateMachine.ChangeState(ActionSelectionState.i);
     }
@@ -154,34 +178,76 @@ public class BattleSystem : MonoBehaviour
     {
         IsBattleOver = true;
         PlayerParty.Pokemons.ForEach(p => p.OnBattleOver());
-        playerUnit.Hud.ClearData();
-        enemyUnit.Hud.ClearData();
+
+        for (int i = 0; i < unitCount; i++)
+        {
+            playerUnits[i].Hud.ClearData();
+            enemyUnits[i].Hud.ClearData();
+
+        }
         onBattleOver?.Invoke(won);
     }
     public void HandleUpdate()
     {
         StateMachine.Execute();
     }
-    public IEnumerator SwitchPokemon(Pokemon newPokemon)
+
+    public void AddBattleAction(BattleAction battleAction)
     {
-        if (playerUnit.Pokemon.HP > 0)
+        battleAction.User = UnitInSelection;
+        battleActions.Add(battleAction);
+
+        if(battleActions.Count == unitCount)
         {
-            yield return dialogBox.TypeDialog($"돌아와! {playerUnit.Pokemon.Base.Name}");
-            playerUnit.PlayFaintAniamtion();
+            // Add Enemy Action
+            foreach(var enemyUnit in enemyUnits)
+            {
+                battleActions.Add(new BattleAction()
+                {
+                    Type = BattleActionType.Move,
+                    SelectedMove = enemyUnit.Pokemon.GetRandomMove(),
+                    User = enemyUnit,
+                    Target = playerUnits[UnityEngine.Random.Range(0, playerUnits.Count)]
+                });
+            }
+
+            // Sort the actions by it's priority and speed
+            battleActions = battleActions.OrderByDescending(a => a.Priority).ThenByDescending(a => a.User.Pokemon.Speed).ToList();
+
+            // Run Turns
+            RunTrunState.i.Actions = battleActions;
+            StateMachine.ChangeState(RunTrunState.i);
+        }
+        else
+        {
+            // Another Action Selection
+            ++unitInSelectionIndex;
+            StateMachine.ChangeState(ActionSelectionState.i);
+        }
+    }
+
+    public void ClearTurnData()
+    {
+        battleActions = new List<BattleAction>();
+        unitInSelectionIndex = 0;
+    }
+    public IEnumerator SwitchPokemon(Pokemon newPokemon,BattleUnit unitToSwitch)
+    {
+        if (unitToSwitch.Pokemon.HP > 0)
+        {
+            yield return dialogBox.TypeDialog($"돌아와! {unitToSwitch.Pokemon.Base.Name}");
+            unitToSwitch.PlayFaintAniamtion();
             yield return new WaitForSeconds(2f);
         }
-        playerUnit.Setup(newPokemon);
-        playerUnit.Hud.SetData(newPokemon);
-
+        unitToSwitch.Setup(newPokemon);
         dialogBox.SetMoveNames(newPokemon.Moves);
-
         yield return dialogBox.TypeDialog($"가라! {newPokemon.Base.Name}");
     }
 
     public IEnumerator SendNextTrainerPokemon()
     {
         var nextPokemon = TrainerParty.GetHealthPokemon();
-        enemyUnit.Setup(nextPokemon);
+        enemyUnits[0].Setup(nextPokemon);
         yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {nextPokemon.Base.Name}을 내보냈다!");
     }
 
@@ -195,6 +261,9 @@ public class BattleSystem : MonoBehaviour
         }
 
         yield return dialogBox.TypeDialog($"{player.Name}(이)가 {pokeballItem.Name}을 사용했다!");
+
+        var playerUnit = playerUnits[0];
+        var enemyUnit = enemyUnits[0];
 
         var pokeballObj = Instantiate(pokeballSprite, playerUnit.transform.position - new Vector3(2, 0), Quaternion.identity);
         var pokeball = pokeballObj.GetComponent<SpriteRenderer>();

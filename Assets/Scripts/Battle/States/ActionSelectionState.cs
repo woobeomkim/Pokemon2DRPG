@@ -39,8 +39,7 @@ public class ActionSelectionState : State<BattleSystem>
     {
         if(selection == 0)
         {
-            bs.SelectedAction = BattleAction.Move;
-            MoveSelectionState.i.Moves = bs.PlayerUnit.Pokemon.Moves;
+            MoveSelectionState.i.Moves = bs.UnitInSelection.Pokemon.Moves;
             bs.StateMachine.ChangeState(MoveSelectionState.i);
         }
         else if(selection == 1)
@@ -53,8 +52,10 @@ public class ActionSelectionState : State<BattleSystem>
         }
         else if(selection == 3)
         {
-            bs.SelectedAction = BattleAction.Run;
-            bs.StateMachine.ChangeState(RunTrunState.i);
+            bs.AddBattleAction(new BattleAction()
+            {
+                Type = BattleActionType.Run
+            });
         }
     }
 
@@ -64,9 +65,11 @@ public class ActionSelectionState : State<BattleSystem>
         var selectedPokemon = PartyState.i.SelectedPokemon;
         if(selectedPokemon != null)
         {
-            bs.SelectedAction = BattleAction.SwitchPokemon;
-            bs.SelectedPokemon = selectedPokemon;
-            bs.StateMachine.ChangeState(RunTrunState.i);
+            bs.AddBattleAction(new BattleAction()
+            {
+                Type = BattleActionType.SwitchPokemon,
+                SelectedPokemon = selectedPokemon
+            });
         }
     }
 
@@ -76,9 +79,11 @@ public class ActionSelectionState : State<BattleSystem>
         var selectedItem = InventoryState.i.SelectedItem;
         if(selectedItem != null)
         {
-            bs.SelectedAction = BattleAction.UseItem;
-            bs.SelectedItem = selectedItem;
-            bs.StateMachine.ChangeState(RunTrunState.i);
+            bs.AddBattleAction(new BattleAction()
+            {
+                Type = BattleActionType.UseItem,
+                SelectedItem = selectedItem
+            });
         }
 
     }

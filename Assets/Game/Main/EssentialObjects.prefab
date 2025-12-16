@@ -300,8 +300,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be40e9b7645005d4a93902ab22f57816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerUnit: {fileID: 3100858429303909719}
-  enemyUnit: {fileID: 7009135753105753061}
+  playerUnits:
+  - {fileID: 3100858429303909719}
+  enemyUnits:
+  - {fileID: 7009135753105753061}
   dialogBox: {fileID: 3015102727779929402}
   partyScreen: {fileID: 7538031773623542753}
   playerImage: {fileID: 6229522605466736590}

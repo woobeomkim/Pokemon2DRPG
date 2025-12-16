@@ -10,6 +10,9 @@ public class RunTrunState : State<BattleSystem>
 {
     public static RunTrunState i { get; private set; }
 
+    // Input
+    public List<BattleAction> Actions { get; set; }
+
     private void Awake()
     {
         i = this;
@@ -17,8 +20,6 @@ public class RunTrunState : State<BattleSystem>
 
     BattleSystem bs;
 
-    BattleUnit playerUnit;
-    BattleUnit enemyUnit;
     BattleDialog dialogBox;
     PartyScreen partyScreen;
     bool isTrainerBattle;
@@ -29,76 +30,49 @@ public class RunTrunState : State<BattleSystem>
     {
         bs = owner;
 
-        playerUnit = bs.PlayerUnit;
-        enemyUnit = bs.EnemyUnit;
         dialogBox = bs.DialogBox;
         partyScreen = bs.PartyScreen;
         isTrainerBattle = bs.IsTrainerBattle;
         playerParty = bs.PlayerParty;
         trainerParty = bs.TrainerParty;
 
-        StartCoroutine(RunTurns(bs.SelectedAction));
+        StartCoroutine(RunTurns());
     }
 
-    IEnumerator RunTurns(BattleAction playerAction)
+    IEnumerator RunTurns()
     {
-        if (playerAction == BattleAction.Move)
+        foreach(var action in Actions)
         {
-            playerUnit.Pokemon.CurrentMove = playerUnit.Pokemon.Moves[bs.SelectedMove];
-            enemyUnit.Pokemon.CurrentMove = enemyUnit.Pokemon.GetRandomMove();
-
-            int playerPriority = playerUnit.Pokemon.CurrentMove.Base.Priority;
-            int enemyPriority = enemyUnit.Pokemon.CurrentMove.Base.Priority;
-
-            bool playerGoesFirst = true;
-            if (enemyPriority > playerPriority)
-                playerGoesFirst = false;
-            else if (enemyPriority == playerPriority)
-                playerGoesFirst = playerUnit.Pokemon.Speed >= enemyUnit.Pokemon.Speed;
-            var firstUnit = (playerGoesFirst) ? playerUnit : enemyUnit;
-            var secondUnit = (firstUnit == playerUnit) ? enemyUnit : playerUnit;
-
-            var secondPokemon = secondUnit.Pokemon;
-
-            yield return RunMove(firstUnit, secondUnit, firstUnit.Pokemon.CurrentMove);
-            yield return RunAfterTurn(firstUnit);
-            if (bs.IsBattleOver) yield break;
-
-            if (secondPokemon.HP > 0)
+            if(action.Type == BattleActionType.Move)
             {
-                yield return RunMove(secondUnit, firstUnit, secondUnit.Pokemon.CurrentMove);
-                yield return RunAfterTurn(secondUnit);
-                if (bs.IsBattleOver) yield break;
+                action.User.Pokemon.CurrentMove = action.SelectedMove;
+
+                yield return RunMove(action.User, action.Target, action.SelectedMove);
+                yield return RunAfterTurn(action.User);
             }
-        }
-        else
-        {
-            if (playerAction == BattleAction.SwitchPokemon)
+            else if (action.Type == BattleActionType.SwitchPokemon)
             {
-                yield return bs.SwitchPokemon(bs.SelectedPokemon);
+                yield return bs.SwitchPokemon(action.SelectedPokemon, action.User);
             }
-            else if (playerAction == BattleAction.UseItem)
+            else if(action.Type == BattleActionType.UseItem)
             {
-                if(bs.SelectedItem is PokeballItem)
+                if (action.SelectedItem is PokeballItem)
                 {
-                    yield return bs.ThrowPokeball(bs.SelectedItem as PokeballItem);
-                    if (bs.IsBattleOver) yield break;
+                    yield return bs.ThrowPokeball(action.SelectedItem as PokeballItem);
                 }
                 else
                 {
                     // State Machine에서 자동처리
                 }
             }
-            else if (playerAction == BattleAction.Run)
+            else if(action.Type == BattleActionType.Run)
             {
                 yield return TryToEscape();
             }
-
-            enemyUnit.Pokemon.CurrentMove = enemyUnit.Pokemon.GetRandomMove();
-            yield return RunMove(enemyUnit, playerUnit, enemyUnit.Pokemon.CurrentMove);
-            yield return RunAfterTurn(enemyUnit);
-            if (bs.IsBattleOver) yield break;
+            if (bs.IsBattleOver) break;
         }
+
+        bs.ClearTurnData();
 
         if (!bs.IsBattleOver)
             bs.StateMachine.ChangeState(ActionSelectionState.i);
@@ -255,57 +229,65 @@ public class RunTrunState : State<BattleSystem>
             float trainerBounus = (isTrainerBattle) ? 1.5f : 1f;
 
             int expGain = Mathf.FloorToInt((expYield * enemyLevel * trainerBounus) / 7);
-            playerUnit.Pokemon.Exp += expGain;
-            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {expGain}EXP를 얻었다!");
-            yield return playerUnit.Hud.SetExpSmooth();
-            // Checek Level Up
+            expGain = expGain / bs.UnitCount;
 
-            while (playerUnit.Pokemon.CheckForLevelUp())
+            for (int i = 0; i < bs.UnitCount; i++) 
             {
-                playerUnit.Hud.SetLevel();
-                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {playerUnit.Pokemon.Level}Level이 되었다!");
+                var playerUnit = bs.PlayerUnits[i];
 
-                //Try to learn a new move
-                var newMove = playerUnit.Pokemon.GetLearnableMoveAtCurrLevel();
-                if (newMove != null)
+                playerUnit.Pokemon.Exp += expGain;
+                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {expGain}EXP를 얻었다!");
+                yield return playerUnit.Hud.SetExpSmooth();
+                // Checek Level Up
+
+                while (playerUnit.Pokemon.CheckForLevelUp())
                 {
-                    if (playerUnit.Pokemon.Moves.Count < PokemonBase.MaxNumOfMoves)
-                    {
-                        playerUnit.Pokemon.LearnMove(newMove.Base);
-                        yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배웠다!");
-                        dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
-                    }
-                    else
-                    {
-                        // TODO : Forgot Move
-                        yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우려고한다");
-                        yield return dialogBox.TypeDialog($"그러나, 기술을 {PokemonBase.MaxNumOfMoves}개만큼 배우지 못한다.");
-                        yield return dialogBox.TypeDialog($"잊을 기술을 선택하세요!");
+                    playerUnit.Hud.SetLevel();
+                    yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {playerUnit.Pokemon.Level}Level이 되었다!");
 
-                        MoveToForgetState.i.NewMove = newMove.Base;
-                        MoveToForgetState.i.CurrentMoves = playerUnit.Pokemon.Moves.Select(m => m.Base).ToList();
-                        yield return GameController.i.StateMachine.PushAndWait(MoveToForgetState.i);
-
-                        int moveIndex = MoveToForgetState.i.Selection;
-                        if (moveIndex == PokemonBase.MaxNumOfMoves || moveIndex == -1)
+                    //Try to learn a new move
+                    var newMove = playerUnit.Pokemon.GetLearnableMoveAtCurrLevel();
+                    if (newMove != null)
+                    {
+                        if (playerUnit.Pokemon.Moves.Count < PokemonBase.MaxNumOfMoves)
                         {
-                            // Dont' learn move
-                            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우지 않았다!");
+                            playerUnit.Pokemon.LearnMove(newMove.Base);
+                            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배웠다!");
+                            dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
                         }
                         else
                         {
-                            // forget selecetedmove and learn new move
-                            var selectedMove = playerUnit.Pokemon.Moves[moveIndex].Base;
-                            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {selectedMove.Name}을 잊고 {newMove.Base.Name}을 배웠다!");
+                            // TODO : Forgot Move
+                            yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우려고한다");
+                            yield return dialogBox.TypeDialog($"그러나, 기술을 {PokemonBase.MaxNumOfMoves}개만큼 배우지 못한다.");
+                            yield return dialogBox.TypeDialog($"잊을 기술을 선택하세요!");
 
-                            playerUnit.Pokemon.Moves[moveIndex] = new Move(newMove.Base);
+                            MoveToForgetState.i.NewMove = newMove.Base;
+                            MoveToForgetState.i.CurrentMoves = playerUnit.Pokemon.Moves.Select(m => m.Base).ToList();
+                            yield return GameController.i.StateMachine.PushAndWait(MoveToForgetState.i);
 
+                            int moveIndex = MoveToForgetState.i.Selection;
+                            if (moveIndex == PokemonBase.MaxNumOfMoves || moveIndex == -1)
+                            {
+                                // Dont' learn move
+                                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {newMove.Base.Name}을 배우지 않았다!");
+                            }
+                            else
+                            {
+                                // forget selecetedmove and learn new move
+                                var selectedMove = playerUnit.Pokemon.Moves[moveIndex].Base;
+                                yield return dialogBox.TypeDialog($"{playerUnit.Pokemon.Base.Name}(이)가 {selectedMove.Name}을 잊고 {newMove.Base.Name}을 배웠다!");
+
+                                playerUnit.Pokemon.Moves[moveIndex] = new Move(newMove.Base);
+
+                            }
                         }
                     }
-                }
 
-                yield return playerUnit.Hud.SetExpSmooth(true);
+                    yield return playerUnit.Hud.SetExpSmooth(true);
+                }
             }
+        
 
             yield return new WaitForSeconds(1f);
         }
@@ -320,7 +302,7 @@ public class RunTrunState : State<BattleSystem>
             if (nextPokemon != null)
             {
                 yield return GameController.i.StateMachine.PushAndWait(PartyState.i);
-                yield return bs.SwitchPokemon(PartyState.i.SelectedPokemon);
+                yield return bs.SwitchPokemon(PartyState.i.SelectedPokemon, faintedUnit);
             }
             else
             {
@@ -368,8 +350,8 @@ public class RunTrunState : State<BattleSystem>
 
         ++bs.EscapeAttempts;
 
-        int playerSpeed = playerUnit.Pokemon.Speed;
-        int enemySpeed = enemyUnit.Pokemon.Speed;
+        int playerSpeed = bs.PlayerUnits[0].Pokemon.Speed;
+        int enemySpeed = bs.EnemyUnits[0].Pokemon.Speed;
 
         if (enemySpeed < playerSpeed)
         {

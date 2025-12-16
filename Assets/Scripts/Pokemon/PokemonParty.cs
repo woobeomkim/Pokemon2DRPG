@@ -36,6 +36,10 @@ public class PokemonParty : MonoBehaviour
     {
         return pokemons.Where(x => x.HP > 0).FirstOrDefault();
     }
+    public List<Pokemon> GetHealthPokemons(int unitCount)
+    {
+        return pokemons.Where(x => x.HP > 0).Take(unitCount).ToList();
+    }
 
     public void AddPokemon(Pokemon pokemon)
     {

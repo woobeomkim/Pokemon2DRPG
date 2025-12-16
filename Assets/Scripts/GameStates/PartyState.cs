@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -78,7 +79,7 @@ public class PartyState : State<GameController>
                     yield break;
                 }
 
-                if (SelectedPokemon == battleState.BattleSystem.PlayerUnit.Pokemon)
+                if (battleState.BattleSystem.PlayerUnits.Any(u => u.Pokemon == SelectedPokemon))
                 {
                     partyScreen.SetMessageText($"같은 포켓몬은 내보낼 수 없습니다!");
                     yield break;
@@ -157,7 +158,7 @@ public class PartyState : State<GameController>
         if(prevState == BattleState.i)
         {
             var battleState = prevState as BattleState;
-            if (battleState.BattleSystem.PlayerUnit.Pokemon.HP <= 0)
+            if (battleState.BattleSystem.PlayerUnits.Any(u => u.Pokemon.HP <= 0))
             {
                 partyScreen.SetMessageText("계속하려면 포켓몬을 고르세요!");
                 return;

@@ -52,8 +52,14 @@ public class MoveSelectionState : State<BattleSystem>
 
     void OnMoveSelected(int selection)
     {
-        bs.SelectedMove = selection;
-        bs.StateMachine.ChangeState(RunTrunState.i);
+        bs.AddBattleAction(new BattleAction()
+        {
+            Type = BattleActionType.Move,
+            SelectedMove = Moves[selection],
+
+            // TODO : TargetSelectionState
+            Target = bs.EnemyUnits[0]
+        });
     }
 
     void OnBack()
