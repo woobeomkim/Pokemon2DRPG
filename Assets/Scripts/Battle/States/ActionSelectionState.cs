@@ -21,7 +21,7 @@ public class ActionSelectionState : State<BattleSystem>
         selectionUI.gameObject.SetActive(true);
         selectionUI.onSelected += OnActionSelected;
 
-        bs.DialogBox.SetDialog("행동을 고르세요!");
+        bs.DialogBox.SetDialog($"{bs.UnitInSelection.Pokemon.Base.Name}의 행동을 고르세요!");
     }
 
     public override void Execute()

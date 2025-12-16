@@ -12,8 +12,11 @@ using Utils.StateMachine;
 public enum BattleTrigger { Longgrass,Water}
 public class BattleSystem : MonoBehaviour
 {
-    [SerializeField] List<BattleUnit> playerUnits;
-    [SerializeField] List<BattleUnit> enemyUnits;
+    [SerializeField] BattleUnit playerUnitSingle;
+    [SerializeField] BattleUnit enemyUnitSingle;
+
+    [SerializeField] List<BattleUnit> playerUnitsMulti;
+    [SerializeField] List<BattleUnit> enemyUnitsMulti;
     [SerializeField] BattleDialog dialogBox;
     [SerializeField] PartyScreen partyScreen;
     [SerializeField] Image playerImage;
@@ -21,6 +24,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] GameObject pokeballSprite;
     [SerializeField] MoveToForgetSelectionUI moveSelectionUI;
     [SerializeField] InventoryUI inventoryUI;
+
+    [SerializeField] GameObject singleBattleElements;
+    [SerializeField] GameObject multiBattleElements;
 
     [Header("Audio")]
     [SerializeField] AudioClip wildBattleMusic;
@@ -31,6 +37,9 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Image backgroundImage;
     [SerializeField] Sprite grassBackground;
     [SerializeField] Sprite waterBackground;
+
+    List<BattleUnit> playerUnits;
+    List<BattleUnit> enemyUnits;
 
     int unitCount = 1;
     int unitInSelectionIndex = 0;
@@ -83,7 +92,7 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
     public void StartTrainerBattle(PokemonParty playerParty, PokemonParty trainerParty,
-        BattleTrigger trigger = BattleTrigger.Longgrass, int unitCount = 1)
+        BattleTrigger trigger = BattleTrigger.Longgrass, int unitCount = 2)
     {
         this.PlayerParty = playerParty;
         this.TrainerParty = trainerParty;
@@ -102,7 +111,21 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle()
     {
-        StateMachine = new StateMachine<BattleSystem>(this);
+        singleBattleElements.SetActive(unitCount == 1);
+        multiBattleElements.SetActive(unitCount > 1);
+
+        if (unitCount == 1)
+        {
+            playerUnits = new List<BattleUnit> { playerUnitSingle };
+            enemyUnits = new List<BattleUnit> { enemyUnitSingle };
+        }
+        else if (unitCount > 1)
+        {
+            playerUnits = playerUnitsMulti.GetRange(0, playerUnitsMulti.Count);
+            enemyUnits = enemyUnitsMulti.GetRange(0, enemyUnitsMulti.Count);
+        }
+
+            StateMachine = new StateMachine<BattleSystem>(this);
         battleActions = new List<BattleAction>();
 
         for(int i=0;i<unitCount;i++)
