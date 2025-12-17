@@ -27,7 +27,7 @@ public class ConditionsDB
                 OnAfterTurn = (Pokemon pokemon) =>
                 {
                     pokemon.DecreaseHP(pokemon.MaxHP / 8);
-                    pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 독에 감염되어 데미지를 입었다!");
+                    pokemon.AddStatusEvent(StatusEventType.Damage,$"{pokemon.Base.Name}(이)가 독에 감염되어 데미지를 입었다!");
                 }
             }
         },
@@ -40,7 +40,7 @@ public class ConditionsDB
                 OnAfterTurn = (Pokemon pokemon) =>
                 {
                     pokemon.DecreaseHP(pokemon.MaxHP / 16);
-                    pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 화상을입어 데미지를 입었다!");
+                    pokemon.AddStatusEvent(StatusEventType.Damage,$"{pokemon.Base.Name}(이)가 화상을입어 데미지를 입었다!");
                 }
             }
         },
@@ -54,7 +54,7 @@ public class ConditionsDB
                 {
                     if(UnityEngine.Random.Range(1,5) == 1)
                     {
-                        pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 마비되어 움직일수없다!");
+                        pokemon.AddStatusEvent($"{pokemon.Base.Name}(이)가 마비되어 움직일수없다!");
                         return false;
                     }
                     return true;
@@ -72,7 +72,7 @@ public class ConditionsDB
                     if(UnityEngine.Random.Range(1,5) == 1)
                     {
                         pokemon.CureStatus();
-                        pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 깨어났다");
+                        pokemon.AddStatusEvent($"{pokemon.Base.Name}(이)가 깨어났다");
                         return true;
                     }
                     return false;
@@ -95,11 +95,11 @@ public class ConditionsDB
                     if(pokemon.StatusTime <= 0)
                     {
                         pokemon.CureStatus();
-                        pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 깨어났다!");
+                        pokemon.AddStatusEvent($"{pokemon.Base.Name}(이)가 깨어났다!");
                         return true;
                     }
                     pokemon.StatusTime--;
-                    pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 자고있는중이다!");
+                    pokemon.AddStatusEvent($"{pokemon.Base.Name}(이)가 자고있는중이다!");
 
                     return false;
                 }
@@ -122,15 +122,15 @@ public class ConditionsDB
                     if(pokemon.VolatileStatusTime <= 0)
                     {
                         pokemon.CureVolatileStatus();
-                        pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 혼란에서 깨어났다!");
+                        pokemon.AddStatusEvent($"{pokemon.Base.Name}(이)가 혼란에서 깨어났다!");
                         return true;
                     }
                     pokemon.VolatileStatusTime--;
-                    pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 혼란에 빠져있다!");
+                    pokemon.AddStatusEvent($"{pokemon.Base.Name}(이)가 혼란에 빠져있다!");
                     if(UnityEngine.Random.Range(1,3) == 1)
                         return true;
                     pokemon.DecreaseHP(pokemon.MaxHP / 8);
-                    pokemon.StatusChanges.Enqueue($"{pokemon.Base.Name}(이)가 혼란에빠져 영문도모른체 자신을 공격했다!");
+                    pokemon.AddStatusEvent(StatusEventType.Damage,$"{pokemon.Base.Name}(이)가 혼란에빠져 영문도모른체 자신을 공격했다!");
                     return false;
                 }
             }

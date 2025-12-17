@@ -86,11 +86,11 @@ public class RunTrunState : State<BattleSystem>
         bool canRunMove = sourceUnit.Pokemon.OnBeforeMove();
         if (!canRunMove)
         {
-            yield return ShowStatusChanges(sourceUnit.Pokemon);
+            yield return ShowStatusChanges(sourceUnit);
             yield return sourceUnit.Hud.WaitForHPUpdate();
             yield break;
         }
-        yield return ShowStatusChanges(sourceUnit.Pokemon);
+        yield return ShowStatusChanges(sourceUnit);
 
         move.PP--;
         yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}(을)를 사용하였다!");
@@ -107,12 +107,12 @@ public class RunTrunState : State<BattleSystem>
 
             if (move.Base.Category == MoveCategory.Status)
             {
-                yield return RunMoveEffects(move.Base.Effects, sourceUnit.Pokemon, targetUnit.Pokemon, move.Base.Target);
+                yield return RunMoveEffects(move.Base.Effects, sourceUnit, targetUnit, move.Base.Target);
             }
             else
             {
                 var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
-                yield return targetUnit.Hud.WaitForHPUpdate();
+                yield return targetUnit.Hud.UpdateHPAsync();
                 yield return ShowDamageDetails(damageDetails);
 
             }
@@ -122,7 +122,7 @@ public class RunTrunState : State<BattleSystem>
                 {
                     var rnd = UnityEngine.Random.Range(1, 101);
                     if (rnd <= secondary.Chance)
-                        yield return RunMoveEffects(secondary, sourceUnit.Pokemon, targetUnit.Pokemon, secondary.Target);
+                        yield return RunMoveEffects(secondary, sourceUnit, targetUnit, secondary.Target);
                 }
             }
 
@@ -138,26 +138,26 @@ public class RunTrunState : State<BattleSystem>
 
     }
 
-    IEnumerator RunMoveEffects(MoveEffects effects, Pokemon source, Pokemon target, MoveTarget moveTarget)
+    IEnumerator RunMoveEffects(MoveEffects effects, BattleUnit source ,BattleUnit target, MoveTarget moveTarget)
     {
         // Stat Boosting
         if (effects.Boosts != null)
         {
             if (moveTarget == MoveTarget.Self)
-                source.ApplyBoost(effects.Boosts);
+                source.Pokemon.ApplyBoost(effects.Boosts);
             else
-                target.ApplyBoost(effects.Boosts);
+                target.Pokemon.ApplyBoost(effects.Boosts);
         }
 
         // Status Condition
         if (effects.Status != ConditionID.none)
         {
-            target.SetStatus(effects.Status);
+            target.Pokemon.SetStatus(effects.Status);
         }
 
         if (effects.VolatileStatus != ConditionID.none)
         {
-            target.SetVolatileStatus(effects.VolatileStatus);
+            target.Pokemon.SetVolatileStatus(effects.VolatileStatus);
         }
 
         yield return ShowStatusChanges(source);
@@ -169,8 +169,8 @@ public class RunTrunState : State<BattleSystem>
         if (bs.IsBattleOver) yield break;
 
         sourceUnit.Pokemon.OnAfterTurn();
-        yield return ShowStatusChanges(sourceUnit.Pokemon);
-        yield return sourceUnit.Hud.WaitForHPUpdate();
+        yield return ShowStatusChanges(sourceUnit);
+        yield return sourceUnit.Hud.UpdateHPAsync();
 
         if (sourceUnit.Pokemon.HP <= 0)
         {
@@ -202,12 +202,21 @@ public class RunTrunState : State<BattleSystem>
         return UnityEngine.Random.Range(1, 101) <= moveAccuracy;
     }
 
-    IEnumerator ShowStatusChanges(Pokemon pokemon)
+    IEnumerator ShowStatusChanges(BattleUnit battleUnit)
     {
+        var pokemon = battleUnit.Pokemon;
+
         while (pokemon.StatusChanges.Count > 0)
         {
-            var message = pokemon.StatusChanges.Dequeue();
-            yield return dialogBox.TypeDialog(message);
+            var statusEvent = pokemon.StatusChanges.Dequeue();
+            yield return dialogBox.TypeDialog(statusEvent.Message);
+
+            if(statusEvent.Type == StatusEventType.Damage)
+            {
+                battleUnit.PlayHitAnimation();
+                AudioManager.i.PlaySfx(AudioID.Hit);
+                yield return battleUnit.Hud.UpdateHPAsync();
+            }
         }
     }
 

@@ -32,7 +32,7 @@ public class Pokemon
     public Dictionary<Stat, int> StatBoosts { get; private set; }
 
     public Condition Status { get; private set; }
-    public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
+    public Queue<StatusEvent> StatusChanges { get; private set; } = new Queue<string>();
     public Condition VolatileStatus { get; private set; }
     public int StatusTime { get; set; }
     public int VolatileStatusTime { get; set; }
@@ -42,7 +42,7 @@ public class Pokemon
     public void Init()
     {
         Moves = new List<Move>();
-        StatusChanges = new Queue<string>();
+        StatusChanges = new Queue<StatusEvent>();
 
         foreach(var move in Base.LearnableMoves)
         {
@@ -79,7 +79,7 @@ public class Pokemon
         Moves = saveData.moves.Select(m => new Move(m)).ToList();
 
         CalculateStats();
-        StatusChanges = new Queue<string>();
+        StatusChanges = new Queue<StatusEvent>();
         ResetBoost();
         VolatileStatus = null;
     }
@@ -155,9 +155,9 @@ public class Pokemon
             StatBoosts[stat] = Mathf.Clamp(StatBoosts[stat] + boost, -6, 6);
 
             if (boost > 0)
-                StatusChanges.Enqueue($"{Base.Name}의 {stat}이 증가하였다!");
+                AddStatusEvent(StatusEventType.StatBoost,$"{Base.Name}의 {stat}이 증가하였다!");
             else
-                StatusChanges.Enqueue($"{Base.Name}의 {stat}이 감소하였다!");
+                AddStatusEvent(StatusEventType.StatBoost,$"{Base.Name}의 {stat}이 감소하였다!");
 
             Debug.Log($"{stat} 이 {StatBoosts[stat]}만큼 부스트 되었다");
         }
@@ -256,10 +256,12 @@ public class Pokemon
         HP = Mathf.Clamp(HP + amount, 0, MaxHP);
         OnHpChagnged?.Invoke();
     }
-    public void DecreaseHP(int damage)
+    public void DecreaseHP(int damage, bool callUpdateEvent = false)
     {
         HP = Mathf.Clamp(HP - damage, 0, MaxHP);
-        OnHpChagnged?.Invoke();
+        
+        if(callUpdateEvent)
+            OnHpChagnged?.Invoke();
     }
 
     public void SetStatus(ConditionID conditionID)
@@ -268,7 +270,7 @@ public class Pokemon
 
         Status = ConditionsDB.Conditions[conditionID];
         Status?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.Name}(이)가 {Status.StartMessage}");
+        AddStatusEvent($"{Base.Name}(이)가 {Status.StartMessage}");
         OnStatusChanged?.Invoke();
     }
     public void SetVolatileStatus(ConditionID conditionID)
@@ -277,7 +279,7 @@ public class Pokemon
 
         VolatileStatus = ConditionsDB.Conditions[conditionID];
         VolatileStatus?.OnStart?.Invoke(this);
-        StatusChanges.Enqueue($"{Base.Name}(이)가 {VolatileStatus.StartMessage}");
+        AddStatusEvent($"{Base.Name}(이)가 {VolatileStatus.StartMessage}");
     }
 
     public Move GetRandomMove()
@@ -327,6 +329,17 @@ public class Pokemon
         ResetBoost();
         CureVolatileStatus();
     }
+
+    public void AddStatusEvent(StatusEventType type, string message)
+    {
+        StatusChanges.Enqueue(new StatusEvent(type, message));
+    }
+
+    public void AddStatusEvent(string message)
+    {
+        AddStatusEvent(StatusEventType.Text, message);
+    }
+
 
     public int Attack
     {
@@ -389,4 +402,17 @@ public class PokemonSaveData
     public int exp;
     public ConditionID? statusID;
     public List<MoveSaveData> moves;
+}
+
+public enum StatusEventType { Text,Damage,StatBoost}
+
+public class StatusEvent
+{
+    public StatusEventType Type { get; private set; }
+    public string Message { get; private set; }
+    public StatusEvent(StatusEventType type,string message)
+    {
+        Type = type;
+        Message = message;
+    }
 }
