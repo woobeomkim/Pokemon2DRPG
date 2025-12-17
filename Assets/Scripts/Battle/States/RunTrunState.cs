@@ -347,7 +347,7 @@ public class RunTrunState : State<BattleSystem>
             if (nextPokemon == null && activePokemons.Count == 0)
             {
                 // End the battle
-                bs.BattleOver(false);
+                bs.BattleOver(true);
             }
             else if (nextPokemon == null && activePokemons.Count > 0)
             {

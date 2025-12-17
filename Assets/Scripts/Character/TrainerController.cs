@@ -5,6 +5,7 @@ using UnityEngine;
 public class TrainerController : MonoBehaviour,Interactable,ISavable
 {
     [SerializeField] string name;
+    [SerializeField] int battleUnitCount = 1;
     [SerializeField] Sprite sprite;
     [SerializeField] Dialog dialog;
     [SerializeField] Dialog dialogAfterBattle;
@@ -19,6 +20,7 @@ public class TrainerController : MonoBehaviour,Interactable,ISavable
 
     public string Name => name;
     public Sprite Sprite => sprite;
+    public int BattleUnitCount => battleUnitCount;
 
     private void Awake()
     {

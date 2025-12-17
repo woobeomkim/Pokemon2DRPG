@@ -81,7 +81,12 @@ public class PartyState : State<GameController>
 
                 if (battleState.BattleSystem.PlayerUnits.Any(u => u.Pokemon == SelectedPokemon))
                 {
-                    partyScreen.SetMessageText($"같은 포켓몬은 내보낼 수 없습니다!");
+                    partyScreen.SetMessageText($"이 포켓몬은 이미 내보냈어!");
+                    yield break;
+                }
+                if (battleState.BattleSystem.UnitCount >1 && battleState.BattleSystem.IsPokemonSelectedToShift(SelectedPokemon))
+                {
+                    partyScreen.SetMessageText($"이 포켓몬은 이미 내보냈어!");
                     yield break;
                 }
 

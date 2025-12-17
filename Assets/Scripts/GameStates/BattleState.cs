@@ -39,7 +39,7 @@ public class BattleState : State<GameController>
         else
         {
             var trainerParty = Trainer.GetComponent<PokemonParty>();
-            bs.StartTrainerBattle(playerParty, trainerParty);
+            bs.StartTrainerBattle(playerParty, trainerParty, unitCount: Trainer.BattleUnitCount);
         }
 
         bs.onBattleOver += OnBattleOver;

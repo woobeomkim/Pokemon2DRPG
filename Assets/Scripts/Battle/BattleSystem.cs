@@ -92,7 +92,7 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
     public void StartTrainerBattle(PokemonParty playerParty, PokemonParty trainerParty,
-        BattleTrigger trigger = BattleTrigger.Longgrass, int unitCount = 2)
+        BattleTrigger trigger = BattleTrigger.Longgrass, int unitCount = 1)
     {
         this.PlayerParty = playerParty;
         this.TrainerParty = trainerParty;
@@ -348,5 +348,10 @@ public class BattleSystem : MonoBehaviour
         }
 
         return shakeCount;
+    }
+
+    public bool IsPokemonSelectedToShift(Pokemon pokemon)
+    {
+        return battleActions.Any(a => a.Type == BattleActionType.SwitchPokemon && a.SelectedPokemon == pokemon);
     }
 }
