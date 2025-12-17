@@ -117,7 +117,9 @@ public class RunTrunState : State<BattleSystem>
             }
             else
             {
-                var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
+                float weatherModifier = bs.Field.Weather?.OnDamageModify?.Invoke(move) ?? 1f;
+
+                var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon , weatherModifier);
                 yield return targetUnit.Hud.UpdateHPAsync();
                 yield return ShowDamageDetails(damageDetails);
 
@@ -167,18 +169,44 @@ public class RunTrunState : State<BattleSystem>
             target.Pokemon.SetVolatileStatus(effects.VolatileStatus);
         }
 
+        if(effects.Weather != WeatherConditonID.none)
+        {
+            bs.Field.SetWeather(effects.Weather, 5);
+            yield return dialogBox.TypeDialog(bs.Field.Weather.StartByMoveMessage ?? bs.Field.Weather.StartMessage);
+        }
+
         yield return ShowStatusChanges(source);
         yield return ShowStatusChanges(target);
     }
     IEnumerator RunWeatherEffects(WeatherCondition weather)
     {
+        if (bs.Field.WeatherDuration != null)
+        {
+            if (bs.Field.WeatherDuration > 0)
+            {
+                --bs.Field.WeatherDuration;
+            }
+            else
+            {
+                bs.Field.SetWeather(WeatherConditonID.none, null);
+                if (weather.EndMessage != null)
+                {
+                    yield return dialogBox.TypeDialog(weather.EndMessage);
+                    int a = 0;
+                }
+                yield break;
+            }
+        }
+
+        if (weather.EffeectMessage != null)
+            yield return dialogBox.TypeDialog(weather.EffeectMessage);
+
         var units = bs.PlayerUnits.Concat(bs.EnemyUnits);
 
         foreach (var unit in units)
         {
-            weather.OnWeatherEffect(unit.Pokemon);
+            weather.OnWeatherEffect?.Invoke(unit.Pokemon);
             yield return ShowStatusChanges(unit);
-
             if (unit.Pokemon.HP <= 0)
                 yield return HandlePokemonFainted(unit);
         }
@@ -236,6 +264,7 @@ public class RunTrunState : State<BattleSystem>
                 battleUnit.PlayHitAnimation();
                 AudioManager.i.PlaySfx(AudioID.Hit);
                 yield return battleUnit.Hud.UpdateHPAsync();
+                playerParty.PartyUpdate();
             }
         }
     }

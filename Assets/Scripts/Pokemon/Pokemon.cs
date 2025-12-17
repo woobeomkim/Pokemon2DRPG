@@ -163,7 +163,7 @@ public class Pokemon
         }
     }
 
-    public DamageDetails TakeDamage(Move move,Pokemon attacker)
+    public DamageDetails TakeDamage(Move move,Pokemon attacker,float weatherModifier = 1f)
     {
         float critical = 1f;
         if (UnityEngine.Random.value * 100f <= 6.25f)
@@ -181,7 +181,7 @@ public class Pokemon
         float attack = (move.Base.Category == MoveCategory.Special) ? attacker.SpAttack : attacker.Attack;
         float defense = (move.Base.Category == MoveCategory.Special) ? this.SpDefense : this.Defense;
 
-        float modifiers = UnityEngine.Random.Range(0.85f, 1f) * type * critical;
+        float modifiers = UnityEngine.Random.Range(0.85f, 1f) * type * critical * weatherModifier;
         float a = (2 * attacker.Level + 10) / 250f;
         float d = a * move.Base.Power * ((float)attack / defense) + 2;
         int damage = Mathf.FloorToInt(d * modifiers);
