@@ -101,38 +101,53 @@ public class RunTrunState : State<BattleSystem>
         move.PP--;
         yield return dialogBox.TypeDialog($"{sourceUnit.Pokemon.Base.Name}(이)가 {move.Base.Name}(을)를 사용하였다!");
 
+        int hitCount = 0;
+        float typeEffectiveness = 1f;
         if (CheckIfMoveHits(move, sourceUnit.Pokemon, targetUnit.Pokemon))
         {
-            sourceUnit.PlayAttackAnimation();
-            AudioManager.i.PlaySfx(move.Base.Sound);
-            yield return new WaitForSeconds(1.0f);
-
-
-            targetUnit.PlayHitAnimation();
-            AudioManager.i.PlaySfx(AudioID.Hit);
-
-            if (move.Base.Category == MoveCategory.Status)
+            for (int i = 1; i <= move.Base.GetHitTimes(); i++)
             {
-                yield return RunMoveEffects(move.Base.Effects, sourceUnit, targetUnit, move.Base.Target);
-            }
-            else
-            {
-                float weatherModifier = bs.Field.Weather?.OnDamageModify?.Invoke(move) ?? 1f;
+                sourceUnit.PlayAttackAnimation();
+                AudioManager.i.PlaySfx(move.Base.Sound);
+                yield return new WaitForSeconds(1.0f);
 
-                var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon , weatherModifier);
-                yield return targetUnit.Hud.UpdateHPAsync();
-                yield return ShowDamageDetails(damageDetails);
 
-            }
-            if (move.Base.Secondaries != null && move.Base.Secondaries.Count > 0 && targetUnit.Pokemon.HP > 0)
-            {
-                foreach (var secondary in move.Base.Secondaries)
+                targetUnit.PlayHitAnimation();
+                AudioManager.i.PlaySfx(AudioID.Hit);
+
+                if (move.Base.Category == MoveCategory.Status)
                 {
-                    var rnd = UnityEngine.Random.Range(1, 101);
-                    if (rnd <= secondary.Chance)
-                        yield return RunMoveEffects(secondary, sourceUnit, targetUnit, secondary.Target);
+                    yield return RunMoveEffects(move.Base.Effects, sourceUnit, targetUnit, move.Base.Target);
                 }
+                else
+                {
+                    float weatherModifier = bs.Field.Weather?.OnDamageModify?.Invoke(move) ?? 1f;
+
+                    var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon, weatherModifier);
+                    yield return targetUnit.Hud.UpdateHPAsync();
+                    yield return ShowDamageDetails(damageDetails);
+                    typeEffectiveness = damageDetails.TypeEffective;
+
+                }
+                if (move.Base.Secondaries != null && move.Base.Secondaries.Count > 0 && targetUnit.Pokemon.HP > 0)
+                {
+                    foreach (var secondary in move.Base.Secondaries)
+                    {
+                        var rnd = UnityEngine.Random.Range(1, 101);
+                        if (rnd <= secondary.Chance)
+                            yield return RunMoveEffects(secondary, sourceUnit, targetUnit, secondary.Target);
+                    }
+                }
+
+                hitCount = i;
+                if (targetUnit.Pokemon.HP <= 0)
+                    break;
             }
+
+            yield return ShowTypeEffectiveness(typeEffectiveness);
+
+            if (move.Base.IsMultiHitMove)
+                yield return dialogBox.TypeDialog($"{hitCount}번 때렸다!");
 
             if (targetUnit.Pokemon.HP <= 0)
             {
@@ -438,9 +453,14 @@ public class RunTrunState : State<BattleSystem>
         if (damageDetails.Critical > 1f)
             yield return dialogBox.TypeDialog($"급소를 때린것같다!");
 
-        if (damageDetails.TypeEffective > 1)
+    }
+
+    IEnumerator ShowTypeEffectiveness(float typeEffectiveness)
+    {
+
+        if (typeEffectiveness > 1)
             yield return dialogBox.TypeDialog($"매우 효과적이다!");
-        else if (damageDetails.TypeEffective < 1)
+        else if (typeEffectiveness < 1)
             yield return dialogBox.TypeDialog($"효과가 없는것 같다!");
     }
 

@@ -21,7 +21,24 @@ public class MoveBase : ScriptableObject
     [SerializeField] List<SecondaryEffects> secondaries;
     [SerializeField] MoveTarget target;
 
+    [SerializeField] bool isMultiHitMove = false;
+    [SerializeField] Vector2Int hitRange = new Vector2Int(2, 0);
+
     [SerializeField] AudioClip sound;
+
+    public int GetHitTimes()
+    {
+        if (isMultiHitMove)
+        {
+            if (hitRange.y == 0)
+                return hitRange.x;
+
+            return UnityEngine.Random.Range(hitRange.x, hitRange.y + 1);
+        }
+        else
+            return 1;
+    }
+
     public string Name => name;
 
     public string Description => description;
@@ -40,6 +57,8 @@ public class MoveBase : ScriptableObject
     public List<SecondaryEffects> Secondaries => secondaries;
     public MoveTarget Target => target;
     public AudioClip Sound => sound;
+
+    public bool IsMultiHitMove => isMultiHitMove;
 }
 
 [System.Serializable]
