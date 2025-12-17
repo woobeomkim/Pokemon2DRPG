@@ -777,6 +777,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 155596563968105196, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
+      propertyPath: pokemons.Array.data[0].level
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 280684699148660815, guid: 67d7bcd3346949949965aa7cf4ce6662, type: 3}
       propertyPath: m_IsActive
       value: 0

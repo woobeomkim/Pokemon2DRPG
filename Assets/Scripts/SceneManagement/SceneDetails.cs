@@ -4,6 +4,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+#endif
+
 public class SceneDetails : MonoBehaviour
 {
     [SerializeField] List<SceneDetails> connectedScenes;
@@ -75,6 +79,28 @@ public class SceneDetails : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
+    [ContextMenu("Open Scene")]
+    public void OpenSceneInEditor()
+    {
+        if(!EditorSceneManager.GetSceneByName(gameObject.name).isLoaded)
+        {
+            string path = $"Assets/Scenes/{gameObject.name}.unity";
+            EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
+        }
+    }
+
+    [ContextMenu("Close Scene")]
+    public void CloseSceneInEditor()
+    {
+        var scene = EditorSceneManager.GetSceneByName(gameObject.name);
+        if (scene.isLoaded)
+        {
+            string path = $"Assets/Scenes/{gameObject.name}.unity";
+            EditorSceneManager.CloseScene(scene, true);
+        }
+    }
+#endif
     List<SavableEntity> GetSavableEntitiesInScene()
     {
         var currScene = SceneManager.GetSceneByName(gameObject.name);

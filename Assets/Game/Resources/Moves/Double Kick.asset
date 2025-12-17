@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: "\uB450\uBC88 \uCC28\uAE30"
   description: 
-  type: 1
-  power: 18
+  type: 7
+  power: 30
   accuracy: 80
   alwaysHits: 0
-  pp: 35
+  pp: 20
   priority: 0
   category: 0
   effects:
@@ -29,5 +29,5 @@ MonoBehaviour:
   secondaries: []
   target: 0
   isMultiHitMove: 1
-  hitRange: {x: 2, y: 5}
+  hitRange: {x: 2, y: 0}
   sound: {fileID: 8300000, guid: d725ba15a8456b445b8bfc4d4d03c778, type: 3}
