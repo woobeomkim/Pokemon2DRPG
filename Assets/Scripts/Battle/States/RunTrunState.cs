@@ -305,9 +305,9 @@ public class RunTrunState : State<BattleSystem>
             float trainerBounus = (isTrainerBattle) ? 1.5f : 1f;
 
             int expGain = Mathf.FloorToInt((expYield * enemyLevel * trainerBounus) / 7);
-            expGain = expGain / bs.UnitCount;
+            expGain = expGain / bs.ActivePlayerUnitsCount;
 
-            for (int i = 0; i < bs.UnitCount; i++) 
+            for (int i = 0; i < bs.ActivePlayerUnitsCount; i++) 
             {
                 var playerUnit = bs.PlayerUnits[i];
 

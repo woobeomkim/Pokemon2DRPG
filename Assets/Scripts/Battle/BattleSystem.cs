@@ -45,6 +45,8 @@ public class BattleSystem : MonoBehaviour
     int unitInSelectionIndex = 0;
 
     public int UnitCount => unitCount;
+    public int ActivePlayerUnitsCount => playerUnits.Count(u => u.Pokemon != null && u.Pokemon.HP > 0);
+    public int ActiveEnemyUnitsCount => EnemyUnits.Count(u => u.Pokemon != null && u.Pokemon.HP > 0);
 
     public StateMachine<BattleSystem> StateMachine { get; private set; }
 
@@ -168,7 +170,7 @@ public class BattleSystem : MonoBehaviour
             // send out first pokemon of the trainer
             trainerImage.gameObject.SetActive(false);
             var enemyPokemons = TrainerParty.GetHealthPokemons(unitCount);
-            for (int i = 0; i < unitCount; i++) 
+            for (int i = 0; i < enemyPokemons.Count; i++) 
             {
                 enemyUnits[i].gameObject.SetActive(true);
                 enemyUnits[i].Setup(enemyPokemons[i]);
@@ -180,7 +182,7 @@ public class BattleSystem : MonoBehaviour
             // send out first pokemon of the player
             playerImage.gameObject.SetActive(false);
             var playerPokemons = PlayerParty.GetHealthPokemons(unitCount);
-            for(int i=0;i<unitCount;i++)
+            for (int i = 0; i < playerPokemons.Count; i++)
             {
                 playerUnits[i].gameObject.SetActive(true);
                 playerUnits[i].Setup(playerPokemons[i]);
@@ -225,7 +227,7 @@ public class BattleSystem : MonoBehaviour
         battleAction.User = UnitInSelection;
         battleActions.Add(battleAction);
 
-        if(battleActions.Count == unitCount)
+        if(battleActions.Count == ActivePlayerUnitsCount)
         {
             // Add Enemy Action
             foreach(var enemyUnit in enemyUnits)
@@ -235,7 +237,7 @@ public class BattleSystem : MonoBehaviour
                     Type = BattleActionType.Move,
                     SelectedMove = enemyUnit.Pokemon.GetRandomMove(),
                     User = enemyUnit,
-                    Target = playerUnits[UnityEngine.Random.Range(0, playerUnits.Count)]
+                    Target = playerUnits[UnityEngine.Random.Range(0, ActivePlayerUnitsCount)]
                 });
             }
 
