@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Utils.StateMachine;
+using static Unity.VisualScripting.Member;
 using static UnityEditor.Progress;
 
 public class RunTrunState : State<BattleSystem>
@@ -75,6 +76,11 @@ public class RunTrunState : State<BattleSystem>
             if (bs.IsBattleOver) break;
         }
 
+        if(bs.Field?.Weather != null)
+        {
+            yield return RunWeatherEffects(bs.Field.Weather);
+        }
+
         bs.ClearTurnData();
 
         if (!bs.IsBattleOver)
@@ -138,6 +144,7 @@ public class RunTrunState : State<BattleSystem>
 
     }
 
+   
     IEnumerator RunMoveEffects(MoveEffects effects, BattleUnit source ,BattleUnit target, MoveTarget moveTarget)
     {
         // Stat Boosting
@@ -150,18 +157,31 @@ public class RunTrunState : State<BattleSystem>
         }
 
         // Status Condition
-        if (effects.Status != ConditionID.none)
+        if (effects.Status != StatusConditionID.none)
         {
             target.Pokemon.SetStatus(effects.Status);
         }
 
-        if (effects.VolatileStatus != ConditionID.none)
+        if (effects.VolatileStatus != StatusConditionID.none)
         {
             target.Pokemon.SetVolatileStatus(effects.VolatileStatus);
         }
 
         yield return ShowStatusChanges(source);
         yield return ShowStatusChanges(target);
+    }
+    IEnumerator RunWeatherEffects(WeatherCondition weather)
+    {
+        var units = bs.PlayerUnits.Concat(bs.EnemyUnits);
+
+        foreach (var unit in units)
+        {
+            weather.OnWeatherEffect(unit.Pokemon);
+            yield return ShowStatusChanges(unit);
+
+            if (unit.Pokemon.HP <= 0)
+                yield return HandlePokemonFainted(unit);
+        }
     }
 
     IEnumerator RunAfterTurn(BattleUnit sourceUnit)

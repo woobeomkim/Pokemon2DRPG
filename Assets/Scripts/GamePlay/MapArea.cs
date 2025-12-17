@@ -8,6 +8,9 @@ public class MapArea : MonoBehaviour
 {
     [SerializeField] List<PokemonEncounterRecord> wildPokemons;
     [SerializeField] List<PokemonEncounterRecord> wildPokemonsInWater;
+    [SerializeField] WeatherConditonID weather;
+
+    public WeatherConditonID Weather => weather;
 
     [HideInInspector]
     [SerializeField] int totalChance = 0;

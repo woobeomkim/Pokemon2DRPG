@@ -18,7 +18,7 @@ public class BattleHud : MonoBehaviour
     [SerializeField] Color frzColor;
     [SerializeField] Color slpColor;
 
-    public Dictionary<ConditionID, Color> statusColor;
+    public Dictionary<StatusConditionID, Color> statusColor;
 
     Pokemon pokemon;
 
@@ -36,13 +36,13 @@ public class BattleHud : MonoBehaviour
         SetLevel();
         SetExp();
 
-        statusColor = new Dictionary<ConditionID, Color>()
+        statusColor = new Dictionary<StatusConditionID, Color>()
         {
-            {ConditionID.psn,psnColor },
-            {ConditionID.brn,brnColor },
-            {ConditionID.par,parColor },
-            {ConditionID.frz,frzColor },
-            {ConditionID.slp,slpColor },
+            {StatusConditionID.psn,psnColor },
+            {StatusConditionID.brn,brnColor },
+            {StatusConditionID.par,parColor },
+            {StatusConditionID.frz,frzColor },
+            {StatusConditionID.slp,slpColor },
         };
 
         SetStatusText();

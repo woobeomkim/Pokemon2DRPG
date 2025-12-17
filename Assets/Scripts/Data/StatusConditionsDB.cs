@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class ConditionsDB
+public class StatusConditionsDB
 {
     public static void Init()
     {
@@ -16,11 +16,11 @@ public class ConditionsDB
         }
     }
 
-    public static Dictionary<ConditionID, Condition> Conditions { get; set; } = new Dictionary<ConditionID, Condition>()
+    public static Dictionary<StatusConditionID, StatusCondition> Conditions { get; set; } = new Dictionary<StatusConditionID, StatusCondition>()
     { 
         {
-            ConditionID.psn,
-            new Condition()
+            StatusConditionID.psn,
+            new StatusCondition()
             {
                 Name = "Posion",
                 StartMessage = "독에 감염되었다!",
@@ -32,8 +32,8 @@ public class ConditionsDB
             }
         },
         {
-            ConditionID.brn,
-            new Condition()
+            StatusConditionID.brn,
+            new StatusCondition()
             {
                 Name = "Burn",
                 StartMessage = "화상을 입었다!",
@@ -45,8 +45,8 @@ public class ConditionsDB
             }
         },
         {
-            ConditionID.par,
-            new Condition()
+            StatusConditionID.par,
+            new StatusCondition()
             {
                 Name = "Paralyzed",
                 StartMessage = "마비되었다!",
@@ -62,8 +62,8 @@ public class ConditionsDB
             }
         },
          {
-            ConditionID.frz,
-            new Condition()
+            StatusConditionID.frz,
+            new StatusCondition()
             {
                 Name = "Freeze",
                 StartMessage = "얼어붙었다!",
@@ -80,8 +80,8 @@ public class ConditionsDB
             }
         },
           {
-            ConditionID.slp,
-            new Condition()
+            StatusConditionID.slp,
+            new StatusCondition()
             {
                 Name = "Sleep",
                 StartMessage = "잠들었다!",
@@ -106,8 +106,8 @@ public class ConditionsDB
             }
         },
           {
-            ConditionID.confused,
-            new Condition()
+            StatusConditionID.confused,
+            new StatusCondition()
             {
                 Name = "Confused",
                 StartMessage = "혼란에 빠졌다!",
@@ -138,20 +138,20 @@ public class ConditionsDB
         }
     };
 
-    public static float GetStatusBounus(Condition condition)
+    public static float GetStatusBounus(StatusCondition condition)
     {
         if (condition == null)
             return 1f;
-        else if (condition.ID == ConditionID.slp || condition.ID == ConditionID.frz)
+        else if (condition.ID == StatusConditionID.slp || condition.ID == StatusConditionID.frz)
             return 2f;
-        else if (condition.ID == ConditionID.par || condition.ID == ConditionID.psn || condition.ID == ConditionID.brn)
+        else if (condition.ID == StatusConditionID.par || condition.ID == StatusConditionID.psn || condition.ID == StatusConditionID.brn)
             return 1.5f;
 
         return 1f;
     }
 }
 
-public enum ConditionID
+public enum StatusConditionID
 {
     none,psn,brn,slp,par,frz,
     //VolatileStatus

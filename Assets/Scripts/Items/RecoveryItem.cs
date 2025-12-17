@@ -14,7 +14,7 @@ public class RecoveryItem : ItemBase
     [SerializeField] bool restoreMaxPP;
 
     [Header("Status Condition")]
-    [SerializeField] ConditionID status;
+    [SerializeField] StatusConditionID status;
     [SerializeField] bool recoverAllStatus;
 
     [Header("Revive")]
@@ -54,7 +54,7 @@ public class RecoveryItem : ItemBase
                 pokemon.IncreaseHP(hpAmount);
         }
 
-        if(recoverAllStatus || status != ConditionID.none)
+        if(recoverAllStatus || status != StatusConditionID.none)
         {
             if (pokemon.Status == null && pokemon.VolatileStatus == null)
                 return false;

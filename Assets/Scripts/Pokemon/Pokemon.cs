@@ -31,9 +31,9 @@ public class Pokemon
     public Dictionary<Stat, int> Stats { get; private set; }
     public Dictionary<Stat, int> StatBoosts { get; private set; }
 
-    public Condition Status { get; private set; }
+    public StatusCondition Status { get; private set; }
     public Queue<StatusEvent> StatusChanges { get; private set; } = new Queue<StatusEvent>();
-    public Condition VolatileStatus { get; private set; }
+    public StatusCondition VolatileStatus { get; private set; }
     public int StatusTime { get; set; }
     public int VolatileStatusTime { get; set; }
 
@@ -72,7 +72,7 @@ public class Pokemon
         Exp = saveData.exp;
 
         if (saveData.statusID != null)
-            Status = ConditionsDB.Conditions[saveData.statusID.Value];
+            Status = StatusConditionsDB.Conditions[saveData.statusID.Value];
         else
             Status = null;
 
@@ -243,6 +243,11 @@ public class Pokemon
         CureStatus();
     }
 
+    public bool IsOfType(PokemonType type)
+    {
+        return type == Base.Type1 || type == Base.Type2;
+    }
+
     public float GetNormalizedExp()
     {
         int currLevelExp = Base.GetExpForLevel(Level);
@@ -264,20 +269,20 @@ public class Pokemon
             OnHpChagnged?.Invoke();
     }
 
-    public void SetStatus(ConditionID conditionID)
+    public void SetStatus(StatusConditionID conditionID)
     {
         if (Status != null) return;
 
-        Status = ConditionsDB.Conditions[conditionID];
+        Status = StatusConditionsDB.Conditions[conditionID];
         Status?.OnStart?.Invoke(this);
         AddStatusEvent($"{Base.Name}(이)가 {Status.StartMessage}");
         OnStatusChanged?.Invoke();
     }
-    public void SetVolatileStatus(ConditionID conditionID)
+    public void SetVolatileStatus(StatusConditionID conditionID)
     {
         if (VolatileStatus != null) return;
 
-        VolatileStatus = ConditionsDB.Conditions[conditionID];
+        VolatileStatus = StatusConditionsDB.Conditions[conditionID];
         VolatileStatus?.OnStart?.Invoke(this);
         AddStatusEvent($"{Base.Name}(이)가 {VolatileStatus.StartMessage}");
     }
@@ -400,7 +405,7 @@ public class PokemonSaveData
     public int hp;
     public int level;
     public int exp;
-    public ConditionID? statusID;
+    public StatusConditionID? statusID;
     public List<MoveSaveData> moves;
 }
 
