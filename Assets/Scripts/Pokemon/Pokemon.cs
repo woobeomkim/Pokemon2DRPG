@@ -32,7 +32,7 @@ public class Pokemon
     public Dictionary<Stat, int> StatBoosts { get; private set; }
 
     public Condition Status { get; private set; }
-    public Queue<StatusEvent> StatusChanges { get; private set; } = new Queue<string>();
+    public Queue<StatusEvent> StatusChanges { get; private set; } = new Queue<StatusEvent>();
     public Condition VolatileStatus { get; private set; }
     public int StatusTime { get; set; }
     public int VolatileStatusTime { get; set; }
