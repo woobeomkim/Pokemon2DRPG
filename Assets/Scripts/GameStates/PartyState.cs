@@ -37,6 +37,8 @@ public class PartyState : State<GameController>
         partyScreen.gameObject.SetActive(true);
         partyScreen.onSelected += OnPokemonSelected;
         partyScreen.onBack += OnBack;
+
+        partyScreen.SetPartyData();
     }
 
     public override void Execute()
@@ -163,7 +165,7 @@ public class PartyState : State<GameController>
         if(prevState == BattleState.i)
         {
             var battleState = prevState as BattleState;
-            if (battleState.BattleSystem.PlayerUnits.Any(u => u.Pokemon.HP <= 0))
+            if (battleState.BattleSystem.PlayerUnits.Any(u => u.Pokemon != null && u.Pokemon.HP <= 0))
             {
                 partyScreen.SetMessageText("계속하려면 포켓몬을 고르세요!");
                 return;

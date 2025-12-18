@@ -274,12 +274,12 @@ public class BattleSystem : MonoBehaviour
         yield return dialogBox.TypeDialog($"가라! {newPokemon.Base.Name}");
     }
 
-    public IEnumerator SendNextTrainerPokemon()
+    public IEnumerator SendNextTrainerPokemon(int faintedUnitIndex = 0)
     {
         var activePokemons = EnemyUnits.Select(u => u.Pokemon).Where(p => p.HP > 0).ToList();
 
         var nextPokemon = TrainerParty.GetHealthPokemon(activePokemons);
-        enemyUnits[0].Setup(nextPokemon);
+        enemyUnits[faintedUnitIndex].Setup(nextPokemon);
         yield return dialogBox.TypeDialog($"{Trainer.Name}(이)가 {nextPokemon.Base.Name}을 내보냈다!");
     }
 

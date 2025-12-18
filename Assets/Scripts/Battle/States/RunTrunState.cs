@@ -220,6 +220,9 @@ public class RunTrunState : State<BattleSystem>
 
         foreach (var unit in units)
         {
+            if (unit.Pokemon == null || unit.Pokemon.HP == 0)
+                continue;
+
             weather.OnWeatherEffect?.Invoke(unit.Pokemon);
             yield return ShowStatusChanges(unit);
             if (unit.Pokemon.HP <= 0)
@@ -442,7 +445,7 @@ public class RunTrunState : State<BattleSystem>
                 }
                 else
                 {
-                    bs.SendNextTrainerPokemon();
+                    yield return bs.SendNextTrainerPokemon(bs.EnemyUnits.IndexOf(faintedUnit));
                 }
             }
         }
