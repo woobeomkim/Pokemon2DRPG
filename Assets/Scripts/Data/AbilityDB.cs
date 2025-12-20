@@ -162,7 +162,8 @@ public class AbilityDB
                 },
             }
         },
-   {
+            {
+            // 복안
             AbilityID.compoundeyes,
             new Ability()
             {
@@ -174,11 +175,121 @@ public class AbilityDB
                 },
             }
         },
+        {
+            AbilityID.keeneye,
+            new Ability()
+            {
+                Name = "Keen Eye",
+                Description = "다른 포켓몬으로부터 명중률이 낮아지는걸 막아준다.",
+                OnBoost = (Dictionary<Stat,int> boosts, Pokemon source, Pokemon target) =>
+                {
+                    // if self boost, then return
+                    if (source != null && source == target) return;
+
+                    if(boosts.ContainsKey(Stat.Accuracy) && boosts[Stat.Accuracy] < 0)
+                    {
+                        boosts.Remove(Stat.Accuracy);
+                        target.AddStatusEvent(StatusEventType.Text,$"{target.Base.Name}의 명중률이 예리한 눈때문에 낮아질수없다.");
+                    }
+                },
+            }
+        },
+        {
+            AbilityID.hypercutter,
+            new Ability()
+            {
+                Name = "Hyper Cutter",
+                Description = "다른 포켓몬으로부터 공격력이 낮아지는걸 막아준다.",
+                OnBoost = (Dictionary<Stat,int> boosts, Pokemon source, Pokemon target) =>
+                {
+                    // if self boost, then return
+                    if (source != null && source == target) return;
+
+                    if(boosts.ContainsKey(Stat.Attack) && boosts[Stat.Attack] < 0)
+                    {
+                        boosts.Remove(Stat.Attack);
+                        target.AddStatusEvent(StatusEventType.Text,$"{target.Base.Name}의 공격력이 낮아질수없다.");
+                    }
+                },
+            }
+        },
+        {
+            AbilityID.bigpecks,
+            new Ability()
+            {
+                Name = "Big Pecks",
+                Description = "다른 포켓몬으로부터 방어력이 낮아지는걸 막아준다.",
+                OnBoost = (Dictionary<Stat,int> boosts, Pokemon source, Pokemon target) =>
+                {
+                    // if self boost, then return
+                    if (source != null && source == target) return;
+
+                    if(boosts.ContainsKey(Stat.Defense) && boosts[Stat.Defense] < 0)
+                    {
+                        boosts.Remove(Stat.Defense);
+                        target.AddStatusEvent(StatusEventType.Text,$"{target.Base.Name}의 방어력이 낮아질수없다.");
+                    }
+                },
+            }
+        },
+        {
+            AbilityID.clearbody,
+            new Ability()
+            {
+                Name = "Clear Body",
+                Description = "다른 포켓몬으로부터 스탯이 낮아지는걸 막아준다.",
+                OnBoost = (Dictionary<Stat,int> boosts, Pokemon source, Pokemon target) =>
+                {
+                    // if self boost, then return
+                    if (source != null && source == target) return;
+
+                    bool boostRemoved = false;
+                    foreach (var stat in boosts.Keys)
+                    {
+                        if(boosts[stat] < 0)
+                        {
+                            boosts.Remove(stat);
+                            boostRemoved = true;
+                        }
+                    }
+
+                    if(boostRemoved)
+                         target.AddStatusEvent(StatusEventType.Text,$"{target.Base.Name}의 클리어바디가 스탯이 낮아지는걸 막아주었다.");
+                },
+            }
+        },
+        {
+            AbilityID.whitesmoke,
+            new Ability()
+            {
+                Name = "White Smoke",
+                Description = "다른 포켓몬으로부터 스탯이 낮아지는걸 막아준다.",
+                OnBoost = (Dictionary<Stat,int> boosts, Pokemon source, Pokemon target) =>
+                {
+                    // if self boost, then return
+                    if (source != null && source == target) return;
+
+                    bool boostRemoved = false;
+                    foreach (var stat in boosts.Keys)
+                    {
+                        if(boosts[stat] < 0)
+                        {
+                            boosts.Remove(stat);
+                            boostRemoved = true;
+                        }
+                    }
+
+                    if(boostRemoved)
+                         target.AddStatusEvent(StatusEventType.Text,$"{target.Base.Name}의 하얀연기가 스탯이 낮아지는걸 막아주었다.");
+                },
+            }
+        },
     };
 };
 
 
 public enum AbilityID
 {
-    none, blaze , overgrow,torrent,swarm,guts,marvelscale,quickfeet,compoundeyes
+    none, blaze , overgrow,torrent,swarm,guts,marvelscale,quickfeet,compoundeyes,
+    keeneye, hypercutter, bigpecks,clearbody,whitesmoke
 }

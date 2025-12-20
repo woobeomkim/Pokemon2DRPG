@@ -168,9 +168,9 @@ public class RunTrunState : State<BattleSystem>
         if (effects.Boosts != null)
         {
             if (moveTarget == MoveTarget.Self)
-                source.Pokemon.ApplyBoost(effects.Boosts);
+                source.Pokemon.ApplyBoost(effects.Boosts, source.Pokemon);
             else
-                target.Pokemon.ApplyBoost(effects.Boosts);
+                target.Pokemon.ApplyBoost(effects.Boosts, source.Pokemon);
         }
 
         // Status Condition
