@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AbilityDB
@@ -244,7 +245,7 @@ public class AbilityDB
                     if (source != null && source == target) return;
 
                     bool boostRemoved = false;
-                    foreach (var stat in boosts.Keys)
+                    foreach (var stat in boosts.Keys.ToList())
                     {
                         if(boosts[stat] < 0)
                         {
@@ -284,6 +285,120 @@ public class AbilityDB
                 },
             }
         },
+        {
+            AbilityID.insomnia,
+            new Ability()
+            {
+                Name = "Insomina",
+                Description = "포켓몬이 잠드는것을 막아준다",
+                OnTrySetStatus = (StatusConditionID statusID, Pokemon pokemon, EffectSource effectSource) =>
+                {
+                    if(statusID == StatusConditionID.slp)
+                    {
+                        if(effectSource == EffectSource.Move)
+                            pokemon.AddStatusEvent(StatusEventType.Text, $"{pokemon.Base.Name}의 불면때문에 잠에들수없다!");
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        },
+        {
+            AbilityID.immunity,
+            new Ability()
+            {
+                Name = "Immunity",
+                Description = "포켓몬이 독에 감여되는것을 막아준다",
+                OnTrySetStatus = (StatusConditionID statusID, Pokemon pokemon, EffectSource effectSource) =>
+                {
+                    if(statusID == StatusConditionID.psn)
+                    {
+                        if(effectSource == EffectSource.Move)
+                            pokemon.AddStatusEvent(StatusEventType.Text, $"{pokemon.Base.Name}의 면역때문에 독에 감염될수없다!");
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        },
+        {
+            AbilityID.limber,
+            new Ability()
+            {
+                Name = "Limber",
+                Description = "포켓몬이 마비되는것을 막아준다",
+                OnTrySetStatus = (StatusConditionID statusID, Pokemon pokemon, EffectSource effectSource) =>
+                {
+                    if(statusID == StatusConditionID.par)
+                    {
+                        if(effectSource == EffectSource.Move)
+                            pokemon.AddStatusEvent(StatusEventType.Text, $"{pokemon.Base.Name}의 유연때문에 마비될수없다!");
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        },
+        {
+            AbilityID.waterveil,
+            new Ability()
+            {
+                Name = "Water Veil",
+                Description = "포켓몬이 화상을 입는것을 막아준다",
+                OnTrySetStatus = (StatusConditionID statusID, Pokemon pokemon, EffectSource effectSource) =>
+                {
+                    if(statusID == StatusConditionID.brn)
+                    {
+                        if(effectSource == EffectSource.Move)
+                            pokemon.AddStatusEvent(StatusEventType.Text, $"{pokemon.Base.Name}의 물막때문에 화상을 입을수 없다!");
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        },
+        {
+            AbilityID.vitalspirit,
+            new Ability()
+            {
+                Name = "Vital Spirit",
+                Description = "포켓몬이 잠드는것을 막아준다",
+                OnTrySetStatus = (StatusConditionID statusID, Pokemon pokemon, EffectSource effectSource) =>
+                {
+                    if(statusID == StatusConditionID.slp)
+                    {
+                        if(effectSource == EffectSource.Move)
+                            pokemon.AddStatusEvent(StatusEventType.Text, $"{pokemon.Base.Name}의 생명력때문에 잠에들수없다!");
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        },
+        {
+            AbilityID.owntempo,
+            new Ability()
+            {
+                Name = "Own Tempo",
+                Description = "포켓몬이 혼란에드는것을 막아준다",
+                OnTrySetVolatileStatus = (StatusConditionID statusID, Pokemon pokemon, EffectSource effectSource) =>
+                {
+                    if(statusID == StatusConditionID.confused)
+                    {
+                        if(effectSource == EffectSource.Move)
+                            pokemon.AddStatusEvent(StatusEventType.Text, $"{pokemon.Base.Name}의 마이페이스때문에 혼란에빠질수없다!");
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        },
     };
 };
 
@@ -291,5 +406,6 @@ public class AbilityDB
 public enum AbilityID
 {
     none, blaze , overgrow,torrent,swarm,guts,marvelscale,quickfeet,compoundeyes,
-    keeneye, hypercutter, bigpecks,clearbody,whitesmoke
+    keeneye, hypercutter, bigpecks,clearbody,whitesmoke,
+    insomnia, immunity,limber,waterveil,vitalspirit,owntempo
 }

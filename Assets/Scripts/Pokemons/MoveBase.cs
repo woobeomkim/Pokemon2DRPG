@@ -61,6 +61,8 @@ public class MoveBase : ScriptableObject
     public bool IsMultiHitMove => isMultiHitMove;
 }
 
+public enum EffectSource { Move,Ability,Item}
+
 [System.Serializable]
 public class MoveEffects
 {

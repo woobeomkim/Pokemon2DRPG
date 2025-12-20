@@ -15,4 +15,7 @@ public class Ability
     public Func<float, Pokemon, Pokemon, Move, float> OnModifyAccuracy { get; set; }
 
     public Action<Dictionary<Stat, int>, Pokemon, Pokemon> OnBoost { get; set; }
+
+    public Func<StatusConditionID,Pokemon,EffectSource,bool> OnTrySetStatus { get; set; }
+    public Func<StatusConditionID,Pokemon,EffectSource,bool> OnTrySetVolatileStatus { get; set; }
 }

@@ -294,18 +294,24 @@ public class Pokemon
             OnHpChagnged?.Invoke();
     }
 
-    public void SetStatus(StatusConditionID conditionID)
+    public void SetStatus(StatusConditionID conditionID,EffectSource effectSource = EffectSource.Move)
     {
         if (Status != null) return;
+
+        bool canSet = Ability?.OnTrySetStatus?.Invoke(conditionID, this, effectSource) ?? true;
+        if (!canSet) return;
 
         Status = StatusConditionsDB.Conditions[conditionID];
         Status?.OnStart?.Invoke(this);
         AddStatusEvent($"{Base.Name}(¿Ã)∞° {Status.StartMessage}");
         OnStatusChanged?.Invoke();
     }
-    public void SetVolatileStatus(StatusConditionID conditionID)
+    public void SetVolatileStatus(StatusConditionID conditionID,EffectSource effectSource = EffectSource.Move)
     {
         if (VolatileStatus != null) return;
+
+        bool canSet = Ability?.OnTrySetVolatileStatus?.Invoke(conditionID, this, effectSource) ?? true;
+        if (!canSet) return;
 
         VolatileStatus = StatusConditionsDB.Conditions[conditionID];
         VolatileStatus?.OnStart?.Invoke(this);
