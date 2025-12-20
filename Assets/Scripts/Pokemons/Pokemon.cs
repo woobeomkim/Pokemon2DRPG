@@ -192,6 +192,7 @@ public class Pokemon
             defense = SpDefense;
 
             attack = attacker.ModifySpAtk(attack, this, move);
+            defense = ModifySpDef(defense, attacker, move);
         }
         else
         {
@@ -199,6 +200,7 @@ public class Pokemon
             defense = Defense;
 
             attack = attacker.ModifyAtk(attack, this, move);
+            defense = ModifyDef(defense, attacker, move);
         }
 
         float modifiers = UnityEngine.Random.Range(0.85f, 1f) * type * critical * weatherModifier;
@@ -371,6 +373,37 @@ public class Pokemon
         return atk;
     }
 
+    public float ModifyDef(float def, Pokemon attacker, Move move)
+    {
+        if (Ability?.OnModifyDefense != null)
+            return Ability.OnModifyDefense(def, attacker, this, move);
+
+        return def;
+    }
+
+    public float ModifySpDef(float def, Pokemon attacker, Move move)
+    {
+        if (Ability?.OnModifySpDefense != null)
+            return Ability.OnModifySpDefense(def, attacker, this, move);
+
+        return def;
+    }
+
+    public float ModifySpeed(float speed, Pokemon defender, Move move)
+    {
+        if (Ability?.OnModifySpeed != null)
+            return Ability.OnModifySpeed(speed, this, defender, move);
+
+        return speed;
+    }
+
+    public float ModifyAccuracy(float acc, Pokemon defender, Move move)
+    {
+        if (Ability?.OnModifyAccuracy != null)
+            return Ability.OnModifyAccuracy(acc, this, defender, move);
+
+        return acc;
+    }
     public void AddStatusEvent(StatusEventType type, string message)
     {
         StatusChanges.Enqueue(new StatusEvent(type, message));
