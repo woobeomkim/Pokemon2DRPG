@@ -21,6 +21,8 @@ public class MoveBase : ScriptableObject
     [SerializeField] List<SecondaryEffects> secondaries;
     [SerializeField] MoveTarget target;
 
+    [SerializeField] List<MoveFlag> flags;
+
     [SerializeField] bool isMultiHitMove = false;
     [SerializeField] Vector2Int hitRange = new Vector2Int(2, 0);
 
@@ -37,6 +39,11 @@ public class MoveBase : ScriptableObject
         }
         else
             return 1;
+    }
+
+    public bool HasFlag(MoveFlag flag)
+    {
+        return flags.Contains(flag);
     }
 
     public string Name => name;
@@ -101,4 +108,9 @@ public enum MoveCategory
 public enum MoveTarget
 {
     Foe,Self
+}
+
+public enum MoveFlag
+{
+    Contact,Punch,Bite,Sound
 }

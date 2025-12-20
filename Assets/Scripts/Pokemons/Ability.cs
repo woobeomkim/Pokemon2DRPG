@@ -18,4 +18,6 @@ public class Ability
 
     public Func<StatusConditionID,Pokemon,EffectSource,bool> OnTrySetStatus { get; set; }
     public Func<StatusConditionID,Pokemon,EffectSource,bool> OnTrySetVolatileStatus { get; set; }
+
+    public Action<float,Pokemon,Pokemon,Move> OnDamagingHit { get; set; }
 }

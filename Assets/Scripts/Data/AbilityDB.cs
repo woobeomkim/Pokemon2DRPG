@@ -7,6 +7,8 @@ public class AbilityDB
 {
     public static Dictionary<AbilityID, Ability> Ablities = new Dictionary<AbilityID, Ability>()
     {
+        // 1. Abilities that increase stats
+
         {
             AbilityID.blaze,
             new Ability()
@@ -176,6 +178,8 @@ public class AbilityDB
                 },
             }
         },
+
+            // 2. Abilites that prevent stats reduction
         {
             AbilityID.keeneye,
             new Ability()
@@ -285,6 +289,8 @@ public class AbilityDB
                 },
             }
         },
+
+        // 3. Abilites that prevent status conditions
         {
             AbilityID.insomnia,
             new Ability()
@@ -399,6 +405,54 @@ public class AbilityDB
                 }
             }
         },
+
+        // 4. Abilites that inflict status conditions on contact move
+
+        {
+            AbilityID.Static,
+            new Ability()
+            {
+                Name = "Static",
+                Description = "접촉했을때 포켓몬을 마비상태로 만든다",
+                OnDamagingHit = (float damage, Pokemon attacker, Pokemon defender,Move move) =>
+                {
+                    if(move.Base.HasFlag(MoveFlag.Contact) && Random.Range(1,101)<=30)
+                    {
+                        attacker.SetStatus(StatusConditionID.par,EffectSource.Ability);
+                    }
+                }
+            }
+        },
+        {
+            AbilityID.posionpoint,
+            new Ability()
+            {
+                Name = "Poision Point",
+                Description = "접촉했을때 포켓몬을 독감염상태로 만든다",
+                OnDamagingHit = (float damage, Pokemon attacker, Pokemon defender,Move move) =>
+                {
+                    if(move.Base.HasFlag(MoveFlag.Contact) && Random.Range(1,101)<=30)
+                    {
+                        attacker.SetStatus(StatusConditionID.psn,EffectSource.Ability);
+                    }
+                }
+            }
+        },
+        {
+            AbilityID.flamebody,
+            new Ability()
+            {
+                Name = "Flame Body",
+                Description = "접촉했을때 포켓몬을 화상상태로 만든다",
+                OnDamagingHit = (float damage, Pokemon attacker, Pokemon defender,Move move) =>
+                {
+                    if(move.Base.HasFlag(MoveFlag.Contact) && Random.Range(1,101)<=30)
+                    {
+                        attacker.SetStatus(StatusConditionID.brn,EffectSource.Ability);
+                    }
+                }
+            }
+        },
     };
 };
 
@@ -407,5 +461,6 @@ public enum AbilityID
 {
     none, blaze , overgrow,torrent,swarm,guts,marvelscale,quickfeet,compoundeyes,
     keeneye, hypercutter, bigpecks,clearbody,whitesmoke,
-    insomnia, immunity,limber,waterveil,vitalspirit,owntempo
+    insomnia, immunity,limber,waterveil,vitalspirit,owntempo,
+    Static,posionpoint,flamebody
 }

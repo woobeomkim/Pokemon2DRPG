@@ -213,6 +213,9 @@ public class Pokemon
 
         DecreaseHP(damage);
 
+        if (damage > 0)
+            Ability?.OnDamagingHit?.Invoke(damage, attacker, this, move);
+
         return damageDetails;
     }
 
