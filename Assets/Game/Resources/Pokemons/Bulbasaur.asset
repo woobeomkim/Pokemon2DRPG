@@ -27,6 +27,7 @@ MonoBehaviour:
   catchRate: 255
   type1: 5
   type2: 8
+  ability: 1
   learnableMoves:
   - pBase: {fileID: 11400000, guid: 2d93fed33fa3c0147a2aa1cd224223b1, type: 2}
     level: 1
